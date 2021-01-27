@@ -1,0 +1,26 @@
+{
+  "name": "strategoonline",
+  "version": "1.0.0",
+  "description": "A game project for ISEN (CIR2)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HugoMartel/StrategoOnline.git"
+  },
+  "keywords": [
+    "stratego"
+  ],
+  "author": "Ducrocq Louis, Eutamene Adel, Martel Hugo, Martin Théodore, ?",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/HugoMartel/StrategoOnline/issues"
+  },
+  "homepage": "https://github.com/HugoMartel/StrategoOnline#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^3.1.0"
+  }
+}

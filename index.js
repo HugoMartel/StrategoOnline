@@ -1,18 +1,40 @@
 // Setup requires and https keys & certificates
-let app = require('express')();
-let fs = require('fs');
+const express = require('express');
+const app = express();
+const fs = require('fs');
+const https = require('https');
 
-let hsKey = fs.readFileSync('key.pem').toString();
-let hsCert = fs.readFileSync('cert.pem').toString();
+// Just for the readability of the console logs on the server side
+const colors = require('colors');
 
-let https = require('https').createServer({key: hsKey, cert: hsCert}, app);
+const hsKey = fs.readFileSync('key.pem').toString();
+const hsCert = fs.readFileSync('cert.pem').toString();
+
+const server = https.createServer({key: hsKey, cert: hsCert}, app);
+const io = require('socket.io')(server, {});
+
+// App setup
+app.set('trust proxy', 1);
 
 // Router
-app.get('/', function (req, res) {
+app.use(express.static(__dirname + '/front/'));
+
+app.get('/', (req, res) => {
     res.sendFile(__dirname + '/front/html/index.html');
 });
 
+// Setup logs for the server
+io.on('connection', (socket) => {
+    console.log('> '.bold + socket.id.green + ' connected');
+
+    socket.on('disconnect', () => {
+        console.log('< '.bold + socket.id.red + ' disconnected');
+    });
+});
+
+
+
 // Make the server use port 4200
-let listener = https.listen(4200, function() {
+let listener = server.listen(4200, () => {
     console.log('Server is up and running on port ' + listener.address().port);
 });

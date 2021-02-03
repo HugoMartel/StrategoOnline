@@ -16,6 +16,24 @@ const io = require('socket.io')(server, {});
 // App setup
 app.set('trust proxy', 1);
 
+// Session setup
+
+const session = require("express-session")({
+    secret:"secret",
+    resave: true,
+    saveUninitialized: true,
+    cookie : {
+        maxAge: 2 * 60 * 60 *1000,
+        secure: false
+    }
+});
+const sharedsession = require("express-socket.io-session");
+// Configure socket io with session middleware
+io.use(sharedsession(session,{
+    // Session automatiquement save en cas de modif
+    autoSave:true
+}));
+
 // Router
 app.use(express.static(__dirname + '/front/'));
 

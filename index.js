@@ -20,7 +20,10 @@ app.set('trust proxy', 1);
 app.use(express.static(__dirname + '/front/'));
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/front/html/index.html');
+    let fileSend = fs.readFileSync("front/html/login.html");
+    fileSend += fs.readFileSync("front/html/index.html");
+    fileSend += fs.readFileSync("front/html/footer.html");
+    res.send(fileSend);
 });
 
 // Setup logs for the server

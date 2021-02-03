@@ -20,6 +20,8 @@
   },
   "homepage": "https://github.com/HugoMartel/StrategoOnline#readme",
   "dependencies": {
+    "@popperjs/core": "^2.5.4",
+    "bootstrap": "^5.0.0-beta1",
     "colors": "^1.4.0",
     "express": "^4.17.1",
     "socket.io": "^3.1.0"

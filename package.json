@@ -4,7 +4,7 @@
   "description": "A game project for ISEN (CIR2)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "scss": "node-sass front/scss -o front/css"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,7 @@
     "bootstrap": "^5.0.0-beta1",
     "colors": "^1.4.0",
     "express": "^4.17.1",
+    "node-sass": "^5.0.0",
     "socket.io": "^3.1.0"
   }
 }

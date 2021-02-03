@@ -12,6 +12,7 @@ const hsCert = fs.readFileSync('cert.pem').toString();
 
 const server = https.createServer({key: hsKey, cert: hsCert}, app);
 const io = require('socket.io')(server, {});
+const port = 4200;
 
 // App setup
 app.set('trust proxy', 1);
@@ -57,5 +58,5 @@ io.on('connection', (socket) => {
 
 // Make the server use port 4200
 let listener = server.listen(4200, () => {
-    console.log('Server is up and running on port ' + listener.address().port);
+    console.log('Server is up and running on https://localhost:' + port + '/');
 });

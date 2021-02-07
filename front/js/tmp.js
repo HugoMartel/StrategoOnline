@@ -1,6 +1,12 @@
+//TODO: TT create a blender model or find one on the net + find how to add a number on them easily
+//TODO: creating a class or idk for the pieces
+//TODO: need to create constructor etc to create each peices
+//TODO: adding a easy way to move each pieces individualy (need to figure out what is the size of a case on the tabletop)
 
-//TODO: Lock the camera beta btw pi/2 and -pi/2
-//TODO: lock the radius at a positive number
+//PART 2:
+//TODO: check inputs, and find the best way to move the pieces, keyboard ? mouse ?
+//TODO: ask the server team to link the inputs with the checking mechanism; in order to avoid strange stuff
+//Then I think it might be fine
 window.addEventListener("DOMContentLoaded", function() {
     let canvas = document.getElementById("canvas");
     let engine = new BABYLON.Engine(canvas, true);

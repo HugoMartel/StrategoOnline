@@ -28,6 +28,7 @@ const session = require("express-session")({
         secure: false
     }
 });
+
 const sharedsession = require("express-socket.io-session");
 // Configure socket io with session middleware
 io.use(sharedsession(session,{
@@ -38,12 +39,16 @@ io.use(sharedsession(session,{
 // Router
 app.use(express.static(__dirname + '/front/'));
 
-app.get('/', (req, res) => {
-    let fileSend = fs.readFileSync("front/html/login.html");
+let sendHome = (req, res) => {
+    let fileSend = fs.readFileSync("front/html/head.html");
+    // Check if already connected to swag login.html with logged.html
+    fileSend += fs.readFileSync("front/html/login.html");
     fileSend += fs.readFileSync("front/html/index.html");
     fileSend += fs.readFileSync("front/html/footer.html");
     res.send(fileSend);
-});
+}
+
+app.get('/', sendHome);
 
 // Setup logs for the server
 io.on('connection', (socket) => {

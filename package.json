@@ -4,7 +4,7 @@
   "description": "A game project for ISEN (CIR2)",
   "main": "index.js",
   "scripts": {
-    "scss": "node-sass front/scss -o front/css"
+    "scss": "node-sass back/scss -o front/css"
   },
   "repository": {
     "type": "git",

@@ -4,8 +4,6 @@ const { body, validationResult, query } = require("express-validator");
 const sha256 = require("js-sha256").sha256;
 const db = require("./query").database;
 
-// Database setup
-db.connect();
 
 let AppRequest = (function () {
   let sendHomeCall = (req, res) => {
@@ -29,7 +27,6 @@ let AppRequest = (function () {
     } else {
       let emailChecked = escape(req.body.email.trim());
       let passwordChecked = req.body.password;
-      //console.log(emailChecked.length, passwordChecked.length);
 
       // Check if the credentials are correct
       if (

@@ -3,7 +3,7 @@ let Database = (function () {
     host: "localhost",
     user: "root",
     password: "",
-    database: "StrategoOnline",
+    database: "strategoonline"
   });
 
   let connectCall = () => {
@@ -15,35 +15,37 @@ let Database = (function () {
   };
 
   let loginCall = (email, password, callback) => {
-    mysql.query(
-      "SELECT Username FROM logins WHERE Login='" + email + "' AND Password='" + password + "';",
-      (err, result) => {
-        if (err)
-          throw err;
+      mysql.query(
+        "SELECT Username FROM logins WHERE Login=? AND Password=?;",
+          [email, password],
+        (err, result) => {
+          if (err) throw err;
 
-        //console.log(result[0].Username);
-        callback(result[0].Username);
-        return;
-      });
+          if (result[0] !== undefined)
+            callback(result[0].Username);
+          else 
+            callback(undefined);
+          return;
+        }
+      );
   };
 
   let registerCall = (email, password, username, callback) => {
-    mysql.query(
-        "INSERT ...;",
-        (err, result) => {
-          if (err)
-            throw err;
-          //TODO
+      // Check if the user already exists
+      mysql.query("SELECT Login FROM logins WHERE Login=?", [email]);
 
-          // Check if the user already exists
+      mysql.query("INSERT INTO logins SET ?;", {Username: username, Login: email, Password: password}, (err, result) => {
+        if (err) throw err;
+        //TODO
 
+        
 
-          // Add the user to the db
+        // Add the user to the db
 
-          // If everything went well
-          callback(username);
-          return;
-        });
+        // If everything went well
+        callback(username);
+        return;
+      });
   };
 
   //--------------------------------------------
@@ -51,7 +53,8 @@ let Database = (function () {
   return {
     connect: () => connectCall(),
     login: (email, password, callback) => loginCall(email, password, callback),
-    register: (email, password, username, callback) => registerCall(email, password, username, callback),
+    register: (email, password, username, callback) =>
+      registerCall(email, password, username, callback),
   };
 })();
 

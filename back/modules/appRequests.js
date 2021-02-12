@@ -4,7 +4,6 @@ const { body, validationResult, query } = require("express-validator");
 const sha256 = require("js-sha256").sha256;
 const db = require("./query").database;
 
-
 let AppRequest = (function () {
   let sendHomeCall = (req, res) => {
     let fileSend = fs.readFileSync("front/html/head.html");
@@ -66,37 +65,52 @@ let AppRequest = (function () {
       console.log(errors);
       return res.status(400).json({ errors: errors.array() });
     } else {
+      //Get XMLHttpRequests values
       let emailChecked = escape(req.body.email.trim());
       let passwordChecked = req.body.password;
+      let password2Checked = req.body.password2;
       let usernameChecked = escape(req.body.username.trim());
-      //console.log(emailChecked.length, passwordChecked.length);
+
+      console.log(emailChecked, passwordChecked, password2Checked, usernameChecked);
 
       // Check if the credentials are correct
       if (
         usernameChecked.length > 3 &&
         emailChecked.length > 3 &&
         /[@]/.test(emailChecked) &&
+        passwordChecked === password2Checked &&
         passwordChecked.length > 8 &&
         /\d/.test(passwordChecked) &&
         /[A-Z]/.test(passwordChecked) &&
         /[a-z]/.test(passwordChecked)
       ) {
-        //req.session.email = emailChecked;
-        //req.session.password = sha256(passwordChecked);
-        console.log(emailChecked, passwordChecked, usernameChecked);
 
-        db.login(emailChecked, sha256(passwordChecked), (username) => {
-          if (username !== undefined) {
-            //Connection successful
-            req.session.username = username;
+        db.find(emailChecked, (username) => {
+          if (username === undefined) {
+            //Connection successful and the user doesn't already exist
+            db.register(
+              emailChecked,
+              sha256(passwordChecked),
+              usernameChecked,
+              (affectedRows) => {
+                if (affectedRows === 1) {
+                  //User addition successful
+                  req.session.username = usernameChecked;
+                } else {
+                  //User addition unsuccessful
+                  console.log("Error while adding an user to the DB...");
+                }
+
+                req.session.save();
+                res.redirect("/");
+              }
+            );
           } else {
-            //Connection unsuccessful
+            //User can't be registered because his email is already in use
             //TODO Display an error message to the user
-            console.log("User not found in the db...");
+            console.log("Email already in use...");
+            res.redirect("/register/");
           }
-
-          req.session.save();
-          res.redirect("/");
         });
       } else {
         //TODO Display an error message to the user
@@ -109,7 +123,7 @@ let AppRequest = (function () {
   return {
     sendHome: (req, res) => sendHomeCall(req, res),
     connectAccount: (req, res) => connectAccountCall(req, res),
-    registerAccount: (req, res) => registerAccount(req, res),
+    registerAccount: (req, res) => registerAccountCall(req, res),
   };
 })();
 

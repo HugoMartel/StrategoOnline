@@ -24,6 +24,7 @@ let Logger = (function(){
     }
 
     function sendRegisterXHR(email, password, password2, username) {
+        //TODO display an error
         if (password != password2 || email === undefined || password === undefined || username === undefined)
             return;
 
@@ -43,7 +44,7 @@ let Logger = (function(){
         XHR.open('POST', '/');
         XHR.setRequestHeader("Content-type", "application/json");
         XHR.responseType = 'json';
-        XHR.send(JSON.stringify({email: email, password: password, username: username}));
+        XHR.send(JSON.stringify({email: email, password: password, username: username, password2: password2}));
     }
 
     return {

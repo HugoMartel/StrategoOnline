@@ -1,59 +1,23 @@
-<header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-between">
-        <a class="navbar-brand" href="#">Navbar</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
-            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Features</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Pricing</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        Dropdown link
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".connect">Connect</button>
-    </nav>
-
-    <div class="modal fade connect" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content text-center">
-                <!-- Header -->
-                <div class="modal-header">
-                    <h4 class="modal-title">Connect to your Account</h4>
-                    <button type="button" class="close" data-dismiss="modal">×</button>
-                </div>
-                <!-- Content -->
-                <form class="modal-body" id="loginForm" action="" method="POST">
-                    <div class="form-group">
-                        <input type="email" id="email" name="email" autocomplete="on" placeholder="Email" required />
-                        <input type="password" id="password" name="password" autocomplete="off" placeholder="Password" required />
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-success" type="submit">Login</button>
-                        <a class="btn btn-primary" href="register/">Register</a>
-                    </div>
-                </form>
+<!-- Modal -->
+<div class="modal fade" id="connectModal" tabindex="-1" aria-labelledby="connectModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="connectModalLabel">Connect to your account</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <form class="modal-body text-center" id="loginForm" action="" method="POST">
+                <div class="form-group">
+                    <input type="email" id="email" name="email" autocomplete="on" placeholder="Email" required />
+                    <input type="password" id="password" name="password" autocomplete="off" placeholder="Password" required />
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-success" type="submit">Login</button>
+                    <a class="btn btn-primary" href="register/">Register</a>
+                </div>
+            </form>
         </div>
     </div>
-</header>
+</div>
 <script src="../js/modules/logger.js"></script>
 <script src="../js/login.js"></script>

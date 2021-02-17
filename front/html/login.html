@@ -19,5 +19,12 @@
         </div>
     </div>
 </div>
+<script>
+    let btn = document.getElementById("connectButton");
+    if (btn.classList.contains("btn-success")) {
+        btn.classList.add("btn-primary");
+        btn.classList.remove("btn-success");
+    }
+</script>
 <script src="../js/modules/logger.js"></script>
 <script src="../js/login.js"></script>

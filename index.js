@@ -68,6 +68,8 @@ app.get("/disconnect/", (req, res) => {
   req.session.destroy();
   res.redirect("/");
 });
+app.get("/scores/", appRequest.sendScores);
+
 // POST
 app.post("/", jsonParser, appRequest.connectAccount);
 app.post("/register/", jsonParser, appRequest.registerAccount);

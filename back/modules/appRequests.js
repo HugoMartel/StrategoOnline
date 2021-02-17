@@ -11,11 +11,27 @@ let AppRequest = (function () {
     console.log(req.session.username);
     if (!req.session.username)
       fileSend += fs.readFileSync("front/html/login.html");
-    else fileSend += fs.readFileSync("front/html/logged.html");
+    else {
+      fileSend += fs.readFileSync("front/html/logged.html");
+      fileSend += '<script>document.getElementById("connectButton").innerText = "'+ req.session.username +'"</script>';
+    }
     fileSend += fs.readFileSync("front/html/index.html");
     fileSend += fs.readFileSync("front/html/footer.html");
     res.send(fileSend);
   };
+
+  let sendScoresCall = (req, res) => {
+    let fileSend = fs.readFileSync("front/html/head.html");
+      // Check if the player is connected to change the navbar or not
+    console.log(req.session.username);
+    if (!req.session.username)
+      fileSend += fs.readFileSync("front/html/login.html");
+    else fileSend += fs.readFileSync("front/html/logged.html");
+    fileSend += fs.readFileSync("front/html/scores.html");
+    fileSend += fs.readFileSync("front/html/footer.html");
+    res.send(fileSend);
+  };
+
 
   let connectAccountCall = (req, res) => {
     const errors = validationResult(req);
@@ -124,6 +140,7 @@ let AppRequest = (function () {
     sendHome: (req, res) => sendHomeCall(req, res),
     connectAccount: (req, res) => connectAccountCall(req, res),
     registerAccount: (req, res) => registerAccountCall(req, res),
+    sendScores: (req, res) => sendScoresCall(req, res),
   };
 })();
 

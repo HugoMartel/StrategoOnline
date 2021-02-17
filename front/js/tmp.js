@@ -2,13 +2,15 @@
 //TODO: creating a class or idk for the pieces
 //TODO: need to create constructor etc to create each peices
 //TODO: adding a easy way to move each pieces individualy (need to figure out what is the size of a case on the tabletop)
-
+//TODO: Fill the constructor grid of the table, and add a way to animate pieces inside the renderLoop
 //PART 2:
 //TODO: check inputs, and find the best way to move the pieces, keyboard ? mouse ?
 //TODO: ask the server team to link the inputs with the checking mechanism; in order to avoid strange stuff
 //Then I think it might be fine
 
 window.addEventListener("DOMContentLoaded", function() {
+    let canvas = document.getElementById("canvas");
+    let engine = new BABYLON.Engine(canvas, true);
     class Pieces{
         constructor(spec, scene, position){
             //spec = the number of the piece, or a char if it is a mine
@@ -23,17 +25,55 @@ window.addEventListener("DOMContentLoaded", function() {
             | 0,0 | 1,0 | ... | 9,0 |
             +-----+-----+-----+-----+
             */
-           this.specc = spec;
+            this.specc = spec;
+            this.x = position[0];
+            this.z = position[1];
             //args: height, diameterTop, diameterBottom, tessellation, subdivisions, scene etc
-            let physicalPiece = BABYLON.Mesh.CreateCylinder("cylinder", 1, 0.8, 0.8, 10, 1, scene, false, BABYLON.Mesh.DEFAULTSIDE);
-            physicalPiece.position.y = 0;
-            physicalPiece.position.x = position[0] * 0.84 - 3.77;
-            physicalPiece.position.z = position[1] * 0.84 - 3.76;
+            this.physicalPiece = BABYLON.Mesh.CreateCylinder("cylinder", 1, 0.8, 0.8, 10, 1, scene, false, BABYLON.Mesh.DEFAULTSIDE);
+            this.physicalPiece.position.y = 0;
+            this.physicalPiece.position.x = this.x * 0.84 - 3.77;
+            this.physicalPiece.position.z = this.z * 0.84 - 3.76;
 
         }
+        //only 
+        move(x, z) {
+            //not checking cause backend stuff
+            this.x = x;
+            this.z = z;
+            this.physicalPiece.position.x = this.x * 0.84 - 3.77;
+            this.physicalPiece.position.z = this.z * 0.84 - 3.76;
+        }
     }
-    let canvas = document.getElementById("canvas");
-    let engine = new BABYLON.Engine(canvas, true);
+
+    class table{
+        /*    
+        le Maréchal (10), 1 par joueur
+        le Général (9), 1 par joueur
+        les Colonels (8), 2 par joueur
+        les Commandants (7), 3 par joueur
+        les Capitaines (6), 4 par joueur
+        les Lieutenants (5), 4 par joueur
+        les Sergents (4), 4 par joueur
+        les Démineurs (3), 5 par joueur
+        les Éclaireurs (2), 8 par joueur
+        l'Espion (1), 1 par joueur
+        le Drapeau (0), 1 par joueur
+        Les Bombes (B), 6 par joueur
+        */
+        constructor(playerPieces, opponentPieces, scene){
+            //creating the grid, full of nothing like ur damn life
+            this.grid = Array(10).fill(null).map(()=>Array(10).fill(undefined));
+            //TODO: fill the grid with:
+            //playerPieces, deux dimensions avec:
+            /*[puissancePiece, [coord], [coord], [coord]]*/
+            //opponentPieces 
+            //[[coord], [coord], [coord], [coord]
+            //filling the grid with opponent pieces:
+            for(let i = 0; i < opponentPieces.lenght; ++i){
+                grid[opponentPieces[i][0]][opponentPieces[i][1]] = new Pieces(-1, scene, [opponentPieces[i][0], opponentPieces[i][1]]);
+            }
+        }
+    }
     let createScene = () => {
         //basic
         const scene = new BABYLON.Scene(engine);
@@ -52,12 +92,18 @@ window.addEventListener("DOMContentLoaded", function() {
         tabletop.diffuseTexture = new  BABYLON.Texture("../textures/tabletop.png", scene);        
         ground.material = tabletop;
         //creating the class of every pieces:
-        let test = new Pieces(2, scene, [3, 5]);
+        let test = new Pieces(2, scene, [6, 7]);
+        test.move(2, 2);
         //end of the creation
         return scene;
     }
     var scene = createScene();
-    engine.runRenderLoop(() => {  
+    //ANIMATION
+    scene.registerBeforeRender(function () {
+
+    });
+
+    engine.runRenderLoop(() => { 
         scene.render();
     });
     window.addEventListener("resize", function () {

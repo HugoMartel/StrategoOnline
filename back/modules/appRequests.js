@@ -13,7 +13,7 @@ let AppRequest = (function () {
       fileSend += fs.readFileSync("front/html/login.html");
     else {
       fileSend += fs.readFileSync("front/html/logged.html");
-      fileSend += '<script>document.getElementById("connectButton").innerText = "'+ req.session.username +'"</script>';
+      fileSend += '<script>document.getElementById("connectButton").innerText = "'+ req.session.username +'";document.getElementById("connectModalLabel").innerText="'+req.session.username+'";</script>';
     }
     fileSend += fs.readFileSync("front/html/index.html");
     fileSend += fs.readFileSync("front/html/footer.html");

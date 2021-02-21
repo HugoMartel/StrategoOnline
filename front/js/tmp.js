@@ -1,8 +1,6 @@
 //TODO: TT create a blender model or find one on the net + find how to add a number on them easily
-//TODO: creating a class or idk for the pieces
-//TODO: need to create constructor etc to create each peices
-//TODO: adding a easy way to move each pieces individualy (need to figure out what is the size of a case on the tabletop)
-//TODO: Fill the constructor grid of the table, and add a way to animate pieces inside the renderLoop
+//TODO: modify the constructor of the piece class in order to get the right model for each one
+//TODO: fix the animation, cause RN the pieces are teleporting instead of moving (lmao)
 //PART 2:
 //TODO: check inputs, and find the best way to move the pieces, keyboard ? mouse ?
 //TODO: ask the server team to link the inputs with the checking mechanism; in order to avoid strange stuff
@@ -35,7 +33,7 @@ window.addEventListener("DOMContentLoaded", function() {
             this.physicalPiece.position.z = this.z * 0.84 - 3.76;
 
         }
-        //only 
+        //only moving the coordonate inside the class, not the physical piece
         move(x, z) {
             //not checking cause backend stuff
             this.x = x;
@@ -43,8 +41,23 @@ window.addEventListener("DOMContentLoaded", function() {
             this.physicalPiece.position.x = this.x * 0.84 - 3.77;
             this.physicalPiece.position.z = this.z * 0.84 - 3.76;
         }
+
+        //check if the physical piece coords are the same as the coord (check if we need to move the physical piece)
+        //return 0 if no difference, else it return the array with the difference coords
+        check = () => {
+            let retour = [0, 0]
+            if(this.x * 0.84 - 3.77 != this.physicalPiece.position.x){
+                retour[0] = (this.x * 0.84 - 3.77)- this.physicalPiece.position.x;
+            }
+            if(this.z * 0.84 - 3.76 != this.physicalPiece.position.z){
+                retour[1] = (this.z * 0.84 - 3.76) - this.physicalPiece.position.z;
+            }
+            if(retour[0] == 0 && retour [1] == 0) return 0;
+            return retour;
+        }
     }
 
+    //ce qui contient toutes les pieces en jeu et la génération des piéces physique
     class table{
         /*    
         le Maréchal (10), 1 par joueur
@@ -68,9 +81,16 @@ window.addEventListener("DOMContentLoaded", function() {
             /*[puissancePiece, [coord], [coord], [coord]]*/
             //opponentPieces 
             //[[coord], [coord], [coord], [coord]
-            //filling the grid with opponent pieces:
-            for(let i = 0; i < opponentPieces.lenght; ++i){
-                grid[opponentPieces[i][0]][opponentPieces[i][1]] = new Pieces(-1, scene, [opponentPieces[i][0], opponentPieces[i][1]]);
+            
+            //filling the grid with opponent pieces, -1 as spec so the player can't see them:
+            for(let i = 0; i < opponentPieces.length; ++i){
+                this.grid[opponentPieces[i][0]][opponentPieces[i][1]] = new Pieces(-1, scene, [opponentPieces[i][0], opponentPieces[i][1]]);
+            }
+            //setting up the player pieces:
+            for(let i = 0; i < playerPieces.length; ++i){
+                for(let j = 1; j < playerPieces[i].length; ++j){
+                    this.grid[playerPieces[i][j][0]][playerPieces[i][j][1]] = new Pieces(playerPieces[i][0], scene, [playerPieces[i][j][0], playerPieces[i][j][1]]);
+                }
             }
         }
     }
@@ -91,16 +111,35 @@ window.addEventListener("DOMContentLoaded", function() {
         const tabletop = new BABYLON.StandardMaterial("tabletop");
         tabletop.diffuseTexture = new  BABYLON.Texture("../textures/tabletop.png", scene);        
         ground.material = tabletop;
-        //creating the class of every pieces:
-        let test = new Pieces(2, scene, [6, 7]);
-        test.move(2, 2);
         //end of the creation
         return scene;
     }
     var scene = createScene();
+    //creating the class of every pieces:
+    let test = new table([
+        [1, [0, 2], [1, 2]],
+        [3, [0, 3], [1, 1]],
+        [6, [0,0]]
+    ], [[9, 9], [8, 8]], scene);
+    //juste pour obtenir le tableau et check que tout est ok
+    console.log(test);
     //ANIMATION
     scene.registerBeforeRender(function () {
-
+        //on verifie le positionnement des pieces physiques comparé à leur placement sur la grid:
+        for(x = 0; x < 10; ++x){
+            for(z = 0; z < 10; ++z){
+                if(test.grid[x][z] != undefined){
+                    let coord = test.grid[x][z].check()
+                    if(coord != 0){
+                        //move the piece because not in the good position:
+                        if(coord[0] > 0) grid[x][z].physicalPiece.position.x+=0.1;
+                        else if(coord[0] < 0) grid[x][z].physicalPiece.position.x-=0.1
+                        if(coord[1] > 0) grid[x][z].physicalPiece.position.z+=0.1;
+                        else if(coord[1] < 0) grid[x][z].physicalPiece.position.z-=0.1
+                    }
+                }
+            }
+        }
     });
 
     engine.runRenderLoop(() => { 

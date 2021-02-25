@@ -69,6 +69,7 @@ app.get("/disconnect/", (req, res) => {
   res.redirect("/");
 });
 app.get("/scores/", appRequest.sendScores);
+app.get("/profile/", appRequest.sendProfile);
 
 // POST
 app.post("/", jsonParser, appRequest.connectAccount);

@@ -3,12 +3,15 @@ const fs = require("fs");
 const { body, validationResult, query } = require("express-validator");
 const sha256 = require("js-sha256").sha256;
 const db = require("./query").database;
+const toast = require("./toasts");
 
+
+//Module
 let AppRequest = (function () {
   let sendHomeCall = (req, res) => {
     let fileSend = fs.readFileSync("front/html/head.html");
     // Check if the player is connected to change the navbar or not
-    console.log(req.session.username);
+    //console.log(req.session.username); //DEBUG
     if (!req.session.username)
       fileSend += fs.readFileSync("front/html/login.html");
     else {
@@ -20,18 +23,43 @@ let AppRequest = (function () {
     res.send(fileSend);
   };
 
+  //===============================================================================
+
   let sendScoresCall = (req, res) => {
     let fileSend = fs.readFileSync("front/html/head.html");
       // Check if the player is connected to change the navbar or not
-    console.log(req.session.username);
+    //console.log(req.session.username); // DEBUG
     if (!req.session.username)
       fileSend += fs.readFileSync("front/html/login.html");
     else fileSend += fs.readFileSync("front/html/logged.html");
     fileSend += fs.readFileSync("front/html/scores.html");
+    //TODO update scores ?
     fileSend += fs.readFileSync("front/html/footer.html");
     res.send(fileSend);
   };
 
+  //===============================================================================
+
+  let sendProfileCall = (req, res) => {
+    let fileSend = fs.readFileSync("front/html/head.html");
+    if (!req.session.username) {
+      //Redirect to the home page + error message
+      //Home page
+      fileSend += fs.readFileSync("front/html/login.html");
+      fileSend += fs.readFileSync("front/html/index.html");
+      //Error message
+      fileSend += toast.error("Please login before accessing your profile...");
+    } else {
+      //Load the profile
+      fileSend += fs.readFileSync("front/html/logged.html");
+      fileSend += fs.readFileSync("front/html/profile.html");
+    }
+    
+    fileSend += fs.readFileSync("front/html/footer.html");
+    res.send(fileSend);
+  };
+
+  //===============================================================================
 
   let connectAccountCall = (req, res) => {
     const errors = validationResult(req);
@@ -73,6 +101,8 @@ let AppRequest = (function () {
       }
     }
   };
+
+  //===============================================================================
 
   let registerAccountCall = (req, res) => {
     const errors = validationResult(req);
@@ -136,11 +166,14 @@ let AppRequest = (function () {
     }
   };
 
+
+  //Object to return
   return {
     sendHome: (req, res) => sendHomeCall(req, res),
     connectAccount: (req, res) => connectAccountCall(req, res),
     registerAccount: (req, res) => registerAccountCall(req, res),
     sendScores: (req, res) => sendScoresCall(req, res),
+    sendProfile: (req, res) => sendProfileCall(req, res),
   };
 })();
 

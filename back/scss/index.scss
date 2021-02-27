@@ -3,3 +3,14 @@ $background: pink;
 body {
     background-color: $background;
 }
+
+img#logo {
+    height: 70px;
+    width: 200px;
+    margin: 0px;
+    padding: 0px;
+}
+
+header.navbar {
+    padding: 0px;
+}

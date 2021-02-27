@@ -13,7 +13,8 @@
     <!-- babylon -->
     <script src="https://cdn.babylonjs.com/babylon.max.js"></script>
     <!-- bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     <!-- favicon -->
     <link rel="apple-touch-icon" sizes="57x57" href="../img/favicon/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="../img/favicon/apple-icon-60x60.png">
@@ -33,24 +34,25 @@
     <meta name="msapplication-TileImage" content="../img/favicon/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
 </head>
+
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#">LOGO ICI ? Stratego Online</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                    <div class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <a class="nav-link active" href="https://localhost:4200/">Home</a>
-                        <a class="nav-link" href="https://localhost:4200/scores/">Scores</a>
-                        <a class="nav-link" href="https://localhost:4200/rules/" aria-disabled="true">Rules</a>
-                    </div>
-                    <div class="d-flex">
-                        <button type="button" id="connectButton" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#connectModal">Connect</button>
-                    </div>
+    <header class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <img src="../img/logoTest2.png" alt="LOGO" id="logo" />
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <a id="homeLink" class="nav-link active" href="https://localhost:4200/">Home</a>
+                    <a id="scoresLink" class="nav-link" href="https://localhost:4200/scores/">Scores</a>
+                    <a id="rulesLink" class="nav-link" href="https://localhost:4200/rules/" aria-disabled="true">Rules</a>
+                </div>
+                <div class="d-flex">
+                    <button type="button" id="connectButton" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#connectModal">Connect</button>
                 </div>
             </div>
-        </nav>
+        </div>
     </header>

@@ -1,3 +1,8 @@
+/**
+ * @file appRequest.js
+ * @namespace AppRequest
+ */
+
 //Requires
 const fs = require("fs");
 const { body, validationResult, query } = require("express-validator");
@@ -6,8 +11,17 @@ const db = require("./query").database;
 const toast = require("./toasts");
 
 
-//Module
+/**
+ * @module AppRequest
+ * Used to process the POST and GET requests from the express app in index.js
+ */
 let AppRequest = (function () {
+  /**
+   * @function AppRequest.sendHome
+   * @param {Object} client request
+   * @param {Object} server response
+   * GET request handler for the site's main page
+   */
   let sendHomeCall = (req, res) => {
     let fileSend = fs.readFileSync("front/html/head.html");
     // Check if the player is connected to change the navbar or not
@@ -31,7 +45,11 @@ let AppRequest = (function () {
     //console.log(req.session.username); // DEBUG
     if (!req.session.username)
       fileSend += fs.readFileSync("front/html/login.html");
-    else fileSend += fs.readFileSync("front/html/logged.html");
+    else {
+      fileSend += fs.readFileSync("front/html/logged.html");
+      fileSend += '<script>document.getElementById("connectButton").innerText = "'+ req.session.username +'";document.getElementById("connectModalLabel").innerText="'+req.session.username+'";</script>';
+    }
+    fileSend += `<script>document.getElementById("homeLink").classList.remove("active");document.getElementById("scoresLink").classList.add("active");</script>`;
     fileSend += fs.readFileSync("front/html/scores.html");
     //TODO update scores ?
     fileSend += fs.readFileSync("front/html/footer.html");
@@ -44,27 +62,50 @@ let AppRequest = (function () {
     let fileSend = fs.readFileSync("front/html/head.html");
     if (!req.session.username) {
       //Redirect to the home page + error message
-      //Home page
-      fileSend += fs.readFileSync("front/html/login.html");
-      fileSend += fs.readFileSync("front/html/index.html");
       //Error message
-      fileSend += toast.error("Please login before accessing your profile...");
+      //TODO FIX message not displayed => add an arg to the session ? like an error code ?
+      //fileSend += toast.error("Please login before accessing your profile...");
+      res.redirect("/");
     } else {
       //Load the profile
       fileSend += fs.readFileSync("front/html/logged.html");
+      fileSend += '<script>document.getElementById("connectButton").innerText = "'+ req.session.username +'";document.getElementById("connectModalLabel").innerText="'+req.session.username+'";</script>';
+      fileSend += `<script>document.getElementById("homeLink").classList.remove("active");</script>`;
+      
       fileSend += fs.readFileSync("front/html/profile.html");
+      //Fill the table with session values
+      fileSend += `<script>document.getElementById("usernameToInsert").innerText = "${req.session.username}";`;
+      fileSend += `document.getElementById("emailToInsert").innerText = "${req.session.login}";</script>`;
+
+      fileSend += fs.readFileSync("front/html/footer.html");
+      res.send(fileSend);
     }
-    
-    fileSend += fs.readFileSync("front/html/footer.html");
-    res.send(fileSend);
   };
 
   //===============================================================================
 
+  let sendRulesCall = (req, res) => {
+    let fileSend = fs.readFileSync("front/html/head.html");
+    // Check if the player is connected to change the navbar or not
+    //console.log(req.session.username); //DEBUG
+    if (!req.session.username)
+      fileSend += fs.readFileSync("front/html/login.html");
+    else {
+      fileSend += fs.readFileSync("front/html/logged.html");
+      fileSend += '<script>document.getElementById("connectButton").innerText = "'+ req.session.username +'";document.getElementById("connectModalLabel").innerText="'+req.session.username+'";</script>';
+    }
+    fileSend += `<script>document.getElementById("homeLink").classList.remove("active");document.getElementById("rulesLink").classList.add("active");</script>`;
+    fileSend += fs.readFileSync("front/html/rules.html");
+    fileSend += fs.readFileSync("front/html/footer.html");
+    res.send(fileSend);
+  };
+
+//===============================================================================
+
   let connectAccountCall = (req, res) => {
     const errors = validationResult(req);
 
-    if (!errors.isEmpty()) {
+    if (!errors.isEmpty() || req.body.email === undefined || req.body.password === undefined) {
       console.log(errors);
       return res.status(400).json({ errors: errors.array() });
     } else {
@@ -81,10 +122,11 @@ let AppRequest = (function () {
         /[a-z]/.test(passwordChecked)
       ) {
         // Check if the user exists and output his username
-        db.login(emailChecked, sha256(passwordChecked), (username) => {
-          if (username !== undefined) {
+        db.login(emailChecked, sha256(passwordChecked), (result) => {
+          if (result !== undefined) {
             //Connection successful
-            req.session.username = username;
+            req.session.username = result.username;
+            req.session.login = result.login;
           } else {
             //Connection unsuccessful
             //TODO Display an error message to the user
@@ -92,12 +134,12 @@ let AppRequest = (function () {
           }
 
           req.session.save();
-          res.redirect(req.get("referer"));
+          res.redirect(req.get("referer"));//Redirects to the current page
         });
       } else {
         //TODO Display an error message to the user
         console.log("Wrong logins credentials...");
-        res.redirect(req.get("referer"));
+        res.redirect(req.get("referer"));//Redirects to the current page
       }
     }
   };
@@ -140,8 +182,9 @@ let AppRequest = (function () {
               usernameChecked,
               (affectedRows) => {
                 if (affectedRows === 1) {
-                  //User addition successful
+                  //User addition successful -> fill the session values
                   req.session.username = usernameChecked;
+                  req.session.login = emailChecked;
                 } else {
                   //User addition unsuccessful
                   console.log("Error while adding an user to the DB...");
@@ -166,14 +209,46 @@ let AppRequest = (function () {
     }
   };
 
+  //===============================================================================
+
+  let deleteAccountCall = (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty() || req.body.login === undefined || req.body.username === undefined) {
+      console.log(errors);
+      return res.status(400).json({ errors: errors.array() });
+    } else {
+      //Get XMLHttpRequests values
+      if (escape(req.body.login.trim()) == req.session.login && escape(req.body.username.trim()) == req.session.username) {
+        //If the XHR values are correct => preform the query
+        db.delete(req.session.login, req.session.username, (affectedRows) => {
+          if (affectedRows === 1) {
+            //TODO Display a deletion successful message
+          } else {
+            //User addition unsuccessful
+            //TODO Display an error message to the user
+            console.log("Error while deleting an user to the DB...");
+          }
+
+          req.session.destroy();
+          res.redirect("/");
+        });
+      } else {
+        //TODO Display an error message to the user
+        console.log("Error while sending the request to the server...");
+      }
+    }
+  };
 
   //Object to return
   return {
     sendHome: (req, res) => sendHomeCall(req, res),
     connectAccount: (req, res) => connectAccountCall(req, res),
     registerAccount: (req, res) => registerAccountCall(req, res),
+    deleteAccount: (req, res) => deleteAccountCall(req, res),
     sendScores: (req, res) => sendScoresCall(req, res),
     sendProfile: (req, res) => sendProfileCall(req, res),
+    sendRules: (req, res) => sendRulesCall(req, res),
   };
 })();
 

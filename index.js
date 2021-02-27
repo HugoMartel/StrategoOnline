@@ -1,3 +1,10 @@
+/**
+ * @file index.js
+ * @author Stratego Online
+ * @date 2021
+ * Main page of the project, start the webserver by executing it
+ */
+
 // Setup requires and https keys & certificates
 const express = require("express");
 const app = express();
@@ -60,7 +67,7 @@ app.use(session);
 app.get("/", appRequest.sendHome);
 app.get("/register/", (req, res) => {
   let fileSend = fs.readFileSync("front/html/head.html");
-  fileSend += fs.readFileSync("front/html/register.html")
+  fileSend += fs.readFileSync("front/html/register.html");
   res.send(fileSend);
 });
 app.get("/disconnect/", (req, res) => {
@@ -70,10 +77,12 @@ app.get("/disconnect/", (req, res) => {
 });
 app.get("/scores/", appRequest.sendScores);
 app.get("/profile/", appRequest.sendProfile);
+app.get("/rules/", appRequest.sendRules);
 
 // POST
 app.post("/", jsonParser, appRequest.connectAccount);
 app.post("/register/", jsonParser, appRequest.registerAccount);
+app.post("/profile/", jsonParser, appRequest.deleteAccount);
 
 // Setup logs for the server
 io.on("connection", (socket) => {

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>index.js - Documentation</title>
+    <title>front/js/modules/request.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,7 +29,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">index.js</h1>
+    <h1 class="page-title">front/js/modules/request.js</h1>
     
 
     
@@ -40,108 +40,145 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * @file Main page of the project, start the webserver by executing it
- * @author Stratego Online
+ * @file Send XMLHTTPRequests to the server to get results from the database
  * @version 1.0
+ * @author Stratego Online
  */
 
-// Setup requires and https keys &amp; certificates
-const express = require("express");
-const app = express();
-const fs = require("fs");
-const https = require("https");
-const appRequest = require("./back/modules/appRequests");
+/**
+ * POST and GET requests sent by users
+ * @type {Object}
+ * @return {Object} functions to use with the Request module
+ * @name Request
+ * @namespace Request
+ */
+let Request = (function () {
+  /**
+   * @function Request.sendLogin
+   * @param {string} email
+   * user's email used to login
+   * @param {string} password
+   * user's password used to login
+   * @returns {} /
+   * @description Login XMLHTTPRequest to send to the express app, the XHR content is sent as a POST request
+   */
+  function sendLoginXHR(email, password) {
+    //TODO display an error
+    if (email === undefined || password === undefined) return;
 
-// Just for the readability of the console logs on the server side
-const colors = require("colors");
+    let XHR = new XMLHttpRequest();
+    // XHR ERROR HANDLING
+    XHR.addEventListener("load", () => {
+      //console.log(`Data loaded: ${XHR.status} ${XHR.response}`);
+    });
+    XHR.addEventListener("error", () => {
+      //console.log("An error occurred while sending the request...");
+    });
+    XHR.addEventListener("abort", () => {
+      //console.log("The transfer has been canceled by the user.");
+    });
 
-const hsKey = fs.readFileSync("key.pem").toString();
-const hsCert = fs.readFileSync("cert.pem").toString();
+    XHR.open("POST", "/");
+    XHR.setRequestHeader("Content-Type", "application/json");
+    XHR.responseType = "json";
+    XHR.send(JSON.stringify({ email: email, password: password }));
+  }
 
-// Setup server and socket
-/** @constant {Object} server https server used to host the project*/
-const server = https.createServer({ key: hsKey, cert: hsCert }, app);
-/** @constant {Object} io socket module used to identify clients*/
-const io = require("socket.io")(server, {});
-/** @constant {number} port port used to host the server on*/
-const port = 4200;
+  //======================================================================================
+  /**
+   * @function Request.sendRegister
+   * @param {string} email
+   * user's email to set
+   * @param {string} password
+   * user's password to set
+   * @param {string} password2
+   * test to verify the user hasn't made a mistake while writing his password
+   * @param {string} username
+   * user's username to display in game and in his profile
+   * @returns {} /
+   * @description Register XMLHTTPRequest to send to the express app, the XHR content is sent as a POST request
+   */
+  function sendRegisterXHR(email, password, password2, username) {
+    //TODO display an error
+    if (
+      password != password2 ||
+      email === undefined ||
+      password === undefined ||
+      username === undefined
+    )
+      return;
 
+    let XHR = new XMLHttpRequest();
+    // XHR ERROR HANDLING
+    XHR.addEventListener("load", () => {
+      //console.log(`Data loaded: ${XHR.status} ${XHR.response}`);
+    });
+    XHR.addEventListener("error", () => {
+      //console.log("An error occurred while sending the request...");
+    });
+    XHR.addEventListener("abort", () => {
+      //console.log("The transfer has been canceled by the user.");
+    });
 
-// Session setup
-const session = require("express-session")({
-  //! DON'T FORGET TO CHANGE THE SECRET -> sha256(secretSECRET)
-  secret: "ed4d86e9808c052ce883c8ef98da9786eb8b608a798cffb2814cdf21a20026b8",
-  resave: true,
-  saveUninitialized: true,
-  cookie: {
-    maxAge: 2 * 60 * 60 * 1000,
-    secure: true,
-  },
-});
+    XHR.open("POST", "/");
+    XHR.setRequestHeader("Content-Type", "application/json");
+    XHR.responseType = "json";
+    XHR.send(
+      JSON.stringify({
+        email: email,
+        password: password,
+        username: username,
+        password2: password2,
+      })
+    );
+  }
 
-// App params
-app.set("trust proxy", 1);
+  //======================================================================================
+  /**
+   * @function Request.sendDelete
+   * @param {string} email
+   * user's email to find the user to delete in the database
+   * @param {string} username
+   * using the email would be fine since it is supposed to be unique but adding the username is a security
+   * @returns {} /
+   * @description Delete XMLHTTPRequest to send to the express app, the XHR content is sent as a POST request
+   */
+  function sendDeleteXHR(email, username) {
+    //The email would be enough to delete an account since it is unique but we also use the username just to be sure
+    //TODO display an error
+    if (email === undefined || username === undefined) return;
 
-// Request handleling requires
-const sharedsession = require("express-socket.io-session");
-const bodyParser = require("body-parser");
-const jsonParser = bodyParser.json();
-const urlencodedParser = bodyParser.urlencoded({ extended: false });
+    let XHR = new XMLHttpRequest();
+    // XHR ERROR HANDLING
+    XHR.addEventListener("load", () => {
+      //console.log(`Data loaded: ${XHR.status} ${XHR.response}`);
+    });
+    XHR.addEventListener("error", () => {
+      //console.log("An error occurred while sending the request...");
+    });
+    XHR.addEventListener("abort", () => {
+      //console.log("The transfer has been canceled by the user.");
+    });
 
-// Configure socket io with session middleware
-io.use(
-  sharedsession(session, {
-    // Save session if it is changed
-    autoSave: true,
-  })
-);
+    XHR.open("POST", "/profile/");
+    XHR.setRequestHeader("Content-Type", "application/json");
+    XHR.responseType = "json";
+    XHR.send(JSON.stringify({ login: email, username: username }));
+  }
 
-// Router
-app.use(express.static(__dirname + "/front/"));
-app.use(jsonParser);
-app.use(urlencodedParser);
-app.use(session);
-
-
-/*--------------------*\
-|-    REQUESTS        -|
-\*--------------------*/
-// GET
-app.get("/", appRequest.sendHome);
-app.get("/register/", (req, res) => {
-  let fileSend = fs.readFileSync("front/html/head.html");
-  fileSend += fs.readFileSync("front/html/login.html");
-  fileSend += fs.readFileSync("front/html/register.html");
-  res.send(fileSend);
-});
-app.get("/disconnect/", (req, res) => {
-  // Destroy the session and reload
-  req.session.destroy();
-  res.redirect("/");
-});
-app.get("/scores/", appRequest.sendScores);
-app.get("/profile/", appRequest.sendProfile);
-app.get("/rules/", appRequest.sendRules);
-
-// POST
-app.post("/", jsonParser, appRequest.connectAccount);
-app.post("/register/", jsonParser, appRequest.registerAccount);
-app.post("/profile/", jsonParser, appRequest.deleteAccount);
-
-// Setup logs for the server
-io.on("connection", (socket) => {
-
-  console.log("> ".bold + socket.id.green + " connected");
-
-  socket.on("disconnect", () => {
-    console.log("&lt; ".bold + socket.id.red + " disconnected");
-  });
-});
-
-// Make the server use port 4200
-server.listen(4200, () => {
-  console.log("Server is up and running on https://localhost:" + port + "/");
-});
+  //return Object
+  return {
+    sendLogin(email, password) {
+      sendLoginXHR(email, password);
+    },
+    sendRegister(email, password, password2, username) {
+      sendRegisterXHR(email, password, password2, username);
+    },
+    sendDelete(email, username) {
+      sendDeleteXHR(email, username);
+    },
+  };
+})();
 </code></pre>
         </article>
     </section>

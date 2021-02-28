@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>index.js - Documentation</title>
+    <title>Toast - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,122 +29,416 @@
 
 <div id="main">
     
-    <h1 class="page-title">index.js</h1>
+    <h1 class="page-title">Toast</h1>
     
 
     
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>/**
- * @file Main page of the project, start the webserver by executing it
- * @author Stratego Online
- * @version 1.0
- */
+        <h2>
+        Toast
+        </h2>
+        
+    
+</header>
 
-// Setup requires and https keys &amp; certificates
-const express = require("express");
-const app = express();
-const fs = require("fs");
-const https = require("https");
-const appRequest = require("./back/modules/appRequests");
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>Module to insert notification snippets</p></div>
+        
 
-// Just for the readability of the console logs on the server side
-const colors = require("colors");
-
-const hsKey = fs.readFileSync("key.pem").toString();
-const hsCert = fs.readFileSync("cert.pem").toString();
-
-// Setup server and socket
-/** @constant {Object} server https server used to host the project*/
-const server = https.createServer({ key: hsKey, cert: hsCert }, app);
-/** @constant {Object} io socket module used to identify clients*/
-const io = require("socket.io")(server, {});
-/** @constant {number} port port used to host the server on*/
-const port = 4200;
+        
 
 
-// Session setup
-const session = require("express-session")({
-  //! DON'T FORGET TO CHANGE THE SECRET -> sha256(secretSECRET)
-  secret: "ed4d86e9808c052ce883c8ef98da9786eb8b608a798cffb2814cdf21a20026b8",
-  resave: true,
-  saveUninitialized: true,
-  cookie: {
-    maxAge: 2 * 60 * 60 * 1000,
-    secure: true,
-  },
-});
+<dl class="details">
 
-// App params
-app.set("trust proxy", 1);
+    
 
-// Request handleling requires
-const sharedsession = require("express-socket.io-session");
-const bodyParser = require("body-parser");
-const jsonParser = bodyParser.json();
-const urlencodedParser = bodyParser.urlencoded({ extended: false });
+    
 
-// Configure socket io with session middleware
-io.use(
-  sharedsession(session, {
-    // Save session if it is changed
-    autoSave: true,
-  })
-);
+    
 
-// Router
-app.use(express.static(__dirname + "/front/"));
-app.use(jsonParser);
-app.use(urlencodedParser);
-app.use(session);
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="back_modules_toasts.js.html">back/modules/toasts.js</a>, <a href="back_modules_toasts.js.html#line7">line 7</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
 
 
-/*--------------------*\
-|-    REQUESTS        -|
-\*--------------------*/
-// GET
-app.get("/", appRequest.sendHome);
-app.get("/register/", (req, res) => {
-  let fileSend = fs.readFileSync("front/html/head.html");
-  fileSend += fs.readFileSync("front/html/login.html");
-  fileSend += fs.readFileSync("front/html/register.html");
-  res.send(fileSend);
-});
-app.get("/disconnect/", (req, res) => {
-  // Destroy the session and reload
-  req.session.destroy();
-  res.redirect("/");
-});
-app.get("/scores/", appRequest.sendScores);
-app.get("/profile/", appRequest.sendProfile);
-app.get("/rules/", appRequest.sendRules);
+        
+    
+    </div>
 
-// POST
-app.post("/", jsonParser, appRequest.connectAccount);
-app.post("/register/", jsonParser, appRequest.registerAccount);
-app.post("/profile/", jsonParser, appRequest.deleteAccount);
+    
 
-// Setup logs for the server
-io.on("connection", (socket) => {
+    
 
-  console.log("> ".bold + socket.id.green + " connected");
+    
 
-  socket.on("disconnect", () => {
-    console.log("&lt; ".bold + socket.id.red + " disconnected");
-  });
-});
+     
 
-// Make the server use port 4200
-server.listen(4200, () => {
-  console.log("Server is up and running on https://localhost:" + port + "/");
-});
-</code></pre>
-        </article>
-    </section>
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<div class="section-members">
+<h4 class="name" id=".duration"><span class="type-signature">(static, constant) </span>duration<span class="type-signature"> :string</span></h4>
+
+
+
+
+<div class="description">
+    <p>Notification's JSON duration object to add to display it correctly</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="back_modules_toasts.js.html">back/modules/toasts.js</a>, <a href="back_modules_toasts.js.html#line16">line 16</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><code>string</code></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</div>
+
+        
+            
+<div class="section-members">
+<h4 class="name" id=".position"><span class="type-signature">(static, constant) </span>position<span class="type-signature"> :string</span></h4>
+
+
+
+
+<div class="description">
+    <p>Notification's JSON position object to add to display it correctly</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="back_modules_toasts.js.html">back/modules/toasts.js</a>, <a href="back_modules_toasts.js.html#line18">line 18</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><code>string</code></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</div>
+
+        
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id=".error"><span class="type-signature">(static) </span>error<span class="signature">(message)</span><span class="type-signature"> &rarr; {string}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Generates the HTML code to insert to the page to display an error notification with a given message</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="back_modules_toasts.js.html">back/modules/toasts.js</a>, <a href="back_modules_toasts.js.html#line23">line 23</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>message</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>string</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>message to add to the notification</p>
+                
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+<dl class="param-type">
+    <dt>
+        Type:
+    </dt>
+    <dd>
+        
+<span class="param-type"><code>string</code></span>
+
+
+    </dd>
+</dl>
+
+
+<div class="param-desc">
+    <p>HTML <script> to display the notification</p>
+</div>
+
+    
+</div>
+
+
+
+</div>
+        
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 

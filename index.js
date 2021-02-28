@@ -18,8 +18,11 @@ const hsKey = fs.readFileSync("key.pem").toString();
 const hsCert = fs.readFileSync("cert.pem").toString();
 
 // Setup server and socket
+/** @constant {Object} server https server used to host the project*/
 const server = https.createServer({ key: hsKey, cert: hsCert }, app);
+/** @constant {Object} io socket module used to identify clients*/
 const io = require("socket.io")(server, {});
+/** @constant {number} port port used to host the server on*/
 const port = 4200;
 
 
@@ -66,6 +69,7 @@ app.use(session);
 app.get("/", appRequest.sendHome);
 app.get("/register/", (req, res) => {
   let fileSend = fs.readFileSync("front/html/head.html");
+  fileSend += fs.readFileSync("front/html/login.html");
   fileSend += fs.readFileSync("front/html/register.html");
   res.send(fileSend);
 });

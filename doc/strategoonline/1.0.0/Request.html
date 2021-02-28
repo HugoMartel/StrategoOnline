@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>AppRequest - Documentation</title>
+    <title>Request - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,7 +29,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">AppRequest</h1>
+    <h1 class="page-title">Request</h1>
     
 
     
@@ -42,7 +42,7 @@
 <header>
     
         <h2>
-        AppRequest
+        Request
         </h2>
         
     
@@ -52,7 +52,7 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Process the POST and GET requests from the express app in index.js</p></div>
+            <div class="description"><p>POST and GET requests sent by users</p></div>
         
 
         
@@ -87,7 +87,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="back_modules_appRequests.js.html">back/modules/appRequests.js</a>, <a href="back_modules_appRequests.js.html#line14">line 14</a>
+        <a href="front_js_modules_request.js.html">front/js/modules/request.js</a>, <a href="front_js_modules_request.js.html#line7">line 7</a>
     </li></ul></dd>
     
 
@@ -124,14 +124,14 @@
 
     
 
-    <h4 class="name" id=".connectAccount"><span class="type-signature">(static) </span>connectAccount<span class="signature">(request, response)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".sendDelete"><span class="type-signature">(static) </span>sendDelete<span class="signature">(email, username)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>POST request handler for an user connection to his account</p>
+    <p>Delete XMLHTTPRequest to send to the express app, the XHR content is sent as a POST request</p>
 </div>
 
 
@@ -167,7 +167,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="back_modules_appRequests.js.html">back/modules/appRequests.js</a>, <a href="back_modules_appRequests.js.html#line148">line 148</a>
+        <a href="front_js_modules_request.js.html">front/js/modules/request.js</a>, <a href="front_js_modules_request.js.html#line96">line 96</a>
     </li></ul></dd>
     
 
@@ -211,13 +211,13 @@
 
         <tr>
             
-                <td class="name"><code>request</code></td>
+                <td class="name"><code>email</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><code>Object</code></span>
+<span class="param-type"><code>string</code></span>
 
 
             
@@ -228,7 +228,7 @@
             
 
             <td class="description last">
-                
+                <p>user's email to find the user to delete in the database</p>
                 
             </td>
         </tr>
@@ -237,13 +237,13 @@
 
         <tr>
             
-                <td class="name"><code>response</code></td>
+                <td class="name"><code>username</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><code>Object</code></span>
+<span class="param-type"><code>string</code></span>
 
 
             
@@ -254,7 +254,7 @@
             
 
             <td class="description last">
-                
+                <p>using the email would be fine since it is supposed to be unique but adding the username is a security</p>
                 
             </td>
         </tr>
@@ -298,14 +298,14 @@
 
     
 
-    <h4 class="name" id=".deleteAccount"><span class="type-signature">(static) </span>deleteAccount<span class="signature">(request, response)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".sendLogin"><span class="type-signature">(static) </span>sendLogin<span class="signature">(email, password)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>POST request handler for an user's account deletion</p>
+    <p>Login XMLHTTPRequest to send to the express app, the XHR content is sent as a POST request</p>
 </div>
 
 
@@ -341,7 +341,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="back_modules_appRequests.js.html">back/modules/appRequests.js</a>, <a href="back_modules_appRequests.js.html#line277">line 277</a>
+        <a href="front_js_modules_request.js.html">front/js/modules/request.js</a>, <a href="front_js_modules_request.js.html#line15">line 15</a>
     </li></ul></dd>
     
 
@@ -385,13 +385,13 @@
 
         <tr>
             
-                <td class="name"><code>request</code></td>
+                <td class="name"><code>email</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><code>Object</code></span>
+<span class="param-type"><code>string</code></span>
 
 
             
@@ -402,7 +402,7 @@
             
 
             <td class="description last">
-                
+                <p>user's email used to login</p>
                 
             </td>
         </tr>
@@ -411,13 +411,13 @@
 
         <tr>
             
-                <td class="name"><code>response</code></td>
+                <td class="name"><code>password</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><code>Object</code></span>
+<span class="param-type"><code>string</code></span>
 
 
             
@@ -428,7 +428,7 @@
             
 
             <td class="description last">
-                
+                <p>user's password used to login</p>
                 
             </td>
         </tr>
@@ -472,14 +472,14 @@
 
     
 
-    <h4 class="name" id=".registerAccount"><span class="type-signature">(static) </span>registerAccount<span class="signature">(request, response)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".sendRegister"><span class="type-signature">(static) </span>sendRegister<span class="signature">(email, password, password2, username)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>POST request handler for an user registration to the site</p>
+    <p>Register XMLHTTPRequest to send to the express app, the XHR content is sent as a POST request</p>
 </div>
 
 
@@ -515,7 +515,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="back_modules_appRequests.js.html">back/modules/appRequests.js</a>, <a href="back_modules_appRequests.js.html#line202">line 202</a>
+        <a href="front_js_modules_request.js.html">front/js/modules/request.js</a>, <a href="front_js_modules_request.js.html#line47">line 47</a>
     </li></ul></dd>
     
 
@@ -559,13 +559,13 @@
 
         <tr>
             
-                <td class="name"><code>request</code></td>
+                <td class="name"><code>email</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><code>Object</code></span>
+<span class="param-type"><code>string</code></span>
 
 
             
@@ -576,7 +576,7 @@
             
 
             <td class="description last">
-                
+                <p>user's email to set</p>
                 
             </td>
         </tr>
@@ -585,13 +585,13 @@
 
         <tr>
             
-                <td class="name"><code>response</code></td>
+                <td class="name"><code>password</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><code>Object</code></span>
+<span class="param-type"><code>string</code></span>
 
 
             
@@ -602,155 +602,7 @@
             
 
             <td class="description last">
-                
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="section-returns">
-<h5>Returns:</h5>
-
-        
-
-
-<div class="param-desc">
-    <p>/</p>
-</div>
-
-    
-</div>
-
-
-
-</div>
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id=".sendHome"><span class="type-signature">(static) </span>sendHome<span class="signature">(request, response)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>GET request handler for the site's main page</p>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="back_modules_appRequests.js.html">back/modules/appRequests.js</a>, <a href="back_modules_appRequests.js.html#line22">line 22</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>request</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>Object</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>user's request</p>
+                <p>user's password to set</p>
                 
             </td>
         </tr>
@@ -759,13 +611,13 @@
 
         <tr>
             
-                <td class="name"><code>response</code></td>
+                <td class="name"><code>password2</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><code>Object</code></span>
+<span class="param-type"><code>string</code></span>
 
 
             
@@ -776,155 +628,7 @@
             
 
             <td class="description last">
-                <p>server's response</p>
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="section-returns">
-<h5>Returns:</h5>
-
-        
-
-
-<div class="param-desc">
-    <p>/</p>
-</div>
-
-    
-</div>
-
-
-
-</div>
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id=".sendProfile"><span class="type-signature">(static) </span>sendProfile<span class="signature">(request, response)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>GET request handler for an user's profile page</p>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="back_modules_appRequests.js.html">back/modules/appRequests.js</a>, <a href="back_modules_appRequests.js.html#line82">line 82</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>request</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>Object</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                
+                <p>test to verify the user hasn't made a mistake while writing his password</p>
                 
             </td>
         </tr>
@@ -933,13 +637,13 @@
 
         <tr>
             
-                <td class="name"><code>response</code></td>
+                <td class="name"><code>username</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><code>Object</code></span>
+<span class="param-type"><code>string</code></span>
 
 
             
@@ -950,355 +654,7 @@
             
 
             <td class="description last">
-                
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="section-returns">
-<h5>Returns:</h5>
-
-        
-
-
-<div class="param-desc">
-    <p>/</p>
-</div>
-
-    
-</div>
-
-
-
-</div>
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id=".sendRules"><span class="type-signature">(static) </span>sendRules<span class="signature">(request, response)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>GET request handler for the site's rules page</p>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="back_modules_appRequests.js.html">back/modules/appRequests.js</a>, <a href="back_modules_appRequests.js.html#line119">line 119</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>request</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>Object</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                
-                
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>response</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>Object</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="section-returns">
-<h5>Returns:</h5>
-
-        
-
-
-<div class="param-desc">
-    <p>/</p>
-</div>
-
-    
-</div>
-
-
-
-</div>
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id=".sendScores"><span class="type-signature">(static) </span>sendScores<span class="signature">(request, response)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>GET request handler for the site's scores page</p>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="back_modules_appRequests.js.html">back/modules/appRequests.js</a>, <a href="back_modules_appRequests.js.html#line52">line 52</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>request</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>Object</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                
-                
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>response</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>Object</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                
+                <p>user's username to display in game and in his profile</p>
                 
             </td>
         </tr>

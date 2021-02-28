@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>AppRequest - Documentation</title>
+    <title>Database - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,7 +29,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">AppRequest</h1>
+    <h1 class="page-title">Database</h1>
     
 
     
@@ -42,7 +42,7 @@
 <header>
     
         <h2>
-        AppRequest
+        Database
         </h2>
         
     
@@ -52,7 +52,7 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Process the POST and GET requests from the express app in index.js</p></div>
+            <div class="description"><p>Module to handle database queries</p></div>
         
 
         
@@ -87,7 +87,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="back_modules_appRequests.js.html">back/modules/appRequests.js</a>, <a href="back_modules_appRequests.js.html#line14">line 14</a>
+        <a href="back_modules_query.js.html">back/modules/query.js</a>, <a href="back_modules_query.js.html#line7">line 7</a>
     </li></ul></dd>
     
 
@@ -114,6 +114,84 @@
     
 
     
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<div class="section-members">
+<h4 class="name" id=".mysql"><span class="type-signature">(static, constant) </span>mysql<span class="type-signature"> :Object</span></h4>
+
+
+
+
+<div class="description">
+    <p>Connection to the database, required to send queries to the mysql tables</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="back_modules_query.js.html">back/modules/query.js</a>, <a href="back_modules_query.js.html#line16">line 16</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><code>Object</code></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</div>
+
+        
+    
 
     
         <h3 class="subsection-title">Methods</h3>
@@ -124,14 +202,14 @@
 
     
 
-    <h4 class="name" id=".connectAccount"><span class="type-signature">(static) </span>connectAccount<span class="signature">(request, response)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".delete"><span class="type-signature">(static) </span>delete<span class="signature">(email, username, callback)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>POST request handler for an user connection to his account</p>
+    <p>Performs a DELETE query to remove an user from the database</p>
 </div>
 
 
@@ -167,7 +245,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="back_modules_appRequests.js.html">back/modules/appRequests.js</a>, <a href="back_modules_appRequests.js.html#line148">line 148</a>
+        <a href="back_modules_query.js.html">back/modules/query.js</a>, <a href="back_modules_query.js.html#line116">line 116</a>
     </li></ul></dd>
     
 
@@ -211,13 +289,13 @@
 
         <tr>
             
-                <td class="name"><code>request</code></td>
+                <td class="name"><code>email</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><code>Object</code></span>
+<span class="param-type"><code>string</code></span>
 
 
             
@@ -228,7 +306,7 @@
             
 
             <td class="description last">
-                
+                <p>email used to find an account to delete</p>
                 
             </td>
         </tr>
@@ -237,13 +315,13 @@
 
         <tr>
             
-                <td class="name"><code>response</code></td>
+                <td class="name"><code>username</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><code>Object</code></span>
+<span class="param-type"><code>string</code></span>
 
 
             
@@ -254,7 +332,33 @@
             
 
             <td class="description last">
+                <p>username used to find an account to delete</p>
                 
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>callback</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>function</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>callback function that needs the query's result to execute</p>
                 
             </td>
         </tr>
@@ -298,14 +402,14 @@
 
     
 
-    <h4 class="name" id=".deleteAccount"><span class="type-signature">(static) </span>deleteAccount<span class="signature">(request, response)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".find"><span class="type-signature">(static) </span>find<span class="signature">(email, callback)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>POST request handler for an user's account deletion</p>
+    <p>Performs a SELECT query to get an user's email and username from the database</p>
 </div>
 
 
@@ -341,7 +445,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="back_modules_appRequests.js.html">back/modules/appRequests.js</a>, <a href="back_modules_appRequests.js.html#line277">line 277</a>
+        <a href="back_modules_query.js.html">back/modules/query.js</a>, <a href="back_modules_query.js.html#line91">line 91</a>
     </li></ul></dd>
     
 
@@ -385,13 +489,13 @@
 
         <tr>
             
-                <td class="name"><code>request</code></td>
+                <td class="name"><code>email</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><code>Object</code></span>
+<span class="param-type"><code>string</code></span>
 
 
             
@@ -402,7 +506,7 @@
             
 
             <td class="description last">
-                
+                <p>email used to find an account</p>
                 
             </td>
         </tr>
@@ -411,13 +515,13 @@
 
         <tr>
             
-                <td class="name"><code>response</code></td>
+                <td class="name"><code>callback</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><code>Object</code></span>
+<span class="param-type"><code>function</code></span>
 
 
             
@@ -428,7 +532,7 @@
             
 
             <td class="description last">
-                
+                <p>callback function that needs the query's result to execute</p>
                 
             </td>
         </tr>
@@ -472,14 +576,14 @@
 
     
 
-    <h4 class="name" id=".registerAccount"><span class="type-signature">(static) </span>registerAccount<span class="signature">(request, response)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".login"><span class="type-signature">(static) </span>login<span class="signature">(email, password, callback)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>POST request handler for an user registration to the site</p>
+    <p>Performs a SELECT query to find an user in the database and get it's email and username</p>
 </div>
 
 
@@ -515,7 +619,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="back_modules_appRequests.js.html">back/modules/appRequests.js</a>, <a href="back_modules_appRequests.js.html#line202">line 202</a>
+        <a href="back_modules_query.js.html">back/modules/query.js</a>, <a href="back_modules_query.js.html#line36">line 36</a>
     </li></ul></dd>
     
 
@@ -559,13 +663,13 @@
 
         <tr>
             
-                <td class="name"><code>request</code></td>
+                <td class="name"><code>email</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><code>Object</code></span>
+<span class="param-type"><code>string</code></span>
 
 
             
@@ -576,7 +680,7 @@
             
 
             <td class="description last">
-                
+                <p>email used to login to an account</p>
                 
             </td>
         </tr>
@@ -585,13 +689,13 @@
 
         <tr>
             
-                <td class="name"><code>response</code></td>
+                <td class="name"><code>password</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><code>Object</code></span>
+<span class="param-type"><code>string</code></span>
 
 
             
@@ -602,7 +706,33 @@
             
 
             <td class="description last">
+                <p>password hash used to login to an account</p>
                 
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>callback</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>function</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>callback function that needs the query's result to execute</p>
                 
             </td>
         </tr>
@@ -646,14 +776,14 @@
 
     
 
-    <h4 class="name" id=".sendHome"><span class="type-signature">(static) </span>sendHome<span class="signature">(request, response)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".register"><span class="type-signature">(static) </span>register<span class="signature">(email, password, username, callback)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>GET request handler for the site's main page</p>
+    <p>Performs a INSERT query to add an user to the database</p>
 </div>
 
 
@@ -689,7 +819,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="back_modules_appRequests.js.html">back/modules/appRequests.js</a>, <a href="back_modules_appRequests.js.html#line22">line 22</a>
+        <a href="back_modules_query.js.html">back/modules/query.js</a>, <a href="back_modules_query.js.html#line62">line 62</a>
     </li></ul></dd>
     
 
@@ -733,13 +863,13 @@
 
         <tr>
             
-                <td class="name"><code>request</code></td>
+                <td class="name"><code>email</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><code>Object</code></span>
+<span class="param-type"><code>string</code></span>
 
 
             
@@ -750,7 +880,7 @@
             
 
             <td class="description last">
-                <p>user's request</p>
+                <p>email used to create an account</p>
                 
             </td>
         </tr>
@@ -759,13 +889,13 @@
 
         <tr>
             
-                <td class="name"><code>response</code></td>
+                <td class="name"><code>password</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><code>Object</code></span>
+<span class="param-type"><code>string</code></span>
 
 
             
@@ -776,155 +906,7 @@
             
 
             <td class="description last">
-                <p>server's response</p>
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="section-returns">
-<h5>Returns:</h5>
-
-        
-
-
-<div class="param-desc">
-    <p>/</p>
-</div>
-
-    
-</div>
-
-
-
-</div>
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id=".sendProfile"><span class="type-signature">(static) </span>sendProfile<span class="signature">(request, response)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>GET request handler for an user's profile page</p>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="back_modules_appRequests.js.html">back/modules/appRequests.js</a>, <a href="back_modules_appRequests.js.html#line82">line 82</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>request</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>Object</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                
+                <p>password hash used to create an account</p>
                 
             </td>
         </tr>
@@ -933,13 +915,13 @@
 
         <tr>
             
-                <td class="name"><code>response</code></td>
+                <td class="name"><code>username</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><code>Object</code></span>
+<span class="param-type"><code>string</code></span>
 
 
             
@@ -950,155 +932,7 @@
             
 
             <td class="description last">
-                
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="section-returns">
-<h5>Returns:</h5>
-
-        
-
-
-<div class="param-desc">
-    <p>/</p>
-</div>
-
-    
-</div>
-
-
-
-</div>
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id=".sendRules"><span class="type-signature">(static) </span>sendRules<span class="signature">(request, response)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>GET request handler for the site's rules page</p>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="back_modules_appRequests.js.html">back/modules/appRequests.js</a>, <a href="back_modules_appRequests.js.html#line119">line 119</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>request</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>Object</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                
+                <p>username used to create an account</p>
                 
             </td>
         </tr>
@@ -1107,13 +941,13 @@
 
         <tr>
             
-                <td class="name"><code>response</code></td>
+                <td class="name"><code>callback</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><code>Object</code></span>
+<span class="param-type"><code>function</code></span>
 
 
             
@@ -1124,181 +958,7 @@
             
 
             <td class="description last">
-                
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="section-returns">
-<h5>Returns:</h5>
-
-        
-
-
-<div class="param-desc">
-    <p>/</p>
-</div>
-
-    
-</div>
-
-
-
-</div>
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id=".sendScores"><span class="type-signature">(static) </span>sendScores<span class="signature">(request, response)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>GET request handler for the site's scores page</p>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="back_modules_appRequests.js.html">back/modules/appRequests.js</a>, <a href="back_modules_appRequests.js.html#line52">line 52</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>request</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>Object</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                
-                
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>response</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>Object</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                
+                <p>callback function that needs the query's result to execute</p>
                 
             </td>
         </tr>

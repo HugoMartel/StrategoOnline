@@ -25,8 +25,8 @@ let AppRequest = (function () {
    * user's request
    * @param {Object} response
    * server's response
-   * @returns {}
-   * GET request handler for the site's main page
+   * @returns {} /
+   * @description GET request handler for the site's main page
    */
   let sendHomeCall = (req, res) => {
     let fileSend = fs.readFileSync("front/html/head.html");
@@ -53,8 +53,8 @@ let AppRequest = (function () {
    * @function AppRequest.sendScores
    * @param {Object} request
    * @param {Object} response
-   * @returns {}
-   * GET request handler for the site's scores page
+   * @returns {} /
+   * @description GET request handler for the site's scores page
    */
   let sendScoresCall = (req, res) => {
     let fileSend = fs.readFileSync("front/html/head.html");
@@ -83,8 +83,8 @@ let AppRequest = (function () {
    * @function AppRequest.sendProfile
    * @param {Object} request
    * @param {Object} response
-   * @returns {}
-   * GET request handler for an user's profile page
+   * @returns {} /
+   * @description GET request handler for an user's profile page
   */
   let sendProfileCall = (req, res) => {
     let fileSend = fs.readFileSync("front/html/head.html");
@@ -120,8 +120,8 @@ let AppRequest = (function () {
    * @function AppRequest.sendRules
    * @param {Object} request
    * @param {Object} response
-   * @returns {}
-   * GET request handler for the site's rules page
+   * @returns {} /
+   * @description GET request handler for the site's rules page
    */
   let sendRulesCall = (req, res) => {
     let fileSend = fs.readFileSync("front/html/head.html");
@@ -149,8 +149,8 @@ let AppRequest = (function () {
    * @function AppRequest.connectAccount
    * @param {Object} request
    * @param {Object} response
-   * @returns {}
-   * POST request handler for an user connection to his account
+   * @returns {} /
+   * @description POST request handler for an user connection to his account
    */
   let connectAccountCall = (req, res) => {
     const errors = validationResult(req);
@@ -203,8 +203,8 @@ let AppRequest = (function () {
    * @function AppRequest.registerAccount
    * @param {Object} request
    * @param {Object} response
-   * @returns {}
-   * POST request handler for an user registration to the site
+   * @returns {} /
+   * @description POST request handler for an user registration to the site
    */
   let registerAccountCall = (req, res) => {
     const errors = validationResult(req);
@@ -278,8 +278,8 @@ let AppRequest = (function () {
    * @function AppRequest.deleteAccount
    * @param {Object} request
    * @param {Object} response
-   * @returns {}
-   * POST request handler for an user's account deletion
+   * @returns {} /
+   * @description POST request handler for an user's account deletion
    */
   let deleteAccountCall = (req, res) => {
     const errors = validationResult(req);

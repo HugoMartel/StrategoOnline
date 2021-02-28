@@ -1,6 +1,7 @@
 /**
  * @file appRequest.js
  * @namespace AppRequest
+ * Contains the module used to process the POST and GET requests from the express app in index.js
  */
 
 //Requires
@@ -38,7 +39,12 @@ let AppRequest = (function () {
   };
 
   //===============================================================================
-
+  /**
+   * @function AppRequest.sendScores
+   * @param {Object} client request
+   * @param {Object} server response
+   * GET request handler for the site's scores page
+   */
   let sendScoresCall = (req, res) => {
     let fileSend = fs.readFileSync("front/html/head.html");
       // Check if the player is connected to change the navbar or not
@@ -57,7 +63,12 @@ let AppRequest = (function () {
   };
 
   //===============================================================================
-
+  /**
+   * @function AppRequest.sendProfile
+   * @param {Object} client request
+   * @param {Object} server response
+   * GET request handler for an user's profile page
+   */
   let sendProfileCall = (req, res) => {
     let fileSend = fs.readFileSync("front/html/head.html");
     if (!req.session.username) {
@@ -83,7 +94,12 @@ let AppRequest = (function () {
   };
 
   //===============================================================================
-
+  /**
+   * @function AppRequest.sendRules
+   * @param {Object} client request
+   * @param {Object} server response
+   * GET request handler for the site's rules page
+   */
   let sendRulesCall = (req, res) => {
     let fileSend = fs.readFileSync("front/html/head.html");
     // Check if the player is connected to change the navbar or not
@@ -100,8 +116,13 @@ let AppRequest = (function () {
     res.send(fileSend);
   };
 
-//===============================================================================
-
+  //===============================================================================
+  /**
+   * @function AppRequest.connectAccount
+   * @param {Object} client request
+   * @param {Object} server response
+   * POST request handler for an user connection to his account
+   */
   let connectAccountCall = (req, res) => {
     const errors = validationResult(req);
 
@@ -145,7 +166,12 @@ let AppRequest = (function () {
   };
 
   //===============================================================================
-
+  /**
+   * @function AppRequest.registerAccount
+   * @param {Object} client request
+   * @param {Object} server response
+   * POST request handler for an user registration to the site
+   */
   let registerAccountCall = (req, res) => {
     const errors = validationResult(req);
 
@@ -210,7 +236,12 @@ let AppRequest = (function () {
   };
 
   //===============================================================================
-
+  /**
+   * @function AppRequest.deleteAccount
+   * @param {Object} client request
+   * @param {Object} server response
+   * POST request handler for an user's account deletion
+   */
   let deleteAccountCall = (req, res) => {
     const errors = validationResult(req);
 

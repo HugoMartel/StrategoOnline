@@ -1,6 +1,7 @@
 /**
  * @file Process the POST and GET requests from the express app in index.js
  * @version 1.0
+ * @author Stratego Online
  */
 
 //Requires
@@ -21,7 +22,9 @@ let AppRequest = (function () {
   /**
    * @function AppRequest.sendHome
    * @param {Object} request
+   * user's request
    * @param {Object} response
+   * server's response
    * @returns {}
    * GET request handler for the site's main page
    */

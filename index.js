@@ -1,8 +1,7 @@
 /**
- * @file index.js
+ * @file Main page of the project, start the webserver by executing it
  * @author Stratego Online
- * @date 2021
- * Main page of the project, start the webserver by executing it
+ * @version 1.0
  */
 
 // Setup requires and https keys & certificates

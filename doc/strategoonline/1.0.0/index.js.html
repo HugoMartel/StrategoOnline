@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>index.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Namespaces</li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="AppRequest.html">AppRequest</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="AppRequest.html#.connectAccount">connectAccount</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="AppRequest.html#.deleteAccount">deleteAccount</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="AppRequest.html#.registerAccount">registerAccount</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="AppRequest.html#.sendHome">sendHome</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="AppRequest.html#.sendProfile">sendProfile</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="AppRequest.html#.sendRules">sendRules</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="AppRequest.html#.sendScores">sendScores</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">index.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file index.js
+ * @author Stratego Online
+ * @date 2021
+ * Main page of the project, start the webserver by executing it
+ */
+
+// Setup requires and https keys &amp; certificates
+const express = require("express");
+const app = express();
+const fs = require("fs");
+const https = require("https");
+const appRequest = require("./back/modules/appRequests");
+
+// Just for the readability of the console logs on the server side
+const colors = require("colors");
+
+const hsKey = fs.readFileSync("key.pem").toString();
+const hsCert = fs.readFileSync("cert.pem").toString();
+
+// Setup server and socket
+const server = https.createServer({ key: hsKey, cert: hsCert }, app);
+const io = require("socket.io")(server, {});
+const port = 4200;
+
+
+// Session setup
+const session = require("express-session")({
+  //! DON'T FORGET TO CHANGE THE SECRET -> sha256(secretSECRET)
+  secret: "ed4d86e9808c052ce883c8ef98da9786eb8b608a798cffb2814cdf21a20026b8",
+  resave: true,
+  saveUninitialized: true,
+  cookie: {
+    maxAge: 2 * 60 * 60 * 1000,
+    secure: true,
+  },
+});
+
+// App params
+app.set("trust proxy", 1);
+
+// Request handleling requires
+const sharedsession = require("express-socket.io-session");
+const bodyParser = require("body-parser");
+const jsonParser = bodyParser.json();
+const urlencodedParser = bodyParser.urlencoded({ extended: false });
+
+// Configure socket io with session middleware
+io.use(
+  sharedsession(session, {
+    // Save session if it is changed
+    autoSave: true,
+  })
+);
+
+// Router
+app.use(express.static(__dirname + "/front/"));
+app.use(jsonParser);
+app.use(urlencodedParser);
+app.use(session);
+
+
+/*--------------------*\
+|-    REQUESTS        -|
+\*--------------------*/
+// GET
+app.get("/", appRequest.sendHome);
+app.get("/register/", (req, res) => {
+  let fileSend = fs.readFileSync("front/html/head.html");
+  fileSend += fs.readFileSync("front/html/register.html");
+  res.send(fileSend);
+});
+app.get("/disconnect/", (req, res) => {
+  // Destroy the session and reload
+  req.session.destroy();
+  res.redirect("/");
+});
+app.get("/scores/", appRequest.sendScores);
+app.get("/profile/", appRequest.sendProfile);
+app.get("/rules/", appRequest.sendRules);
+
+// POST
+app.post("/", jsonParser, appRequest.connectAccount);
+app.post("/register/", jsonParser, appRequest.registerAccount);
+app.post("/profile/", jsonParser, appRequest.deleteAccount);
+
+// Setup logs for the server
+io.on("connection", (socket) => {
+
+  console.log("> ".bold + socket.id.green + " connected");
+
+  socket.on("disconnect", () => {
+    console.log("&lt; ".bold + socket.id.red + " disconnected");
+  });
+});
+
+// Make the server use port 4200
+server.listen(4200, () => {
+  console.log("Server is up and running on https://localhost:" + port + "/");
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a> on Sun Feb 28 2021 14:16:32 GMT+0100 (Central European Standard Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

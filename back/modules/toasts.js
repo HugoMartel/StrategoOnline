@@ -13,9 +13,9 @@
  */
 let Toast = (function () {
   //Consts
-  /** @constant {string} Toast.duration Notification's JSON duration object to add to display it correctly*/
+  /** @constant {string} Toast~duration Notification's JSON duration object to add to display it correctly*/
   const duration = "duration: 2500";
-  /** @constant {string} Toast.position Notification's JSON position object to add to display it correctly*/
+  /** @constant {string} Toast~position Notification's JSON position object to add to display it correctly*/
   const position = "position: {x: 'center', y: 'top'}";
 
   // Nested functions

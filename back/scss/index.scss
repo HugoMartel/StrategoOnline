@@ -1,16 +1,43 @@
-$background: pink;
+$background: #ecebf3;
+$mainColor: #0c1821;
+$secondaryColor: #1e2f48;
+$mainAccentColor: #c9847e;
+$secondaryAccentColor: #93a8ac;
 
 body {
-    background-color: $background;
+  background-color: $background;
 }
 
 img#logo {
-    height: 70px;
-    width: 200px;
-    margin: 0px;
-    padding: 0px;
+  height: 70px;
+  width: 200px;
+  margin: 0px;
+  padding: 0px;
 }
 
 header.navbar {
-    padding: 0px;
+  padding: 0px;
+}
+
+div.separator {
+  height: 50px;
+}
+
+//***********************
+//* bootstrap overrides *
+//***********************
+.btn-primary {
+  background-color: $mainAccentColor !important;
+}
+
+.btn-success {
+  background-color: $secondaryAccentColor !important;
+}
+
+.bg-dark {
+  background-color: $mainColor !important;
+}
+
+.bg-secondary {
+  background-color: $secondaryColor !important;
 }

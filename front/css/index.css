@@ -1,5 +1,5 @@
 body {
-  background-color: pink; }
+  background-color: #ecebf3; }
 
 img#logo {
   height: 70px;
@@ -9,3 +9,18 @@ img#logo {
 
 header.navbar {
   padding: 0px; }
+
+div.separator {
+  height: 50px; }
+
+.btn-primary {
+  background-color: #c9847e !important; }
+
+.btn-success {
+  background-color: #93a8ac !important; }
+
+.bg-dark {
+  background-color: #0c1821 !important; }
+
+.bg-secondary {
+  background-color: #1e2f48 !important; }

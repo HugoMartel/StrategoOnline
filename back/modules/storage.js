@@ -10,7 +10,7 @@ const fs = require("fs");
 /**
  * Process the load and edit of the json files
  * @type {Object}
- * @return {Object} functions to use with the AppRequest module
+ * @return {Function} Functions to edit and load json
  * @name Storage
  * @namespace storage
  */

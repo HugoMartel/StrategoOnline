@@ -1,16 +1,22 @@
-//TODO: TT create a blender model or find one on the net + find how to add a number on them easily
-//TODO: modify the constructor of the piece class in order to get the right model for each one
-//TODO: fix the animation, cause RN the pieces are teleporting instead of moving (lmao)
+//TODO: modify the constructor of the piece class in order to get the right texture for each one
+//TODO: maybe try to find better coordonates for the pieces, so they end up centered
 //PART 2:
 //TODO: check inputs, and find the best way to move the pieces, keyboard ? mouse ?
 //TODO: ask the server team to link the inputs with the checking mechanism; in order to avoid strange stuff
 //Then I think it might be fine
 
-window.addEventListener("DOMContentLoaded", function() {
+//window.addEventListener("DOMContentLoaded", function() {
     let canvas = document.getElementById("canvas");
     let engine = new BABYLON.Engine(canvas, true);
+
+    let deplace = (newCoord, oldCoord, grid) =>{
+        grid[oldCoord[0]][oldCoord[1]].move(newCoord[0], newCoord[1]);
+        grid[newCoord[0]][newCoord[1]] = grid[oldCoord[0]][oldCoord[1]];
+        grid[oldCoord[0]][oldCoord[1]] = undefined;
+    }
+
     class Pieces{
-        constructor(spec, scene, position){
+        constructor(spec, scene, position, mesh){
             //spec = the number of the piece, or a char if it is a mine
             //scene, the babylonjs scene
             //position: table [X, Y], both are between 0 and 9
@@ -26,31 +32,37 @@ window.addEventListener("DOMContentLoaded", function() {
             this.specc = spec;
             this.x = position[0];
             this.z = position[1];
-            //args: height, diameterTop, diameterBottom, tessellation, subdivisions, scene etc
-            this.physicalPiece = BABYLON.Mesh.CreateCylinder("cylinder", 1, 0.8, 0.8, 10, 1, scene, false, BABYLON.Mesh.DEFAULTSIDE);
+            //this.physicalPiece = BABYLON.Mesh.CreateCylinder("cylinder", 1, 0.8, 0.8, 10, 1, scene, false, BABYLON.Mesh.DEFAULTSIDE);
+            //cloning the base mesh:
+            this.physicalPiece = mesh.clone("clonedPiece");
+            //rescaling it, so it doesn't look like it's straight away from hell
+            this.physicalPiece.scaling.x = 0.38;
+            this.physicalPiece.scaling.y = 0.38;
+            this.physicalPiece.scaling.z = 0.38;
+            //making it looking in the right direction
+            this.physicalPiece.rotation.y = Math.PI /2;
+            //settting up it's position
             this.physicalPiece.position.y = 0;
-            this.physicalPiece.position.x = this.x * 0.84 - 3.77;
-            this.physicalPiece.position.z = this.z * 0.84 - 3.76;
-
+            this.physicalPiece.position.x = this.x * 0.835 - 3.757;
+            this.physicalPiece.position.z = this.z * 0.835 - 3.757;
         }
+
         //only moving the coordonate inside the class, not the physical piece
         move(x, z) {
             //not checking cause backend stuff
             this.x = x;
             this.z = z;
-            this.physicalPiece.position.x = this.x * 0.84 - 3.77;
-            this.physicalPiece.position.z = this.z * 0.84 - 3.76;
         }
 
         //check if the physical piece coords are the same as the coord (check if we need to move the physical piece)
         //return 0 if no difference, else it return the array with the difference coords
         check = () => {
             let retour = [0, 0]
-            if(this.x * 0.84 - 3.77 != this.physicalPiece.position.x){
-                retour[0] = (this.x * 0.84 - 3.77)- this.physicalPiece.position.x;
+            if(this.x * 0.835 - 3.757 != this.physicalPiece.position.x){
+                retour[0] = (this.x * 0.835 - 3.757)- this.physicalPiece.position.x;
             }
-            if(this.z * 0.84 - 3.76 != this.physicalPiece.position.z){
-                retour[1] = (this.z * 0.84 - 3.76) - this.physicalPiece.position.z;
+            if(this.z * 0.835 - 3.757 != this.physicalPiece.position.z){
+                retour[1] = (this.z * 0.835 - 3.757) - this.physicalPiece.position.z;
             }
             if(retour[0] == 0 && retour [1] == 0) return 0;
             return retour;
@@ -76,22 +88,22 @@ window.addEventListener("DOMContentLoaded", function() {
         constructor(playerPieces, opponentPieces, scene){
             //creating the grid, full of nothing like ur damn life
             this.grid = Array(10).fill(null).map(()=>Array(10).fill(undefined));
-            //TODO: fill the grid with:
-            //playerPieces, deux dimensions avec:
-            /*[puissancePiece, [coord], [coord], [coord]]*/
-            //opponentPieces 
-            //[[coord], [coord], [coord], [coord]
-            
-            //filling the grid with opponent pieces, -1 as spec so the player can't see them:
-            for(let i = 0; i < opponentPieces.length; ++i){
-                this.grid[opponentPieces[i][0]][opponentPieces[i][1]] = new Pieces(-1, scene, [opponentPieces[i][0], opponentPieces[i][1]]);
-            }
-            //setting up the player pieces:
-            for(let i = 0; i < playerPieces.length; ++i){
-                for(let j = 1; j < playerPieces[i].length; ++j){
-                    this.grid[playerPieces[i][j][0]][playerPieces[i][j][1]] = new Pieces(playerPieces[i][0], scene, [playerPieces[i][j][0], playerPieces[i][j][1]]);
+            //importing the mesh first
+            BABYLON.SceneLoader.ImportMesh("", "../mesh/", "piece.babylon", scene, (newMeshes) => {
+                const mesh = BABYLON.Mesh.MergeMeshes(newMeshes);
+                //filling the grid with opponent pieces, -1 as spec so the player can't see them:
+                for(let i = 0; i < opponentPieces.length; ++i){
+                    this.grid[opponentPieces[i][0]][opponentPieces[i][1]] = new Pieces(-1, scene, [opponentPieces[i][0], opponentPieces[i][1]], mesh);
                 }
-            }
+                //setting up the player pieces:
+                for(let i = 0; i < playerPieces.length; ++i){
+                    for(let j = 1; j < playerPieces[i].length; ++j){
+                        this.grid[playerPieces[i][j][0]][playerPieces[i][j][1]] = new Pieces(playerPieces[i][0], scene, [playerPieces[i][j][0], playerPieces[i][j][1]], mesh);
+                    }
+                }
+                //hiding the base mesh
+                mesh.setEnabled(false);
+            });   
         }
     }
     let createScene = () => {
@@ -102,7 +114,7 @@ window.addEventListener("DOMContentLoaded", function() {
         //max beta angle, so the player can't look under 
         camera.upperBetaLimit = 1.2;
         //max and min radius, so you can't cross the tabletop, or go far away because ur afraid to loose
-        camera.lowerRadiusLimit = 5;
+        camera.lowerRadiusLimit = 7;
         camera.upperRadiusLimit = 15;
         const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0), scene);
         //first meshes
@@ -132,10 +144,10 @@ window.addEventListener("DOMContentLoaded", function() {
                     let coord = test.grid[x][z].check()
                     if(coord != 0){
                         //move the piece because not in the good position:
-                        if(coord[0] > 0) grid[x][z].physicalPiece.position.x+=0.1;
-                        else if(coord[0] < 0) grid[x][z].physicalPiece.position.x-=0.1
-                        if(coord[1] > 0) grid[x][z].physicalPiece.position.z+=0.1;
-                        else if(coord[1] < 0) grid[x][z].physicalPiece.position.z-=0.1
+                        if(coord[0] > 0) test.grid[x][z].physicalPiece.position.x+=0.01;
+                        else if(coord[0] < 0) test.grid[x][z].physicalPiece.position.x-=0.01
+                        if(coord[1] > 0) test.grid[x][z].physicalPiece.position.z+=0.01;
+                        else if(coord[1] < 0) test.grid[x][z].physicalPiece.position.z-=0.01;
                     }
                 }
             }
@@ -149,4 +161,4 @@ window.addEventListener("DOMContentLoaded", function() {
         engine.resize();
     });
     console.log(scene);
-});
+//});

@@ -10,6 +10,10 @@ const { body, validationResult, query } = require("express-validator");
 const sha256 = require("js-sha256").sha256;
 const db = require("./query").database;
 const toast = require("./toasts");
+const Storage = require("./storage");
+const Scores = require("./scores");
+const TableDraw = require("./tableDraw");
+
 
 /**
  * Process the POST and GET requests from the express app in index.js
@@ -28,6 +32,8 @@ let AppRequest = (function () {
    * @returns {} /
    * @description GET request handler for the site's main page
    */
+
+
   let sendHomeCall = (req, res) => {
     let fileSend = fs.readFileSync("front/html/head.html");
     // Check if the player is connected to change the navbar or not
@@ -73,9 +79,12 @@ let AppRequest = (function () {
     }
     fileSend += `<script>document.getElementById("homeLink").classList.remove("active");document.getElementById("scoresLink").classList.add("active");</script>`;
     fileSend += fs.readFileSync("front/html/scores.html");
-    //TODO update scores ?
+    let data  = Storage.getData("scores");
+    fileSend += TableDraw.draw(20, data.scores, Scores.getRankLine);
+    fileSend +="</table></div>";
     fileSend += fs.readFileSync("front/html/footer.html");
     res.send(fileSend);
+    
   };
 
   //===============================================================================

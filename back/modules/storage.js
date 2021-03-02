@@ -12,7 +12,7 @@ const fs = require("fs");
  * @type {Object}
  * @return {Function} Functions to edit and load json
  * @name Storage
- * @namespace storage
+ * @namespace Storage
  */
 
 let Storage = (function () {
@@ -27,7 +27,7 @@ let Storage = (function () {
    */
 
 let getJSONData =( function (name){
-  let data = fs.readFileSync('../storage/'+name+'.json','utf8')
+  let data = fs.readFileSync('back/storage/'+name+'.json','utf8')
 return (JSON.parse(data));
 });
 
@@ -51,7 +51,7 @@ let editJSONData = (function (name, edit){
   
     let json = JSON.stringify(inputVar);
   
-    fs.writeFile('../storage/'+name+'.json',json,'utf8',function(err) {
+    fs.writeFile('back/storage/'+name+'.json',json,'utf8',function(err) {
       if (err) throw err;
     })
   })
@@ -64,4 +64,4 @@ return {
 
 })();
 
-module.exports = { storage: Storage };
+module.exports = Storage;

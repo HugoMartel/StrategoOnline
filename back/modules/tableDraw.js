@@ -9,10 +9,10 @@
  * @type {Object}
  * @return {} functions to use to generate html table
  * @name tableDraw
- * @namespace tabledraw
+ * @namespace TableDraw
  */
 
-let tableDraw = (function () {
+let TableDraw = (function () {
     return{
         /**
           * @function tabledraw.draw
@@ -23,26 +23,27 @@ let tableDraw = (function () {
           * @param {Function} line
           * The function which return an html line of our data 
           * @param {String} id
-          * The id of the table yo uwant to complete
+          * The id of the table you want to complete
           * @returns {} /
           * 
           * @description Generate an html table with given lenght, data, html line and and html ID
         */
-        draw(number, data, line, id) {
-            let table = document.getElementById(id);
-            table.innerHTML += "<tbody>";
-            if(number <= data.lenght){
-                for (let i = 0; i < number; i++) {
-                    table.innerHTML += line(i);
+        draw(number, data, line) {
+            let table;
+            table += "<tbody>";
+            if(number <= data.length){
+                for (let i = 1; i <= number; i++) {
+                    table += line(i, data);
                 }
             }else{
-                for (let i = 0; i < data.lenght; i++) {
-                    table.innerHTML += line(i);
+                for (let i = 1; i <= data.length; i++) {
+                    table += line(i, data);
                 }
             }
-            table.innerHTML += "</tbody>";
+            table += "</tbody>";
+            return table;
         }
     }
 })();
 
-module.exports = { tabledraw: tableDraw };
+module.exports = TableDraw;

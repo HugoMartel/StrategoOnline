@@ -22,10 +22,8 @@ let TableDraw = (function () {
           * The data we display
           * @param {Function} line
           * The function which return an html line of our data 
-          * @param {String} id
-          * The id of the table you want to complete
-          * @returns {} /
-          * 
+          * @returns {String} 
+          * return the html code of the wanted table
           * @description Generate an html table with given lenght, data, html line and and html ID
         */
         draw(number, data, line) {

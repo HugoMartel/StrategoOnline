@@ -15,13 +15,15 @@
 let Scores = (function () {
 
     /**
-   * @function scores.getRankInfos
-   * @param {Number} rank
-   * Rank you want to acces informations
-   * @returns {Array} 
-   * Array of this rank
-   * @description Get the content of a rank in scores array
-   */
+    * @function scores.getRankInfos
+    * @param {Number} rank
+    * Rank you want to get data
+    * @param {Number} data
+    * Data you want to use
+    * @returns {Array} 
+    * Array of this rank
+    * @description Get the content of a rank in scores array
+    */
 
     function getRankInfos(rank, data){
         for (let i = 0; i < data.length; i++) {
@@ -34,7 +36,9 @@ let Scores = (function () {
         /**
         * @function scores.getRankData
         * @param {Number} rank
-        * Rank you want to acces informations
+        * Rank you want to get data
+        * @param {Number} data
+        * Data you want to use
         * @returns {Array} 
         * Array of this rank
         * @description Get the content of a rank in scores array
@@ -53,6 +57,8 @@ let Scores = (function () {
         * @function scores.getRankLine
         * @param {Number} rank
         * Rank you want to create html table line for
+        * @param {Number} data
+        * Data you want to use
         * @returns {String} 
         * Return html code for the line of this rank
         * @description Create the html code for a rank line in a table

@@ -27,7 +27,7 @@ let TableDraw = (function () {
           * @description Generate an html table with given lenght, data, html line and and html ID
         */
         draw(number, data, line) {
-            let table;
+            let table="";
             table += "<tbody>";
             if(number <= data.length){
                 for (let i = 1; i <= number; i++) {

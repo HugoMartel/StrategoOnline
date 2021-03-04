@@ -1,8 +1,9 @@
-$background: #ecebf3;
-$mainColor: #0c1821;
-$secondaryColor: #1e2f48;
-$mainAccentColor: #c9847e;
-$secondaryAccentColor: #93a8ac;
+$background: #ecebf3;// ~white/gray
+$mainColor: #0c1821;// ~black
+$secondaryColor: #1e2f48; // lighter black
+//$mainAccentColor: #c9847e; // gold
+$mainAccentColor: #e1ae33; // light pink
+$secondaryAccentColor: #93a8ac; // light green
 
 body {
   background-color: $background;

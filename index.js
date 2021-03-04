@@ -4,7 +4,6 @@
  * @version 1.0
  */
 
-
 //****************************
 //*         Consts           *
 //****************************
@@ -13,14 +12,15 @@ const express = require("express");
 const app = express();
 const fs = require("fs");
 const https = require("https");
-const appRequest = require("./back/modules/appRequests");
+const AppRequest = require("./back/modules/appRequests");
 const Stratego = require("./back/classes/stratego");
+const Storage = require("./back/modules/storage");
 
 // Just for the readability of the console logs on the server side
 const colors = require("colors");
 
-const hsKey = fs.readFileSync("key.pem").toString();
-const hsCert = fs.readFileSync("cert.pem").toString();
+const hsKey = fs.readFileSync(__dirname + "/ssl/key.pem").toString();
+const hsCert = fs.readFileSync(__dirname + "/ssl/cert.pem").toString();
 
 // Request handling requires
 const sharedsession = require("express-socket.io-session");
@@ -32,11 +32,9 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false });
 /** @constant {Object} server https server used to host the project*/
 const server = https.createServer({ key: hsKey, cert: hsCert }, app);
 /** @constant {Object} io socket module used to identify clients*/
-const io = require("socket.io")(server, {});
+const io = require("socket.io")(server, { secure: true });
 /** @constant {number} port port used to host the server on*/
 const port = 4200;
-
-
 
 //****************************
 //*         Session          *
@@ -51,7 +49,6 @@ const session = require("express-session")({
     secure: true,
   },
 });
-
 
 //****************************
 //*      Configuration       *
@@ -73,13 +70,11 @@ app.use(jsonParser);
 app.use(urlencodedParser);
 app.use(session);
 
-
-
 //****************************
 //*        Requests          *
 //****************************
 // GET
-app.get("/", appRequest.sendHome);
+app.get("/", AppRequest.sendHome);
 app.get("/register/", (req, res) => {
   let fileSend = fs.readFileSync("front/html/head.html");
   fileSend += `<script>document.getElementById("homeLink").classList.remove("active");</script>`;
@@ -92,42 +87,70 @@ app.get("/disconnect/", (req, res) => {
   req.session.destroy();
   res.redirect("/");
 });
-app.get("/scores/", appRequest.sendScores);
-app.get("/profile/", appRequest.sendProfile);
-app.get("/rules/", appRequest.sendRules);
+app.get("/scores/", AppRequest.sendScores);
+app.get("/profile/", AppRequest.sendProfile);
+app.get("/rules/", AppRequest.sendRules);
 
 // POST
-app.post("/", jsonParser, appRequest.connectAccount);
-app.post("/register/", jsonParser, appRequest.registerAccount);
-app.post("/profile/", jsonParser, appRequest.deleteAccount);
-
-
+app.post("/", jsonParser, AppRequest.connectAccount);
+app.post("/register/", jsonParser, AppRequest.registerAccount);
+app.post("/profile/", jsonParser, AppRequest.deleteAccount);
 
 //****************************
 //*        Socket.io         *
 //****************************
-io.on("connection", (socket) => {
+let gameWaiting = false;
+
+io.on("connection", (client) => {
   // Console message on connection
-  console.log("> ".bold + socket.id.green + " connected");
+  console.log("> ".bold + client.id.green + " connected");
 
   // Console message on disconnection
-  socket.on("disconnect", () => {
-    console.log("< ".bold + socket.id.red + " disconnected");
+  client.on("disconnect", () => {
+    console.log("< ".bold + client.id.red + " disconnected");
   });
 
   //===================================================================
   // An user wants to find a game
-  socket.on("newGame", () => {
-    let srvSockets = io.sockets.sockets;
-    srvSockets.forEach(user => {
-      console.log(user.handshake.session.username, user.handshake.session.login);//DEBUG
-    });
-    //Store the user in a new game object
-    let tmp = new Stratego(socket.id);
-    console.log("A new game has been created".underline);
+  client.on("newGame", () => {
+    let clientSocket = io.sockets.sockets.get(client.id); // correct way to access a map object in js
+    //console.log(clientSocket.id);//DEBUG
+
+    if (gameWaiting === false) {
+      //Store the user in a new game object
+      let newGame = new Stratego(
+        clientSocket !== undefined ? clientSocket.handshake.session.login : clientSocket.id.toString()
+      );
+
+      //Save the game as a JSON file in ./back/storage/games/waiting
+      Storage.saveData(
+        "games/waiting/" +
+          fs
+            .readdirSync(__dirname + "/back/storage/games/waiting")
+            .length.toString(),
+        newGame
+      );
+
+      gameWaiting = true;
+      console.log("A new game has been created".underline);
+    } else {
+      //Add the second user to the game object
+      let waitingGame = Storage.getData("games/waiting/1");
+      waitingGame.addPlayer(
+        clientSocket !== undefined ? clientSocket.handshake.session.login : client.id
+      );
+
+      //Save the game as a JSON file in ./back/storage/games/waiting
+      Storage.saveData(
+        "games/" + waitingGame.player1 + "+" + waitingGame.player2,
+        waitingGame
+      );
+
+      gameWaiting = false;
+      console.log("A game is starting".underline);
+    }
   });
 });
-
 
 //****************************
 //*       Server Start       *

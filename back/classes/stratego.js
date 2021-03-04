@@ -15,23 +15,30 @@ class Stratego {
    */
   constructor(player) {
     this.player1 = player;
-    this.player2 = undefined;
+    this.player2 = null;
     //Create each player's pieces array
-    this.player1Table = Array(10).fill(0).map(x => Array(10).fill(0));
-    this.player2Table = Array(10).fill(0).map(x => Array(10).fill(0));
+    this.player1Table = Array(10)
+      .fill(0)
+      .map((x) => Array(10).fill(0));
+    this.player2Table = Array(10)
+      .fill(0)
+      .map((x) => Array(10).fill(0));
+    //Add the lakes (-1)
+    for (let i = 4; i < 6; ++i) {
+      for (let j = 2; j < 4; ++j) {
+        this.player1Table[i][j] = -1;
+        this.player2Table[i][j] = -1;
+        this.player1Table[i][j + 4] = -1;
+        this.player2Table[i][j + 4] = -1;
+      }
+    }
     //Fill each player's array with the default pieces placement
 
-
     //! DEBUG
+    console.log(this.player1);
     console.log(this.player1Table);
-  }
-
-  /**
-   * Adds the game's missing second player
-   * @param {string} player second player to add to the game object
-   */
-  addPlayer(player) {
-    this.player2 = player;
+    console.log(this.player2);
+    console.log(this.player2Table);
   }
 
   /**
@@ -48,13 +55,19 @@ class Stratego {
   endGame() {
     //Add the game to the database
     //TODO
-
     //Add the winner to the database
     //TODO
-
     //Delete the stored JSON file from the storage
     //Storage.deleteData(this.player1 + "-" + this.player2);
   }
 }
+
+/**
+ * Adds the game's missing second player
+ * @param {string} player second player to add to the game object
+ */
+Stratego.prototype.addPlayer = (player) => {
+  this.player2 = player;
+};
 
 module.exports = Stratego;

@@ -90,19 +90,48 @@
             this.grid = Array(10).fill(null).map(()=>Array(10).fill(undefined));
             //importing the mesh first
             BABYLON.SceneLoader.ImportMesh("", "../mesh/", "piece.babylon", scene, (newMeshes) => {
-                const mesh = BABYLON.Mesh.MergeMeshes(newMeshes);
+                //const mesh = BABYLON.Mesh.MergeMeshes(newMeshes);
+                //TMP
+                var playerColor = new BABYLON.StandardMaterial("mat0", scene);
+                playerColor.diffuseColor = new BABYLON.Color3(0, 0, 1);
+                var otherColor = new BABYLON.StandardMaterial("mat0", scene);
+                otherColor.diffuseColor = new BABYLON.Color3.Green;
+                var lastColor = new BABYLON.StandardMaterial("mat0", scene);
+                lastColor.diffuseColor = new BABYLON.Color3.Red;
+                //
                 //filling the grid with opponent pieces, -1 as spec so the player can't see them:
                 for(let i = 0; i < opponentPieces.length; ++i){
+                    let top = newMeshes[0].clone("no");
+                    let mid = newMeshes[1].clone("no");;
+                    let bottom = newMeshes[2].clone("no");;
+                    top.material = otherColor;
+                    bottom.material = playerColor;
+                    mid.material = lastColor;
+                    //creating the assembly
+                    let mesh = BABYLON.Mesh.MergeMeshes([top, mid, bottom], true, false, null, false, true);
                     this.grid[opponentPieces[i][0]][opponentPieces[i][1]] = new Pieces(-1, scene, [opponentPieces[i][0], opponentPieces[i][1]], mesh);
+                    //removing the base mesh assembled
+                    mesh.dispose();
                 }
                 //setting up the player pieces:
                 for(let i = 0; i < playerPieces.length; ++i){
                     for(let j = 1; j < playerPieces[i].length; ++j){
+                        let top = newMeshes[0].clone("no");
+                        let mid = newMeshes[1].clone("no");;
+                        let bottom = newMeshes[2].clone("no");
+                        top.material = playerColor;
+                        bottom.material = otherColor;
+                        mid.material = lastColor;
+                        //assembling the new mesh with the good textures
+                        let mesh = BABYLON.Mesh.MergeMeshes([top, mid, bottom], true, false, null, false, true);
                         this.grid[playerPieces[i][j][0]][playerPieces[i][j][1]] = new Pieces(playerPieces[i][0], scene, [playerPieces[i][j][0], playerPieces[i][j][1]], mesh);
+                        //removing the base mesh assembled
+                        mesh.dispose();
                     }
                 }
-                //hiding the base mesh
-                mesh.setEnabled(false);
+                //assembling and removing the imported one
+                let deleted = BABYLON.Mesh.MergeMeshes(newMeshes);
+                deleted.dispose();
             });   
         }
     }
@@ -160,5 +189,4 @@
     window.addEventListener("resize", function () {
         engine.resize();
     });
-    console.log(scene);
 //});

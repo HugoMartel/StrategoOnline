@@ -1,10 +1,16 @@
-$background: #ecebf3;// ~white/gray
-$mainColor: #0c1821;// ~black
+//***********************
+//*    Color defines    *
+//***********************
+$background: #ecebf3; // ~white/gray
+$mainColor: #0c1821; // ~black
 $secondaryColor: #1e2f48; // lighter black
 //$mainAccentColor: #c9847e; // gold
 $mainAccentColor: #e1ae33; // light pink
 $secondaryAccentColor: #93a8ac; // light green
 
+//***********************
+//*      Basic CSS      *
+//***********************
 body {
   background-color: $background;
 }
@@ -21,20 +27,66 @@ header.navbar {
   box-shadow: 0 4px 8px -2px rgba(0, 0, 0, 0.5);
 }
 
+a.nav-link.active {
+  text-decoration-line: underline;
+}
+
 div.separator {
-  height: 50px;
+  height: 30px;
+  background-color: #ffd700;
   box-shadow: 0 4px 8px 2px rgba(0, 0, 0, 0.5);
 }
 
+div.separator-sm {
+  height: 5px;
+  background-color: #ffd700;
+  box-shadow: 0 4px 8px 2px rgba(0, 0, 0, 0.5);
+}
+
+canvas#canvas {
+  display: block;
+}
+
+@font-face {
+  font-family: "Ancient";
+  src: url("../font/Ancient\ Medium.ttf");
+}
+
 //***********************
-//* bootstrap overrides *
+//* Bootstrap overrides *
 //***********************
 .btn-primary {
   background-color: $mainAccentColor !important;
+  border-color: white !important;
+}
+
+.btn-primary:focus {
+  box-shadow: 0 0 0 0.25rem rgba(251, 220, 102, 0.5);
+}
+
+.btn-primary:active {
+  box-shadow: 0 0 0 0.25rem rgba(251, 220, 102, 0.5);
+}
+
+.btn-check:active + .btn-primary:focus,
+.btn-check:checked + .btn-primary:focus,
+.btn-primary.active:focus,
+.btn-primary:active:focus,
+.show > .btn-primary.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.25rem rgba(251, 220, 102, 0.5);
 }
 
 .btn-success {
   background-color: $secondaryAccentColor !important;
+  border-color: white !important;
+}
+
+.btn-success:focus {
+  box-shadow: 0 0 0 0.25rem rgba(92, 128, 123, 0.5);
+}
+
+.btn-success:active {
+  box-shadow: 0 0 0 0.25rem rgba(92, 128, 123, 0.5);
 }
 
 .bg-dark {

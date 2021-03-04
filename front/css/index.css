@@ -8,10 +8,12 @@ img#logo {
   padding: 0px; }
 
 header.navbar {
-  padding: 0px; }
+  padding: 0px;
+  box-shadow: 0 4px 8px -2px rgba(0, 0, 0, 0.5); }
 
 div.separator {
-  height: 50px; }
+  height: 50px;
+  box-shadow: 0 4px 8px 2px rgba(0, 0, 0, 0.5); }
 
 .btn-primary {
   background-color: #c9847e !important; }

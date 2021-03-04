@@ -1,7 +1,8 @@
 $background: #ecebf3;
 $mainColor: #0c1821;
 $secondaryColor: #1e2f48;
-$mainAccentColor: #c9847e;
+//$mainAccentColor: #c9847e;
+$mainAccentColor: #e1ae33;
 $secondaryAccentColor: #93a8ac;
 
 body {
@@ -20,7 +21,22 @@ header.navbar {
 }
 
 div.separator {
-  height: 50px;
+  height: 30px;
+  background-color: #ffd700;
+}
+
+div.separator-sm {
+  height: 5px;
+  background-color: #ffd700;
+}
+
+canvas#canvas {
+  display: block;
+}
+
+@font-face {
+  font-family: 'Ancient';
+  src: url('../font/Ancient\ Medium.ttf');
 }
 
 //***********************

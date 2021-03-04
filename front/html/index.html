@@ -1,8 +1,22 @@
+<div class="separator-sm container-fluid"></div>
 <div id="main" class="w-100 h-100">
-    <canvas id="canvas" class="w-100 h-100"></canvas>
+    <canvas id="canvas"> Your browser doesn't support the canvas tag. Please update it to be able to
+        play our game</canvas>
 </div>
-<script src="../js/tmp.js"></script>
+<script src="../js/modules/canvas.js"></script>
 <script>
+    /* Initialize socket.io */
     let socket = io();
+
+    /* Append the img to ease out the access for the menu background */
+    let bottomImg = document.createElement("img");
+    bottomImg.style.display = "none";
+    bottomImg.id = "startMenuBottom";
+    bottomImg.src = "../img/startMenuBottom.png";
+    document.getElementById("main").appendChild(bottomImg);
+
+    /* Build the start menu */
+    window.addEventListener("load", function () {
+        Canvas.startMenuSetup();
+    });
 </script>
-<script src="../js/modules/socket.js"></script>

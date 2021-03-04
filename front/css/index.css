@@ -11,10 +11,22 @@ header.navbar {
   padding: 0px; }
 
 div.separator {
-  height: 50px; }
+  height: 30px;
+  background-color: #ffd700; }
+
+div.separator-sm {
+  height: 5px;
+  background-color: #ffd700; }
+
+canvas#canvas {
+  display: block; }
+
+@font-face {
+  font-family: 'Ancient';
+  src: url("../font/Ancient Medium.ttf"); }
 
 .btn-primary {
-  background-color: #c9847e !important; }
+  background-color: #e1ae33 !important; }
 
 .btn-success {
   background-color: #93a8ac !important; }

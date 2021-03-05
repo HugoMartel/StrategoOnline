@@ -94,19 +94,44 @@
                 //TMP
                 var playerColor = new BABYLON.StandardMaterial("mat0", scene);
                 playerColor.diffuseColor = new BABYLON.Color3(0, 0, 1);
-                var otherColor = new BABYLON.StandardMaterial("mat0", scene);
-                otherColor.diffuseColor = new BABYLON.Color3.Green;
-                var lastColor = new BABYLON.StandardMaterial("mat0", scene);
-                lastColor.diffuseColor = new BABYLON.Color3.Red;
+                var opponentColor = new BABYLON.StandardMaterial("mat0", scene);
+                opponentColor.diffuseColor = new BABYLON.Color3.Red;
+
+                var marechalColor = new BABYLON.StandardMaterial("mat0", scene);
+                marechalColor.bumpTexture = new BABYLON.Texture("/textures/10.png", scene);
+                var generalColor = new BABYLON.StandardMaterial("mat0", scene);
+                generalColor.bumpTexture = new BABYLON.Texture("/textures/9.png", scene);
+                var colonelColor = new BABYLON.StandardMaterial("mat0", scene);
+                colonelColor.bumpTexture = new BABYLON.Texture("/textures/8.png", scene);
+                var commandantColor = new BABYLON.StandardMaterial("mat0", scene);
+                commandantColor.bumpTexture = new BABYLON.Texture("/textures/7.png", scene);
+                var capitaineColor = new BABYLON.StandardMaterial("mat0", scene);
+                capitaineColor.bumpTexture = new BABYLON.Texture("/textures/6.png", scene);
+                var lieuteunantColor = new BABYLON.StandardMaterial("mat0", scene);
+                lieuteunantColor.bumpTexture = new BABYLON.Texture("/textures/5.png", scene);
+                var sergentColor = new BABYLON.StandardMaterial("mat0", scene);
+                sergentColor.bumpTexture = new BABYLON.Texture("/textures/4.png", scene);
+                var demineurColor = new BABYLON.StandardMaterial("mat0", scene);
+                demineurColor.bumpTexture = new BABYLON.Texture("/textures/3.png", scene);
+                var eclaireurColor = new BABYLON.StandardMaterial("mat0", scene);
+                eclaireurColor.bumpTexture = new BABYLON.Texture("/textures/2.png", scene);
+                var espionColor = new BABYLON.StandardMaterial("mat0", scene);
+                espionColor.bumpTexture = new BABYLON.Texture("/textures/1.png", scene);
+                var drapeauColor = new BABYLON.StandardMaterial("mat0", scene);
+                drapeauColor.bumpTexture = new BABYLON.Texture("/textures/0.png", scene);
+                var bombeColor = new BABYLON.StandardMaterial("mat0", scene);
+                bombeColor.bumpTexture = new BABYLON.Texture("/textures/B.png", scene);
+                
+                
                 //
                 //filling the grid with opponent pieces, -1 as spec so the player can't see them:
                 for(let i = 0; i < opponentPieces.length; ++i){
                     let top = newMeshes[0].clone("no");
-                    let mid = newMeshes[1].clone("no");;
-                    let bottom = newMeshes[2].clone("no");;
-                    top.material = otherColor;
-                    bottom.material = playerColor;
-                    mid.material = lastColor;
+                    let mid = newMeshes[1].clone("no");
+                    let bottom = newMeshes[2].clone("no");
+                    top.material = opponentColor;
+                    bottom.material = opponentColor;
+                    mid.material = colonelColor;
                     //creating the assembly
                     let mesh = BABYLON.Mesh.MergeMeshes([top, mid, bottom], true, false, null, false, true);
                     this.grid[opponentPieces[i][0]][opponentPieces[i][1]] = new Pieces(-1, scene, [opponentPieces[i][0], opponentPieces[i][1]], mesh);
@@ -117,11 +142,48 @@
                 for(let i = 0; i < playerPieces.length; ++i){
                     for(let j = 1; j < playerPieces[i].length; ++j){
                         let top = newMeshes[0].clone("no");
-                        let mid = newMeshes[1].clone("no");;
+                        let mid = newMeshes[1].clone("no");
                         let bottom = newMeshes[2].clone("no");
                         top.material = playerColor;
-                        bottom.material = otherColor;
-                        mid.material = lastColor;
+                        bottom.material = playerColor;
+                        switch(playerPieces[i][0]){
+                            case 10:
+                                mid.material = marechalColor;
+                                break;
+                            case 9:
+                                mid.material = generalColor;
+                                break;
+                            case 8:
+                                mid.material = colonelColor;
+                                break;
+                            case 7:
+                                mid.material = commandantColor;
+                                break;
+                            case 6:
+                                mid.material = capitaineColor;
+                                break;
+                            case 5:
+                                mid.material = lieuteunantColor;
+                                break;
+                            case 4:
+                                mid.material = sergentColor;
+                                break;
+                            case 3:
+                                mid.material = demineurColor;
+                                break;
+                            case 2:
+                                mid.material = eclaireurColor;
+                                break;
+                            case 1:
+                                mid.material = espionColor;
+                                break;  
+                            case O:
+                                mid.material = drapeauColor;
+                                break;
+                            case 'B':
+                                mid.material = bombeColor;
+                                break;                
+                        }
                         //assembling the new mesh with the good textures
                         let mesh = BABYLON.Mesh.MergeMeshes([top, mid, bottom], true, false, null, false, true);
                         this.grid[playerPieces[i][j][0]][playerPieces[i][j][1]] = new Pieces(playerPieces[i][0], scene, [playerPieces[i][j][0], playerPieces[i][j][1]], mesh);

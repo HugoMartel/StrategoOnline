@@ -93,9 +93,9 @@
                 //const mesh = BABYLON.Mesh.MergeMeshes(newMeshes);
                 //TMP
                 var playerColor = new BABYLON.StandardMaterial("mat0", scene);
-                playerColor.diffuseColor = new BABYLON.Color3(0, 0, 1);
+                playerColor.diffuseColor = new BABYLON.Color3(0.20, 0.43, 1.00);
                 var opponentColor = new BABYLON.StandardMaterial("mat0", scene);
-                opponentColor.diffuseColor = new BABYLON.Color3.Red;
+                opponentColor.diffuseColor = new BABYLON.Color3(1.00, 0.29, 0.20);
 
                 var marechalColor = new BABYLON.StandardMaterial("mat0", scene);
                 marechalColor.bumpTexture = new BABYLON.Texture("/textures/10.png", scene);
@@ -131,7 +131,7 @@
                     let bottom = newMeshes[2].clone("no");
                     top.material = opponentColor;
                     bottom.material = opponentColor;
-                    mid.material = colonelColor;
+                    mid.material = opponentColor;
                     //creating the assembly
                     let mesh = BABYLON.Mesh.MergeMeshes([top, mid, bottom], true, false, null, false, true);
                     this.grid[opponentPieces[i][0]][opponentPieces[i][1]] = new Pieces(-1, scene, [opponentPieces[i][0], opponentPieces[i][1]], mesh);

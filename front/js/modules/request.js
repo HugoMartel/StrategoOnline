@@ -119,6 +119,14 @@ let Request = (function () {
       //console.log("The transfer has been canceled by the user.");
     });
 
+    XHR.onreadystatechange = () => {
+      if (XHR.readyState === 4 && XHR.status === 200) {
+        if (typeof(XHR.response.redirect) == 'string') {
+          window.location = XHR.response.redirect;
+        }
+      }
+    };
+
     XHR.open("POST", "/profile/");
     XHR.setRequestHeader("Content-Type", "application/json");
     XHR.responseType = "json";

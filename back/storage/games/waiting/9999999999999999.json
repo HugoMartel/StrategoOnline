@@ -1,5 +1,5 @@
 {
-  "players": ["test1", null],
+  "players": ["user1", null],
   "tables": [
     [
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],

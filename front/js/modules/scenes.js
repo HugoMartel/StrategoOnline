@@ -54,6 +54,10 @@ let Scenes = (function () {
 
     /* Play button */
     ctx.font = "normal " + parseInt(canvas.width / 10) + "pt Ancient";
+    ctx.shadowOffsetX = 2;
+    ctx.shadowOffsetY = 2;
+    ctx.shadowBlur = 2;
+    ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
     let grdGold = ctx.createLinearGradient(
       Math.round(canvas.width / 2 - ctx.measureText("play").width / 2),
       0,
@@ -120,6 +124,11 @@ let Scenes = (function () {
     grdGold.addColorStop(0, "#e1ae33");
     grdGold.addColorStop(0.5, "white");
     grdGold.addColorStop(1, "#e1ae33");
+    grdGold.textBaseline = "top";
+    ctx.shadowOffsetX = 2;
+    ctx.shadowOffsetY = 2;
+    ctx.shadowBlur = 2;
+    ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
     ctx.font = "normal " + parseInt(canvas.width / 35) + "pt Ancient";
     ctx.fillStyle = grdGold;
     ctx.fillText(

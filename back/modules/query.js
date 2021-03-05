@@ -130,7 +130,7 @@ let Database = (function () {
       [email, username],
       (err, result) => {
         if (err) throw err;
-        console.log(result.affectedRows);
+        
         callback(result !== undefined ? result.affectedRows : 0);
 
         return;

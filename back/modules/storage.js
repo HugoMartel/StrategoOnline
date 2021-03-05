@@ -75,7 +75,7 @@ let Storage = (function () {
       JSON.stringify(JSONObject),
       {
         encoding: "utf8",
-        flag: "wx",
+        flag: "w",
         mode: 0o666,
       },
       (err) => {

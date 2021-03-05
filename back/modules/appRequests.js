@@ -317,7 +317,7 @@ let AppRequest = (function () {
           }
 
           req.session.destroy();
-          res.redirect("/");
+          res.send({redirect: '/'});
         });
       } else {
         //TODO Display an error message to the user

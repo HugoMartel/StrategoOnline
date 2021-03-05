@@ -13,7 +13,7 @@ const app = express();
 const fs = require("fs");
 const https = require("https");
 const AppRequest = require("./back/modules/appRequests");
-const Stratego = require("./back/classes/stratego");
+const { Game, Stratego } = require("./back/classes/stratego");
 const Storage = require("./back/modules/storage");
 
 // Just for the readability of the console logs on the server side
@@ -107,47 +107,96 @@ io.on("connection", (client) => {
 
   // Console message on disconnection
   client.on("disconnect", () => {
+    // END or DELETE games where the client could be a part of
+
     console.log("< ".bold + client.id.red + " disconnected");
   });
 
+  client.on("disconnecting", (reason) => {
+    for (const room of client.rooms) {
+      if (room !== client.id) {
+        // Disconnecting during a game
+        //TODO
+        client.to(room).emit("userLeft", client.id);
+      }
+    }
+  });
+
   //===================================================================
-  // An user wants to find a game
+  /******************************\
+    An user wants to find a game
+  \******************************/
   client.on("newGame", () => {
     let clientSocket = io.sockets.sockets.get(client.id); // correct way to access a map object in js
-    //console.log(clientSocket.id);//DEBUG
+    //console.log(clientSocket); //DEBUG
 
+    /* There are no user waiting for a game */
     if (gameWaiting === false) {
       //Store the user in a new game object
-      let newGame = new Stratego(
-        clientSocket !== undefined ? clientSocket.handshake.session.login : clientSocket.id.toString()
+      let newGame = new Game(
+        clientSocket.handshake.session.login !== undefined
+          ? clientSocket.handshake.session.login
+          : clientSocket.id
       );
 
+      // TimeStamp to use for identification
+      let currentTime = Date.now().toString()
+
+      //Make the client join a socket room
+      client.join(currentTime);
+
       //Save the game as a JSON file in ./back/storage/games/waiting
-      Storage.saveData(
-        "games/waiting/" +
-          fs
-            .readdirSync(__dirname + "/back/storage/games/waiting")
-            .length.toString(),
-        newGame
-      );
+      //idea to name files : fs.readdirSync(__dirname + "/back/storage/games/waiting").length // Counts the amount of files in the directory
+      Stratego.saveGame("games/waiting/" + currentTime, newGame);
 
       gameWaiting = true;
       console.log("A new game has been created".underline);
     } else {
-      //Add the second user to the game object
-      let waitingGame = Storage.getData("games/waiting/1");
-      waitingGame.addPlayer(
-        clientSocket !== undefined ? clientSocket.handshake.session.login : client.id
-      );
+      /* A game is already waiting for a second player */
 
-      //Save the game as a JSON file in ./back/storage/games/waiting
-      Storage.saveData(
+      //Removes the .json and converts to int to ease comparison
+      let waitingGamesNames = fs
+        .readdirSync(__dirname + "/back/storage/games/waiting")
+        .map((value, index, array) =>
+          parseInt(value.slice(0, value.length - 5))
+        );
+
+      // Game to add our user into
+      //Find the game that is waiting for the longest time (= has the lowest timestamp)
+      let waitingGameTimeStamp = Math.min.apply(null, waitingGamesNames);
+      let waitingGame = Storage.getData("games/waiting/" + waitingGameTimeStamp);
+
+      //add the user the the correct socket room
+      client.join(waitingGameTimeStamp.toString());
+
+      waitingGame.player2 =
+        clientSocket.handshake.session.login !== undefined
+          ? clientSocket.handshake.session.login
+          : client.id;
+
+      //Save the game as a JSON file in ./back/storage/games
+      Stratego.saveGame(
         "games/" + waitingGame.player1 + "+" + waitingGame.player2,
         waitingGame
       );
 
+      console.log(client.rooms);
+
+      //Remove the waiting JSON game file from ./back/storage/games/waiting
+      fs.unlink(
+        __dirname + "/back/storage/games/waiting/" + waitingGameTimeStamp + ".json",
+        (err) => {
+          if (err) throw err;
+        }
+      );
+
       gameWaiting = false;
       console.log("A game is starting".underline);
+
+      //Update the first user's interface with the second player's name
+
+      //Send the two players a START game ping
+      //TODO
     }
   });
 });
@@ -159,3 +208,61 @@ io.on("connection", (client) => {
 server.listen(4200, () => {
   console.log("Server is up and running on https://localhost:" + port + "/");
 });
+
+//****************************
+//*     Clean up on exit     *
+//****************************
+process.stdin.resume(); //so the program will not close instantly
+
+function exitHandler(options, exitCode) {
+  if (options.cleanup) {
+    console.log(
+      "\n------------------------------------------------------------------"
+    );
+    console.log("Cleaning up the files...");
+
+    // Remove waiting game files
+    fs.readdirSync(__dirname + "/back/storage/games/waiting").forEach(
+      (filename) => {
+        if (filename != "9999999999999999.json") {
+          fs.unlinkSync(
+            __dirname + "/back/storage/games/waiting/" + filename,
+            (err) => {
+              if (err) throw err;
+            }
+          );
+          console.log(
+            "/back/storage/games/waiting/" + filename + " was " + "deleted".bold
+          );
+        }
+      }
+    );
+
+    // Remove filled game files
+    fs.readdirSync(__dirname + "/back/storage/games").forEach((filename) => {
+      if (filename != "TEMPLATE.json" && filename != "waiting") {
+        fs.unlinkSync(__dirname + "/back/storage/games/" + filename, (err) => {
+          if (err) throw err;
+        });
+        console.log(
+          "/back/storage/games/" + filename + " was " + "deleted".bold
+        );
+      }
+    });
+  }
+  if (exitCode || exitCode === 0) console.log(exitCode);
+  if (options.exit) process.exit();
+}
+
+//do something when app is closing
+process.on("exit", exitHandler.bind(null, { cleanup: true }));
+
+//catches ctrl+c event
+process.on("SIGINT", exitHandler.bind(null, { exit: true }));
+
+// catches "kill pid"
+process.on("SIGUSR1", exitHandler.bind(null, { exit: true }));
+process.on("SIGUSR2", exitHandler.bind(null, { exit: true }));
+
+//catches uncaught exceptions
+process.on("uncaughtException", exitHandler.bind(null, { exit: true }));

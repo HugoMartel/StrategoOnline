@@ -5,10 +5,10 @@
  */
 
 //Imports
-const Storage = require("../modules/storage").storage;
+const Storage = require("../modules/storage");
 
 /** Class contructing a Stratego game object */
-class Stratego {
+class Game {
   /**
    * Creates the game object
    * @param {string} player first player that will take part (the second player will be added later)
@@ -36,38 +36,62 @@ class Stratego {
 
     //! DEBUG
     console.log(this.player1);
-    console.log(this.player1Table);
+    //console.log(this.player1Table);
     console.log(this.player2);
-    console.log(this.player2Table);
+    //console.log(this.player2Table);
   }
+}
 
+/**
+ * Function toolbox to use when using a Stratego Game Object
+ * @type {Object}
+ * @return {Object} Functions to edit and load json
+ * @name Stratego
+ * @namespace Stratego
+ */
+let Stratego = (function () {
   /**
-   * Save the game to a JSON file named by its players
+   * @function Stratego.saveGame
+   * @param {string} name
+   * Path to save the Stratego Game Object
+   * @param {Object} game
+   * Game Object to save as JSON
+   * @returns {} /
+   * @description Saves a Stratego Game Object as JSON
    */
-  saveGame() {
-    //TODO
-    //Storage.editData("game/" + this.player1 + "-" + this.player2, this);
-  }
+  let saveGameCall = (name, game) => {
+    //! ERROR CHECKING
+    Storage.saveData(name, game);
+  };
 
+  //============================================================================
   /**
-   * End the game and add its results to the database
+   * @function Stratego.endGame
+   * @param {string} name
+   * Path to save the Stratego Game Object
+   * @param {Object} game
+   * Game Object to save as JSON
+   * @param {number} winner
+   * 1 or 2 which represents the player who won
+   * @returns {} /
+   * @description Saves a Stratego Game Object as JSON
    */
-  endGame() {
+  let endGameCall = (name, game, winner) => {
     //Add the game to the database
     //TODO
     //Add the winner to the database
     //TODO
     //Delete the stored JSON file from the storage
     //Storage.deleteData(this.player1 + "-" + this.player2);
-  }
-}
+  };
 
-/**
- * Adds the game's missing second player
- * @param {string} player second player to add to the game object
- */
-Stratego.prototype.addPlayer = (player) => {
-  this.player2 = player;
-};
+  //============================================================================
+  //============================================================================
+  // Returned Object
+  return {
+    saveGame: (name, game) => saveGameCall(name, game),
+    endGame: (name, game, winner) => endGameCall(name, game, winner),
+  };
+})();
 
-module.exports = Stratego;
+module.exports = { Game: Game, Stratego: Stratego };

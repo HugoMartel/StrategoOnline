@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>back/modules/query.js - Documentation</title>
+    <title>Canvas - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,174 +29,552 @@
 
 <div id="main">
     
-    <h1 class="page-title">back/modules/query.js</h1>
+    <h1 class="page-title">Canvas</h1>
     
 
     
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>/**
- * @file File used to talk to the mysql database
- * @version 1.0
- * @author Stratego Online
- */
-
-/**
- * Module to handle database queries
- * @type {Object}
- * @return {Object} functions to use with the Database module
- * @name Database
- * @namespace Database
- */
-let Database = (function () {
-
-  /** @constant {Object} Database.mysql Connection to the database, required to send queries to the mysql tables*/
-  const mysql = require("mysql").createConnection({
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: "strategoonline",
-  });
-
-  //==========================================================================
-  /*
-  let connectCall = () => {
-    mysql.connect((err) => {
-      if (err) throw err;
-      console.log("Database".bold + " connected as " + mysql.threadId);
-      //! NEVER DISCONNECTS
-    });
-  };
-  */
-
-  //==========================================================================
-  /**
-   * @function Database.login
-   * @param {string} email
-   * email used to login to an account
-   * @param {string} password
-   * password hash used to login to an account
-   * @param {Function} callback
-   * callback function that needs the query's result to execute
-   * @returns {} /
-   * @description Performs a SELECT query to find an user in the database and get it's email and username
-   */
-  let loginCall = (email, password, callback) => {
-    mysql.query(
-      "SELECT Username, Login FROM logins WHERE Login=? AND Password=?;",
-      [email, password],
-      (err, result) => {
-        if (err) throw err;
-
-        callback(result[0] !== undefined ? {username: result[0].Username, login: result[0].Login} : undefined);
-
-        return;
-      }
-    );
-  };
-
-  //==========================================================================
-  /**
-   * @function Database.register
-   * @param {string} email
-   * email used to create an account
-   * @param {string} password
-   * password hash used to create an account
-   * @param {string} username
-   * username used to create an account
-   * @param {Function} callback
-   * callback function that needs the query's result to execute
-   * @returns {} /
-   * @description Performs a INSERT query to add an user to the database
-   */
-  let registerCall = (email, password, username, callback) => {
-    // Add the user to the db
-    mysql.query(
-      "INSERT INTO logins SET ?;",
-      { Login: email, Password: password, Username: username },
-      (err, result) => {
-        if (err) throw err;
-
-        callback(result !== undefined ? result.affectedRows : 0);
-
-        return;
-      }
-    );
-  };
-
-  //==========================================================================
-  /**
-   * @function Database.find
-   * @param {string} email
-   * email used to find an account
-   * @param {Function} callback
-   * callback function that needs the query's result to execute
-   * @returns {} /
-   * @description Performs a SELECT query to get an user's email and username from the database
-   */
-  let findCall = (email, callback) => {
-    // Check if the user already exists
-    mysql.query(
-      "SELECT Username, Login FROM logins WHERE Login=?;",
-      [email],
-      (err, result) => {
-        if (err) throw err;
-
-        callback(result[0] !== undefined ? { username: result[0].Username, login: result[0].Login } : undefined);
+        <h2>
+        Canvas
+        </h2>
         
-        return;
-      }
-    );
-  };
+    
+</header>
 
-  //==========================================================================
-  /**
-   * @function Database.delete
-   * @param {string} email
-   * email used to find an account to delete
-   * @param {string} username
-   * username used to find an account to delete
-   * @param {Function} callback
-   * callback function that needs the query's result to execute
-   * @returns {} /
-   * @description Performs a DELETE query to remove an user from the database
-   */
-  let deleteCall = (email, username, callback) => {
-    mysql.query(
-      "DELETE FROM logins WHERE Login=? AND Username=?;",
-      [email, username],
-      (err, result) => {
-        if (err) throw err;
+<article>
+    <div class="container-overview">
+    
         
-        callback(result !== undefined ? result.affectedRows : 0);
+            <div class="description"><p>Function to use to display stuff on the canvas</p></div>
+        
 
-        return;
-      }
-    );
-  };
+        
 
-  //--------------------------------------------
 
-  // Returned Object
-  return {
-    connect: () => connectCall(),
-    login: (email, password, callback) => loginCall(email, password, callback),
-    register: (email, password, username, callback) =>
-      registerCall(email, password, username, callback),
-    find: (email, callback) => findCall(email, callback),
-    delete: (email, username, callback) =>
-      deleteCall(email, username, callback),
-  };
-})();
+<dl class="details">
 
-module.exports = { database: Database };
-</code></pre>
-        </article>
-    </section>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="front_js_modules_canvas.js.html">front/js/modules/canvas.js</a>, <a href="front_js_modules_canvas.js.html#line7">line 7</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id=".drawCanvas"><span class="type-signature">(static) </span>drawCanvas<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Draws the correct scene onto the canvas</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="front_js_modules_canvas.js.html">front/js/modules/canvas.js</a>, <a href="front_js_modules_canvas.js.html#line149">line 149</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+
+<div class="param-desc">
+    <p>/</p>
+</div>
+
+    
+</div>
+
+
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id=".firstSetup"><span class="type-signature">(static) </span>firstSetup<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Converts the event coords to canvas coords</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="front_js_modules_canvas.js.html">front/js/modules/canvas.js</a>, <a href="front_js_modules_canvas.js.html#line123">line 123</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+
+<div class="param-desc">
+    <p>/</p>
+</div>
+
+    
+</div>
+
+
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id=".getCursorPosition"><span class="type-signature">(static) </span>getCursorPosition<span class="signature">(event)</span><span class="type-signature"> &rarr; {Array.&lt;Number>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Converts the event coords to canvas coords</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="front_js_modules_canvas.js.html">front/js/modules/canvas.js</a>, <a href="front_js_modules_canvas.js.html#line110">line 110</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>event</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>Event</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>event storing the mouse's coordinates</p>
+                
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+<dl class="param-type">
+    <dt>
+        Type:
+    </dt>
+    <dd>
+        
+<span class="param-type"><code>Array.&lt;Number></code></span>
+
+
+    </dd>
+</dl>
+
+
+<div class="param-desc">
+    <p>Coordinates converted for the canvas</p>
+</div>
+
+    
+</div>
+
+
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id=".resizeCanvas"><span class="type-signature">(static) </span>resizeCanvas<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Make the canvas fit the screen resolution</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="front_js_modules_canvas.js.html">front/js/modules/canvas.js</a>, <a href="front_js_modules_canvas.js.html#line170">line 170</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+
+<div class="param-desc">
+    <p>/</p>
+</div>
+
+    
+</div>
+
+
+
+</div>
+        
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 

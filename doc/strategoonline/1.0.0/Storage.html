@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>back/modules/query.js - Documentation</title>
+    <title>Storage - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,174 +29,612 @@
 
 <div id="main">
     
-    <h1 class="page-title">back/modules/query.js</h1>
+    <h1 class="page-title">Storage</h1>
     
 
     
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>/**
- * @file File used to talk to the mysql database
- * @version 1.0
- * @author Stratego Online
- */
-
-/**
- * Module to handle database queries
- * @type {Object}
- * @return {Object} functions to use with the Database module
- * @name Database
- * @namespace Database
- */
-let Database = (function () {
-
-  /** @constant {Object} Database.mysql Connection to the database, required to send queries to the mysql tables*/
-  const mysql = require("mysql").createConnection({
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: "strategoonline",
-  });
-
-  //==========================================================================
-  /*
-  let connectCall = () => {
-    mysql.connect((err) => {
-      if (err) throw err;
-      console.log("Database".bold + " connected as " + mysql.threadId);
-      //! NEVER DISCONNECTS
-    });
-  };
-  */
-
-  //==========================================================================
-  /**
-   * @function Database.login
-   * @param {string} email
-   * email used to login to an account
-   * @param {string} password
-   * password hash used to login to an account
-   * @param {Function} callback
-   * callback function that needs the query's result to execute
-   * @returns {} /
-   * @description Performs a SELECT query to find an user in the database and get it's email and username
-   */
-  let loginCall = (email, password, callback) => {
-    mysql.query(
-      "SELECT Username, Login FROM logins WHERE Login=? AND Password=?;",
-      [email, password],
-      (err, result) => {
-        if (err) throw err;
-
-        callback(result[0] !== undefined ? {username: result[0].Username, login: result[0].Login} : undefined);
-
-        return;
-      }
-    );
-  };
-
-  //==========================================================================
-  /**
-   * @function Database.register
-   * @param {string} email
-   * email used to create an account
-   * @param {string} password
-   * password hash used to create an account
-   * @param {string} username
-   * username used to create an account
-   * @param {Function} callback
-   * callback function that needs the query's result to execute
-   * @returns {} /
-   * @description Performs a INSERT query to add an user to the database
-   */
-  let registerCall = (email, password, username, callback) => {
-    // Add the user to the db
-    mysql.query(
-      "INSERT INTO logins SET ?;",
-      { Login: email, Password: password, Username: username },
-      (err, result) => {
-        if (err) throw err;
-
-        callback(result !== undefined ? result.affectedRows : 0);
-
-        return;
-      }
-    );
-  };
-
-  //==========================================================================
-  /**
-   * @function Database.find
-   * @param {string} email
-   * email used to find an account
-   * @param {Function} callback
-   * callback function that needs the query's result to execute
-   * @returns {} /
-   * @description Performs a SELECT query to get an user's email and username from the database
-   */
-  let findCall = (email, callback) => {
-    // Check if the user already exists
-    mysql.query(
-      "SELECT Username, Login FROM logins WHERE Login=?;",
-      [email],
-      (err, result) => {
-        if (err) throw err;
-
-        callback(result[0] !== undefined ? { username: result[0].Username, login: result[0].Login } : undefined);
+        <h2>
+        Storage
+        </h2>
         
-        return;
-      }
-    );
-  };
+    
+</header>
 
-  //==========================================================================
-  /**
-   * @function Database.delete
-   * @param {string} email
-   * email used to find an account to delete
-   * @param {string} username
-   * username used to find an account to delete
-   * @param {Function} callback
-   * callback function that needs the query's result to execute
-   * @returns {} /
-   * @description Performs a DELETE query to remove an user from the database
-   */
-  let deleteCall = (email, username, callback) => {
-    mysql.query(
-      "DELETE FROM logins WHERE Login=? AND Username=?;",
-      [email, username],
-      (err, result) => {
-        if (err) throw err;
+<article>
+    <div class="container-overview">
+    
         
-        callback(result !== undefined ? result.affectedRows : 0);
+            <div class="description"><p>Process the load and edit of the json files</p></div>
+        
 
-        return;
-      }
-    );
-  };
+        
 
-  //--------------------------------------------
 
-  // Returned Object
-  return {
-    connect: () => connectCall(),
-    login: (email, password, callback) => loginCall(email, password, callback),
-    register: (email, password, username, callback) =>
-      registerCall(email, password, username, callback),
-    find: (email, callback) => findCall(email, callback),
-    delete: (email, username, callback) =>
-      deleteCall(email, username, callback),
-  };
-})();
+<dl class="details">
 
-module.exports = { database: Database };
-</code></pre>
-        </article>
-    </section>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="back_modules_storage.js.html">back/modules/storage.js</a>, <a href="back_modules_storage.js.html#line11">line 11</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id=".editData"><span class="type-signature">(static) </span>editData<span class="signature">(name, edit)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Edit the content of a JSON file with a function</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="back_modules_storage.js.html">back/modules/storage.js</a>, <a href="back_modules_storage.js.html#line33">line 33</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>string</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>File name request</p>
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>edit</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>function</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>File edit function</p>
+                
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+
+<div class="param-desc">
+    <p>/</p>
+</div>
+
+    
+</div>
+
+
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id=".editData"><span class="type-signature">(static) </span>editData<span class="signature">(name, JSONObject)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Edit the content of a JSON file with a function</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="back_modules_storage.js.html">back/modules/storage.js</a>, <a href="back_modules_storage.js.html#line63">line 63</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>string</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Path to define where the file should be stored</p>
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>JSONObject</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>JSON</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>JSON Object to save as a file</p>
+                
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+
+<div class="param-desc">
+    <p>/</p>
+</div>
+
+    
+</div>
+
+
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id=".getData"><span class="type-signature">(static) </span>getData<span class="signature">(name)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Get the content of a JSON file</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="back_modules_storage.js.html">back/modules/storage.js</a>, <a href="back_modules_storage.js.html#line19">line 19</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>string</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>File name request</p>
+                
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+<dl class="param-type">
+    <dt>
+        Type:
+    </dt>
+    <dd>
+        
+<span class="param-type"><code>Object</code></span>
+
+
+    </dd>
+</dl>
+
+
+<div class="param-desc">
+    <p>JSON Object that was stored in the file</p>
+</div>
+
+    
+</div>
+
+
+
+</div>
+        
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 

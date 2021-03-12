@@ -73,10 +73,10 @@ let Request = (function () {
       //console.log(`Data loaded: ${XHR.status} ${XHR.response}`);
     });
     XHR.addEventListener("error", () => {
-      //console.log("An error occurred while sending the request...");
+      Toast.error("An error occurred during your registration...");
     });
     XHR.addEventListener("abort", () => {
-      //console.log("The transfer has been canceled by the user.");
+      Toast.error("Your account deletion has been canceled...");
     });
 
     XHR.open("POST", "/");
@@ -113,23 +113,27 @@ let Request = (function () {
       //console.log(`Data loaded: ${XHR.status} ${XHR.response}`);
     });
     XHR.addEventListener("error", () => {
-      //console.log("An error occurred while sending the request...");
+      Toast.error("An error occurred during your account deletion...");
     });
     XHR.addEventListener("abort", () => {
-      //console.log("The transfer has been canceled by the user.");
+      Toast.error("Your account deletion has been canceled...");
     });
 
     XHR.onreadystatechange = () => {
       if (XHR.readyState === 4 && XHR.status === 200) {
-        if (typeof(XHR.response.redirect) == 'string') {
-          window.location = XHR.response.redirect;
+        if (typeof XHR.response.redirect == "string") {
+          window.location.replace(XHR.response.redirect);
+
+          Toast.success("Your account has been successfully deleted");
+        } else if (typeof XHR.response.error == "string") {
+          Toast.error(XHR.response.error);
         }
       }
     };
 
     XHR.open("POST", "/profile/");
     XHR.setRequestHeader("Content-Type", "application/json");
-    XHR.responseType = "json";
+    //XHR.responseType = "json";
     XHR.send(JSON.stringify({ login: email, username: username }));
   }
 

@@ -1,11 +1,11 @@
 /**
- * @file Generate different kind of informations of the scores array
+ * @file Generate different kind of informations of the leaderboard array
  * @version 1.0
  * @author Stratego Online
  */
 
 /**
- * Generate different kind of informations of the scores array
+ * Generate different kind of informations of the leaderboard array
  * @type {Object}
  * @return {Object} functions to get data of a rank or just generate an html line of a rank
  * @name Scores
@@ -20,7 +20,7 @@ let Scores = (function () {
    * Data you want to use
    * @returns {Array}
    * Array of this rank
-   * @description Get the content of a rank in scores array
+   * @description Get the content of a rank in leaderboard array
    */
   function getRankInfos(rank, data) {
     for (let i = 0; i < data.length; i++) {
@@ -38,15 +38,15 @@ let Scores = (function () {
      * Data you want to use
      * @returns {Array}
      * Array of this rank
-     * @description Get the content of a rank in scores array
+     * @description Get the content of a rank in leaderboard array
      */
     getRankData(rank, data) {
       // sert à rien pour l'instant, peut être utile si l'on complexifie le stockage
-      let scores = getRankInfos(rank, data);
+      let leaderboard = getRankInfos(rank, data);
       let line = new Object();
-      line["username"] = scores.username;
-      line["score"] = scores.score;
-      line["time"] = scores.time;
+      line["username"] = leaderboard.username;
+      line["score"] = leaderboard.score;
+      line["time"] = leaderboard.time;
       return line;
     },
 
@@ -61,20 +61,20 @@ let Scores = (function () {
      * @description Create the html code for a rank line in a table
      */
     getRankLine(rank, data) {
-      let scores = getRankInfos(rank, data);
+      let leaderboard = getRankInfos(rank, data);
       return (
         "<tr>" +
         "<td>" +
         rank +
         "</td>" +
         "<td>" +
-        scores.username +
+        leaderboard.username +
         "</td>" +
         "<td>" +
-        scores.score +
+        leaderboard.score +
         " points</td>" +
         "<td>" +
-        scores.time +
+        leaderboard.time +
         "min</td></tr>"
       );
     },

@@ -11,9 +11,8 @@ const sha256 = require("js-sha256").sha256;
 const db = require("./query").database;
 const toast = require("./toasts");
 const Storage = require("./storage");
-const Scores = require("./scores");
+const Scores = require("./leaderboard");
 const TableDraw = require("./tableDraw");
-
 
 /**
  * Process the POST and GET requests from the express app in index.js
@@ -32,12 +31,9 @@ let AppRequest = (function () {
    * @returns {} /
    * @description GET request handler for the site's main page
    */
-
-
   let sendHomeCall = (req, res) => {
     let fileSend = fs.readFileSync("front/html/head.html");
     // Check if the player is connected to change the navbar or not
-    //console.log(req.session.username); //DEBUG
     if (!req.session.username)
       fileSend += fs.readFileSync("front/html/login.html");
     else {
@@ -60,7 +56,7 @@ let AppRequest = (function () {
    * @param {Object} request
    * @param {Object} response
    * @returns {} /
-   * @description GET request handler for the site's scores page
+   * @description GET request handler for the site's leaderboard page
    */
   let sendScoresCall = (req, res) => {
     let fileSend = fs.readFileSync("front/html/head.html");
@@ -77,14 +73,13 @@ let AppRequest = (function () {
         req.session.username +
         '";</script>';
     }
-    fileSend += `<script>document.getElementById("homeLink").classList.remove("active");document.getElementById("scoresLink").classList.add("active");</script>`;
-    fileSend += fs.readFileSync("front/html/scores.html");
-    let data  = Storage.getData("scores");
-    fileSend += TableDraw.draw(20, data.scores, Scores.getRankLine);
-    fileSend +="</table></div>";
+    fileSend += `<script>document.getElementById("homeLink").classList.remove("active");document.getElementById("leaderboardLink").classList.add("active");</script>`;
+    fileSend += fs.readFileSync("front/html/leaderboard.html");
+    let data = Storage.getData("leaderboard");
+    fileSend += TableDraw.draw(20, data.leaderboard, Scores.getRankLine);
+    fileSend += "</table></div>";
     fileSend += fs.readFileSync("front/html/footer.html");
     res.send(fileSend);
-    
   };
 
   //===============================================================================
@@ -94,7 +89,7 @@ let AppRequest = (function () {
    * @param {Object} response
    * @returns {} /
    * @description GET request handler for an user's profile page
-  */
+   */
   let sendProfileCall = (req, res) => {
     let fileSend = fs.readFileSync("front/html/head.html");
     if (!req.session.username) {
@@ -310,18 +305,24 @@ let AppRequest = (function () {
         db.delete(req.session.login, req.session.username, (affectedRows) => {
           if (affectedRows === 1) {
             //TODO Display a deletion successful message
+            console.log("Accout successfully deleted!");
+            //errorCode stays at 0
+            res.send({ redirect: "/" });
           } else {
             //User addition unsuccessful
             //TODO Display an error message to the user
-            console.log("Error while deleting an user to the DB...");
+            console.error("Error while deleting an user to the DB...");
+            res.send({ error: "Database error..." });
           }
 
           req.session.destroy();
-          res.send({redirect: '/'});
         });
       } else {
         //TODO Display an error message to the user
-        console.log("Error while sending the request to the server...");
+        console.error("Error while sending the request to the server...");
+
+        req.session.destroy();
+        res.send({ error: "Your request couldn't be sent" });
       }
     }
   };

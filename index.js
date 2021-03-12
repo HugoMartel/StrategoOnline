@@ -87,7 +87,7 @@ app.get("/disconnect/", (req, res) => {
   req.session.destroy();
   res.redirect("/");
 });
-app.get("/scores/", AppRequest.sendScores);
+app.get("/leaderboard/", AppRequest.sendScores);
 app.get("/profile/", AppRequest.sendProfile);
 app.get("/rules/", AppRequest.sendRules);
 

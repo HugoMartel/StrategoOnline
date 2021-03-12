@@ -3,36 +3,38 @@
     </script>
     <div class="container" aria-hidden="true">
         <div class="modal-dialog modal-lg">
-            <div class="modal-content text-center">
+            <form class="modal-content" id="registerForm" action="" method="POST">
                 <!-- Header -->
                 <div class="modal-header">
-                    <h4 class="modal-title">Create your Account</h4>
+                    <h4 class="modal-title">Create your account</h4>
                 </div>
                 <!-- Content -->
-                <form class="modal-body" id="registerForm" action="" method="POST">
-                    <div class="form-group">
-                        <label for="email">Email:</label>
-                        <input type="email" id="email" name="email" autocomplete="off" placeholder="Enter your email" style="width: 100%;" />
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" required>
+                        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
                     </div>
-                    <div class="form-group">
-                        <label for="username">Username:</label>
-                        <input type="text" id="username" name="username" autocomplete="off" placeholder="Enter your username" aria-describedby="usernameHelp" style="width: 100%;" />
-                        <small id="usernameHelp" class="form-text text-muted">Between 4 and 16 characters</small>
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" aria-describedby="usernameHelp" required>
+                        <div id="usernameHelp" class="form-text">It must be between 4 and 16 characters.</div>
                     </div>
-                    <div class="form-group">
-                        <label for="password">Password:</label>
-                        <input type="password" id="password" name="password" autocomplete="off" placeholder="Enter your password" aria-describedby="passwordHelp" style="width: 100%;" />
-                        <small id="passwordHelp" class="form-text text-muted">More than 8 chars with at least 1 number, 1 Uppercase letter, 1 lowercase letter</small>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" aria-describedby="passwordHelp" required>
+                        <div id="passwordHelp" class="form-text">It must be more than 8 characters with at least 1 number, 1 uppercase letter, 1 lowercase letter.</div>
                     </div>
-                    <div class="form-group">
-                        <label for="password2">Confirm your password:</label>
-                        <input type="password" id="password2" name="password2" autocomplete="off" placeholder="Enter your password" style="width: 100%;" />
+                    <div class="mb-3">
+                        <label for="password2" class="form-label">Confirm your password</label>
+                        <input type="password" class="form-control" id="password2" name="password2" required>
                     </div>
-                    <div class="form-group">
-                        <button class="btn btn-success" type="submit">Create Account</button>
-                    </div>
-                </form>
-            </div>
+                </div>
+                <!-- Footer -->
+                <div class="modal-footer text-center d-block">
+                    <button class="btn btn-success" type="submit">Create</button>
+                </div>
+            </form>
         </div>
     </div>
 </body>

@@ -1,53 +1,50 @@
-<div class="container-fluid">
+<div class="container my-5">
+    <h2>Your personal informations</h2>
+    <hr/>
     <form method="GET" action="">
-        <table id="profileTable" class="table table-hover mt-5" style="min-height:600px">
-            <thead class="thead-dark">
-                <tr>
-                    <th scope="col" colspan="3">Your personal information :</th>
-                </tr>
-            </thead>
+        <table id="profileTable" class="table table-hover align-middle mt-5" style="min-height:50vh">
             <tbody>
                 <!-- Email -->
                 <tr>
                     <th scope="row">Email</th>
                     <td>
-                        <p id="emailToInsert">...</p>
+                        <a id="emailToInsert">...</a>
                     </td>
-                    <td><button class="btn btn-outline-primary" type="sumbit" value="email">Modify</button></td>
+                    <td><button class="btn btn-outline-primary" type="sumbit" value="email">Edit</button></td>
                 </tr>
                 <!-- Password hidden -->
                 <tr>
                     <th scope="row">Password</th>
                     <td>
-                        <p>●●●●●●●●●●</p>
+                        <a>●●●●●●●●●●</a>
                     </td>
-                    <td><button class="btn btn-outline-primary" type="sumbit" value="email">Modify</button></td>
+                    <td><button class="btn btn-outline-primary" type="sumbit" value="email">Edit</button></td>
                 </tr>
                 <!-- Username -->
                 <tr>
                     <th scope="row">Username</th>
                     <td>
-                        <p id="usernameToInsert">...</p>
+                        <a id="usernameToInsert">...</a>
                     </td>
-                    <td><button class="btn btn-outline-primary" type="sumbit" value="email">Modify</button></td>
+                    <td><button class="btn btn-outline-primary" type="sumbit" value="email">Edit</button></td>
                 </tr>
                 <tr>
                     <th scope="row">Stats</th>
                     <td colspan="2">
                         <!-- Games played -->
-                        <p id="gamesPlayed">Games played: </p>
+                        <p class="d-block">Games played: <span id="gamesPlayed"></span></p>
                         <!-- Games won -->
-                        <p id="gamesWon">Games won: </p>
+                        <p class="d-block">Games won: <span id="gamesWon"></span></p>
                         <!-- Victory percentage graph ?-->
-                        <p id="winrate">Winrate: </p>
+                        <p class="d-block">Winrate: <span id="winrate"></span></p>
                     </td>
                 </tr>
             </tbody>
         </table>
     </form>
     <!-- Delete option -->
-    <form method="POST" action="/">
-        <button id="deleteAccountButton" class="btn btn-danger" type="submit">Delete your Account</button>
+    <form class="text-center" method="POST" action="/">
+        <button id="deleteAccountButton" class="btn btn-danger" type="submit">Delete your account</button>
     </form>
 </div>
 <script src="../js/modules/request.js"></script>

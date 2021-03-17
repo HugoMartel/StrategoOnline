@@ -78,6 +78,8 @@ let AppRequest = (function () {
     let data = Storage.getData("leaderboard");
     fileSend += TableDraw.draw(20, data.leaderboard, Scores.getRankLine);
     fileSend += "</table></div>";
+    fileSend += '<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" type="text/javascript"></script>'
+    fileSend += '<script> const table = new simpleDatatables.DataTable("table") </script>'
     fileSend += fs.readFileSync("front/html/footer.html");
     res.send(fileSend);
   };

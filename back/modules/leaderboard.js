@@ -72,10 +72,10 @@ let Scores = (function () {
         "</td>" +
         "<td>" +
         leaderboard.score +
-        " points</td>" +
+        " </td>" +
         "<td>" +
         leaderboard.time +
-        "min</td></tr>"
+        " min</td></tr>"
       );
     },
   };

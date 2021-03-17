@@ -23,8 +23,8 @@ let Scores = (function () {
    * @description Get the content of a rank in leaderboard array
    */
   function getRankInfos(rank, data) {
-    for (let i = 0; i < data.length; i++) {
-      if (data[i].rank == rank) return data[i];
+    if (data[rank]!= undefined) {
+      return data[rank];
     }
     return data[0]; //Si on trouve pas, on envoie le 1er pour éviter l'erreur
   }

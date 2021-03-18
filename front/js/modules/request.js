@@ -8,12 +8,54 @@
  * POST and GET requests sent by users
  * @type {Object}
  * @return {Object} functions to use with the Request module
- * @name Request
- * @namespace Request
+ * @name ClientRequest
+ * @namespace ClientRequest
  */
-let Request = (function () {
+let ClientRequest = (function () {
   /**
-   * @function Request.sendLogin
+   * @function ClientRequest.sendXHR
+   * @param {JSON} body
+   * request's JSON body to send to the server with the request
+   * @param {string} successMessage
+   * message to display in the case of success
+   * @returns {} /
+   * @description Generic XMLHttpRequest function
+   */
+  function sendXHR(body, successMessage, path) {
+    let XHR = new XMLHttpRequest();
+    // XHR ERROR HANDLING
+    XHR.addEventListener("load", () => {
+      //console.log(`Data loaded: ${XHR.status} ${XHR.response}`);
+    });
+    XHR.addEventListener("error", () => {
+      Toast.error("An error occurred while sending the request...");
+    });
+    XHR.addEventListener("abort", () => {
+      Toast.error("The transfer has been canceled by the user.");
+    });
+
+    XHR.onreadystatechange = () => {
+      if (XHR.readyState === 4 && XHR.status === 200) {
+        if (typeof XHR.response.redirect == "string") {
+          Toast.success(successMessage);
+          setTimeout(function () {
+            window.location.replace(XHR.response.redirect);
+          }, 2000);
+        } else if (typeof XHR.response.error == "string") {
+          Toast.error(XHR.response.error);
+        }
+      }
+    };
+
+    XHR.open("POST", path);
+    XHR.setRequestHeader("Content-Type", "application/json");
+    XHR.responseType = "json";
+    XHR.send(JSON.stringify(body));
+  }
+
+  //======================================================================================
+  /**
+   * @function ClientRequest.sendLogin
    * @param {string} email
    * user's email used to login
    * @param {string} password
@@ -22,30 +64,14 @@ let Request = (function () {
    * @description Login XMLHTTPRequest to send to the express app, the XHR content is sent as a POST request
    */
   function sendLoginXHR(email, password) {
-    //TODO display an error
     if (email === undefined || password === undefined) return;
 
-    let XHR = new XMLHttpRequest();
-    // XHR ERROR HANDLING
-    XHR.addEventListener("load", () => {
-      //console.log(`Data loaded: ${XHR.status} ${XHR.response}`);
-    });
-    XHR.addEventListener("error", () => {
-      //console.log("An error occurred while sending the request...");
-    });
-    XHR.addEventListener("abort", () => {
-      //console.log("The transfer has been canceled by the user.");
-    });
-
-    XHR.open("POST", "/");
-    XHR.setRequestHeader("Content-Type", "application/json");
-    XHR.responseType = "json";
-    XHR.send(JSON.stringify({ email: email, password: password }));
+    sendXHR({ email: email, password: password }, "Logged in", "/");
   }
 
   //======================================================================================
   /**
-   * @function Request.sendRegister
+   * @function ClientRequest.sendRegister
    * @param {string} email
    * user's email to set
    * @param {string} password
@@ -58,43 +84,31 @@ let Request = (function () {
    * @description Register XMLHTTPRequest to send to the express app, the XHR content is sent as a POST request
    */
   function sendRegisterXHR(email, password, password2, username) {
-    //TODO display an error
+    console.log(email, password, password2, username);
+
     if (
-      password != password2 ||
+      password !== password2 ||
       email === undefined ||
       password === undefined ||
       username === undefined
     )
       return;
 
-    let XHR = new XMLHttpRequest();
-    // XHR ERROR HANDLING
-    XHR.addEventListener("load", () => {
-      //console.log(`Data loaded: ${XHR.status} ${XHR.response}`);
-    });
-    XHR.addEventListener("error", () => {
-      Toast.error("An error occurred during your registration...");
-    });
-    XHR.addEventListener("abort", () => {
-      Toast.error("Your account deletion has been canceled...");
-    });
-
-    XHR.open("POST", "/");
-    XHR.setRequestHeader("Content-Type", "application/json");
-    XHR.responseType = "json";
-    XHR.send(
-      JSON.stringify({
+    sendXHR(
+      {
         email: email,
         password: password,
         username: username,
         password2: password2,
-      })
+      },
+      "Your account has been successfully created!",
+      "/register"
     );
   }
 
   //======================================================================================
   /**
-   * @function Request.sendDelete
+   * @function ClientRequest.sendDelete
    * @param {string} email
    * user's email to find the user to delete in the database
    * @param {string} username
@@ -104,37 +118,13 @@ let Request = (function () {
    */
   function sendDeleteXHR(email, username) {
     //The email would be enough to delete an account since it is unique but we also use the username just to be sure
-    //TODO display an error
     if (email === undefined || username === undefined) return;
 
-    let XHR = new XMLHttpRequest();
-    // XHR ERROR HANDLING
-    XHR.addEventListener("load", () => {
-      //console.log(`Data loaded: ${XHR.status} ${XHR.response}`);
-    });
-    XHR.addEventListener("error", () => {
-      Toast.error("An error occurred during your account deletion...");
-    });
-    XHR.addEventListener("abort", () => {
-      Toast.error("Your account deletion has been canceled...");
-    });
-
-    XHR.onreadystatechange = () => {
-      if (XHR.readyState === 4 && XHR.status === 200) {
-        if (typeof XHR.response.redirect == "string") {
-          window.location.replace(XHR.response.redirect);
-
-          Toast.success("Your account has been successfully deleted");
-        } else if (typeof XHR.response.error == "string") {
-          Toast.error(XHR.response.error);
-        }
-      }
-    };
-
-    XHR.open("POST", "/profile/");
-    XHR.setRequestHeader("Content-Type", "application/json");
-    //XHR.responseType = "json";
-    XHR.send(JSON.stringify({ login: email, username: username }));
+    sendXHR(
+      { login: email, username: username },
+      "Your account has been successfully deleted",
+      "/profile"
+    );
   }
 
   //return Object

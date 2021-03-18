@@ -78,7 +78,6 @@ app.get("/", AppRequest.sendHome);
 app.get("/register/", (req, res) => {
   let fileSend = fs.readFileSync("front/html/head.html");
   fileSend += `<script>document.getElementById("homeLink").classList.remove("active");</script>`;
-  fileSend += fs.readFileSync("front/html/login.html");
   fileSend += fs.readFileSync("front/html/register.html");
   res.send(fileSend);
 });

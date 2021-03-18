@@ -78,8 +78,10 @@ let AppRequest = (function () {
     let data = Storage.getData("leaderboard");
     fileSend += TableDraw.draw(20, data.leaderboard, Scores.getRankLine);
     fileSend += "</table></div>";
-    fileSend += '<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" type="text/javascript"></script>'
-    fileSend += '<script> const table = new simpleDatatables.DataTable("table") </script>'
+    fileSend +=
+      '<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" type="text/javascript"></script>';
+    fileSend +=
+      '<script> const table = new simpleDatatables.DataTable("table") </script>';
     fileSend += fs.readFileSync("front/html/footer.html");
     res.send(fileSend);
   };
@@ -166,7 +168,7 @@ let AppRequest = (function () {
       req.body.email === undefined ||
       req.body.password === undefined
     ) {
-      console.log(errors);
+      console.log(errors, req.body.email, req.body.password);
       return res.status(400).json({ errors: errors.array() });
     } else {
       let emailChecked = escape(req.body.email.trim());
@@ -187,19 +189,19 @@ let AppRequest = (function () {
             //Connection successful
             req.session.username = result.username;
             req.session.login = result.login;
+            return res.send({ redirect: req.get("referer") });
           } else {
             //Connection unsuccessful
-            //TODO Display an error message to the user
             console.log("User not found in the db...");
+            req.session.save();
+            return res.send({ error: "User not found in the db..." });
           }
-
-          req.session.save();
-          res.redirect(req.get("referer")); //Redirects to the current page
+          //res.redirect(req.get("referer")); //Redirects to the current page
         });
       } else {
-        //TODO Display an error message to the user
-        console.log("Wrong logins credentials...");
-        res.redirect(req.get("referer")); //Redirects to the current page
+        console.log("Wrong login credentials...");
+        //res.redirect(req.get("referer")); //Redirects to the current page
+        return res.send({ error: "Wrong login credentials..." });
       }
     }
   };
@@ -255,26 +257,26 @@ let AppRequest = (function () {
                   //User addition successful -> fill the session values
                   req.session.username = usernameChecked;
                   req.session.login = emailChecked;
+                  req.session.save();
+                  res.json({ redirect: "/" });
                 } else {
                   //User addition unsuccessful
                   console.log("Error while adding an user to the DB...");
+                  res.json({
+                    error: "Error while adding an user to the DB...",
+                  });
                 }
-
-                req.session.save();
-                res.redirect("/");
               }
             );
           } else {
             //User can't be registered because his email is already in use
-            //TODO Display an error message to the user
             console.log("Email already in use...");
-            res.redirect("/register/");
+            res.json({ error: "Email already in use..." });
           }
         });
       } else {
-        //TODO Display an error message to the user
         console.log("Wrong logins credentials...");
-        res.redirect("/register/");
+        res.json({ error: "Wrong logins credentials..." });
       }
     }
   };
@@ -295,7 +297,7 @@ let AppRequest = (function () {
       req.body.login === undefined ||
       req.body.username === undefined
     ) {
-      console.log(errors);
+      console.error(errors);
       return res.status(400).json({ errors: errors.array() });
     } else {
       //Get XMLHttpRequests values
@@ -306,25 +308,21 @@ let AppRequest = (function () {
         //If the XHR values are correct => preform the query
         db.delete(req.session.login, req.session.username, (affectedRows) => {
           if (affectedRows === 1) {
-            //TODO Display a deletion successful message
-            console.log("Accout successfully deleted!");
-            //errorCode stays at 0
-            res.send({ redirect: "/" });
+            console.log("Account successfully deleted!");
+            res.json({ redirect: "/" });
           } else {
             //User addition unsuccessful
-            //TODO Display an error message to the user
             console.error("Error while deleting an user to the DB...");
-            res.send({ error: "Database error..." });
+            res.json({ error: "Database error..." });
           }
 
           req.session.destroy();
         });
       } else {
-        //TODO Display an error message to the user
         console.error("Error while sending the request to the server...");
 
         req.session.destroy();
-        res.send({ error: "Your request couldn't be sent" });
+        res.json({ error: "Your request couldn't be sent" });
       }
     }
   };

@@ -4,6 +4,6 @@
  * @author Stratego Online
  */
 document.getElementById('registerForm').addEventListener('submit', event => {
-    //event.preventDefault();
-    Request.sendRegister(document.getElementById('email').value, document.getElementById('password').value, document.getElementById('password2').value, document.getElementById('username').value);
+    event.preventDefault();
+    ClientRequest.sendRegister(document.getElementById('userEmail').value, document.getElementById('userPassword').value, document.getElementById('userPassword2').value, document.getElementById('username').value);
 });

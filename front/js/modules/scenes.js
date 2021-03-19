@@ -12,6 +12,10 @@
  * @namespace Scenes
  */
 let Scenes = (function () {
+  // Intern variables
+  let players = [];
+  let gameReadyToStart = false;
+
   /**
    * @function Scenes.clear
    * @argument {HTMLCanvasElement} canvas
@@ -95,6 +99,11 @@ let Scenes = (function () {
    * Canvas to display elements in
    * @argument {Object} ctx
    * Canvas's context to be able to draw in
+   * @argument {string} name1
+   * Name to display on the left
+   * @argument {string} name2
+   * Name to display on the right
+   * @argument {boolean} ready
    * @returns {} /
    * @description Draws the waiting menu
    */
@@ -114,7 +123,9 @@ let Scenes = (function () {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     /* Waiting for an opponent text */
-    let txtTop = "Waiting for an opponent...";
+    let txtTop = gameReadyToStart
+      ? "Your game will start in a few seconds"
+      : "Waiting for an opponent...";
     let grdGold = ctx.createLinearGradient(
       parseInt(canvas.width / 2 - ctx.measureText(txtTop).width / 2),
       0,
@@ -156,15 +167,14 @@ let Scenes = (function () {
       parseInt(canvas.width / 10)
     );
     //Name 1
-    let username1 = "username";
-    ctx.font = "normal " + parseInt(canvas.width / 40) + "pt Ancient";
+    ctx.font = "normal " + parseInt(canvas.width / 50) + "pt Arial";
     ctx.fillText(
-      username1,
+      players[0],
       parseInt(
         canvas.width / 2 -
           canvas.width / 6 -
           canvas.width / 20 -
-          ctx.measureText(username1).width / 2
+          ctx.measureText(players[0]).width / 2
       ),
       parseInt(canvas.height / 4 + canvas.width / 10 + canvas.width / 40)
     );
@@ -187,20 +197,60 @@ let Scenes = (function () {
       parseInt(canvas.width / 10)
     );
     //Name 2
-    let username2 = "?";
     ctx.fillText(
-      username2,
+      players[1] !== undefined ? players[1] : "?",
       parseInt(
         canvas.width / 2 +
           canvas.width / 6 +
           canvas.width / 20 -
-          ctx.measureText(username2).width / 2
+          ctx.measureText(players[1] !== undefined ? players[1] : "?").width / 2
       ),
       parseInt(canvas.height / 4 + canvas.width / 10 + canvas.width / 40)
     );
 
+    //if (!gameReadyToStart) {
     /* Animated searching icon */
-    //TODO
+    // found on https://codepen.io/ruffiem/pen/mHylb (modified)
+    sA = (Math.PI / 180) * 45;
+    sE = (Math.PI / 180) * 90;
+
+    setInterval(function () {
+      ctx.lineWidth = 15;
+
+      ctx.beginPath();
+      ctx.strokeStyle = "#ffffff";
+      ctx.shadowColor = "#eeeeee";
+      ctx.shadowOffsetX = 2;
+      ctx.shadowOffsetY = 2;
+      ctx.shadowBlur = 0;
+      ctx.arc(
+        parseInt(canvas.width / 2),
+        parseInt((canvas.height * 3) / 4),
+        25,
+        0,
+        360,
+        false
+      );
+      ctx.stroke();
+      ctx.closePath();
+
+      sE += 0.05;
+      sA += 0.05;
+
+      ctx.beginPath();
+      ctx.strokeStyle = "#aaaaaa";
+      ctx.arc(
+        parseInt(canvas.width / 2),
+        parseInt((canvas.height * 3) / 4),
+        25,
+        sA,
+        sE,
+        false
+      );
+      ctx.stroke();
+      ctx.closePath();
+    }, 6);
+    //}
 
     /* Optional countdown on player found */
     //TODO
@@ -213,5 +263,10 @@ let Scenes = (function () {
     startMenu: (canvas, ctx) => startMenuDraw(canvas, ctx),
     waitingMenu: (canvas, ctx) => waitingMenuDraw(canvas, ctx),
     clear: (canvas, ctx) => clearCall(canvas, ctx),
+    addPlayer: (name) => {
+      if (players.length < 2) players.push(name);
+    },
+    resetPlayers: () => (players = []),
+    setGameReady: (isReady) => (gameReadyToStart = isReady),
   };
 })();

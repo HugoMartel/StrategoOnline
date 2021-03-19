@@ -41,18 +41,15 @@ let Canvas = (function () {
         Math.round(canvas.height / 3 - parseInt(canvas.width / 10))
     ) {
       //Inform the server that someone wants to play
-      socket.emit("newGame"); //TODO add args ?
+      socket.emit("newGame");
 
       //Remove the events attached to the start menu
       canvas.removeEventListener("click", playButtonClickedCallback);
       canvas.removeEventListener("mousemove", playButtonHoveredCallback);
       document.getElementById("startMenuBottom").remove();
 
-      //Change the canvas scene
+      //Clear the scene
       Scenes.clear(canvas, ctx);
-      currentScene = 1;
-      drawCanvasCall();
-      //TODO
     }
   };
 
@@ -187,5 +184,7 @@ let Canvas = (function () {
     startMenuSetup: () => startMenuSetupCall(),
     drawCanvas: () => drawCanvasCall(),
     resizeCanvas: () => resizeCanvasCall(),
+    setCurrentScene: (sceneToDisplay) => currentScene = sceneToDisplay,
+
   };
 })();

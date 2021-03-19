@@ -13,7 +13,9 @@ class Game {
    * Creates the game object
    * @param {string} player first player that will take part (the second player will be added later)
    */
-  constructor(player) {
+  constructor(player, name) {
+    this.room_name = name;
+
     this.player1 = player;
     this.player2 = null;
     //Create each player's pieces array

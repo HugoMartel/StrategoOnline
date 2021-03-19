@@ -7,7 +7,7 @@
 /**
  * POST and GET requests sent by users
  * @type {Object}
- * @return {Object} functions to use with the Request module
+ * @return {Object} functions to use with the ClientRequest module
  * @name ClientRequest
  * @namespace ClientRequest
  */

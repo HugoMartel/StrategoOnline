@@ -2,11 +2,16 @@
     <canvas id="canvas" class="w-100 h-100"> Your browser doesn't support the canvas tag. Please update it to be able to
         play our game</canvas>
 </div>
+<script src="../js/modules/socket.js"></script>
 <script src="../js/modules/scenes.js"></script>
 <script src="../js/modules/canvas.js"></script>
 <script>
     /* Initialize socket.io */
     let socket = io();
+
+    socket.on('match created', data => Socket.matchCreated(data));
+    socket.on('match ready', data => Socket.matchReady(data));
+    socket.on('user left', data => Socket.userLeft(data));
 
     /* Append the img to ease out the access for the menu background */
     let bottomImg = document.createElement("img");

@@ -1,4 +1,5 @@
 {
+  "room_name": "the timestamp at which the game was created",
   "players": ["user1", null],
   "tables": [
     [

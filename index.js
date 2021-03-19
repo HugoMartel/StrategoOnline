@@ -116,7 +116,7 @@ io.on("connection", (client) => {
       if (room !== client.id) {
         // Disconnecting during a game
         //TODO
-        client.to(room).emit("userLeft", client.id);
+        client.to(room).emit("user left", client.id);
       }
     }
   });
@@ -131,18 +131,24 @@ io.on("connection", (client) => {
 
     /* There are no user waiting for a game */
     if (gameWaiting === false) {
+      // TimeStamp to use for identification
+      let currentTime = Date.now().toString();
+
       //Store the user in a new game object
       let newGame = new Game(
         clientSocket.handshake.session.login !== undefined
           ? clientSocket.handshake.session.login
-          : clientSocket.id
+          : clientSocket.id,
+        currentTime
       );
-
-      // TimeStamp to use for identification
-      let currentTime = Date.now().toString()
 
       //Make the client join a socket room
       client.join(currentTime);
+
+      // Send things to display to the client
+      io.sockets.to(newGame.room_name).emit("match created", {
+        username1: newGame.player1
+      });
 
       //Save the game as a JSON file in ./back/storage/games/waiting
       //idea to name files : fs.readdirSync(__dirname + "/back/storage/games/waiting").length // Counts the amount of files in the directory
@@ -163,7 +169,9 @@ io.on("connection", (client) => {
       // Game to add our user into
       //Find the game that is waiting for the longest time (= has the lowest timestamp)
       let waitingGameTimeStamp = Math.min.apply(null, waitingGamesNames);
-      let waitingGame = Storage.getData("games/waiting/" + waitingGameTimeStamp);
+      let waitingGame = Storage.getData(
+        "games/waiting/" + waitingGameTimeStamp
+      );
 
       //add the user the the correct socket room
       client.join(waitingGameTimeStamp.toString());
@@ -183,7 +191,10 @@ io.on("connection", (client) => {
 
       //Remove the waiting JSON game file from ./back/storage/games/waiting
       fs.unlink(
-        __dirname + "/back/storage/games/waiting/" + waitingGameTimeStamp + ".json",
+        __dirname +
+          "/back/storage/games/waiting/" +
+          waitingGameTimeStamp +
+          ".json",
         (err) => {
           if (err) throw err;
         }
@@ -193,9 +204,10 @@ io.on("connection", (client) => {
       console.log("A game is starting".underline);
 
       //Update the first user's interface with the second player's name
-
-      //Send the two players a START game ping
-      //TODO
+      io.sockets.to(waitingGame.room_name).emit("match ready", {
+        username1: waitingGame.player1,
+        username2: waitingGame.player2,
+      });
     }
   });
 });

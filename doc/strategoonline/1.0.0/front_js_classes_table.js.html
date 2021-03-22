@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>front/js/classes/table.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Game.html">Game</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Pieces.html">Pieces</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Table.html">Table</a></span></li><li class="nav-heading">Namespaces</li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="AppRequest.html">AppRequest</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="AppRequest.html#.connectAccount">connectAccount</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="AppRequest.html#.deleteAccount">deleteAccount</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="AppRequest.html#.registerAccount">registerAccount</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="AppRequest.html#.sendHome">sendHome</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="AppRequest.html#.sendProfile">sendProfile</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="AppRequest.html#.sendRules">sendRules</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="AppRequest.html#.sendScores">sendScores</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Canvas.html">Canvas</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Canvas.html#.drawCanvas">drawCanvas</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Canvas.html#.getCursorPosition">getCursorPosition</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Canvas.html#.resizeCanvas">resizeCanvas</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Canvas.html#.startMenuSetup">startMenuSetup</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="ClientRequest.html">ClientRequest</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ClientRequest.html#.sendDelete">sendDelete</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ClientRequest.html#.sendLogin">sendLogin</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ClientRequest.html#.sendRegister">sendRegister</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ClientRequest.html#.sendXHR">sendXHR</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Database.html">Database</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Database.html#.delete">delete</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Database.html#.find">find</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Database.html#.login">login</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Database.html#.register">register</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Graphics.html">Graphics</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Graphics.html#.createScene">createScene</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Graphics.html#.deplace">deplace</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Scenes.html">Scenes</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Scenes.html#.clear">clear</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Scenes.html#.gameBoard">gameBoard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Scenes.html#.setupBabylon">setupBabylon</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Scenes.html#.startMenu">startMenu</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Scenes.html#.waitingMenu">waitingMenu</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Scores.html">Scores</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Scores.html#.getRankData">getRankData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Scores.html#.getRankInfos">getRankInfos</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Scores.html#.getRankLine">getRankLine</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Socket.html">Socket</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Socket.html#.matchCreated">matchCreated</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Socket.html#.matchReady">matchReady</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Storage.html">Storage</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Storage.html#.editData">editData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Storage.html#.getData">getData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Storage.html#.saveJSONData">saveJSONData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Storage.html#.storeLeaderboard">storeLeaderboard</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Stratego.html">Stratego</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Stratego.html#.endGame">endGame</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Stratego.html#.saveGame">saveGame</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="TableDraw.html">TableDraw</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Toast.html">Toast</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Toast.html#.error">error</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Toast.html#.error">error</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Toast.html#.success">success</a></span></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#io">io</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#port">port</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#server">server</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">front/js/classes/table.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file Table Class
+ * @version 1.0
+ * @author Stratego Online
+ */
+
+/** Class used to store all the pieces' position on the board */
+class Table {
+  /*    
+    Marshal (10), 1 per player
+    General (9), 1 per player
+    Colonels (8), 2 per player
+    Majors (7), 3 per player
+    Captains (6), 4 per player
+    Lieutenants (5), 4 per player
+    Sergeants (4), 4 per player
+    Miners (3), 5 per player
+    Scouts (2), 8 per player
+    Spy (1), 1 per player
+    Flag (0), 1 per player
+    Bombs (11), 6 per player
+    =====================================
+    TOTAL: 40 pieces
+    */
+
+  /**
+   * Creates the Table storing all the pieces info on the board
+   * @param {Object[]} playerPieces client' pieces' position sorted by type
+   * @param {Object[]} opponentPieces opponent's pieces position with no type
+   * @param {Object} scene Babylonjs 3D Scene 
+   */
+  constructor(playerPieces, opponentPieces, scene) {
+    //creating the grid, full of nothing like ur damn life
+    this.grid = Array(10)
+      .fill(null)
+      .map(() => Array(10).fill(undefined));
+    //importing the mesh first
+    BABYLON.SceneLoader.ImportMesh(
+      "",
+      "../../mesh/",
+      "piece.babylon",
+      scene,
+      (newMeshes) => {
+        //loading and setting up variables for the textures
+        let topPlayerColor = new BABYLON.StandardMaterial("mat0", scene);
+        topPlayerColor.diffuseTexture = new BABYLON.Texture(
+          "/textures/pieces/Blue/Cylinder/top.png",
+          scene
+        );
+        let bottomPlayerColor = new BABYLON.StandardMaterial("mat0", scene);
+        bottomPlayerColor.diffuseTexture = new BABYLON.Texture(
+          "/textures/pieces/Blue/Cylinder/bottom.png",
+          scene
+        );
+        let opponentColor = new BABYLON.StandardMaterial("mat0", scene);
+        opponentColor.diffuseTexture = new BABYLON.Texture(
+          "/textures/pieces/Red/Cube/Cube.png",
+          scene
+        );
+        let topOpponentColor = new BABYLON.StandardMaterial("mat0", scene);
+        topOpponentColor.diffuseTexture = new BABYLON.Texture(
+          "/textures/pieces/Red/Cylinder/top.png",
+          scene
+        );
+        let bottomOpponentColor = new BABYLON.StandardMaterial("mat0", scene);
+        bottomOpponentColor.diffuseTexture = new BABYLON.Texture(
+          "/textures/pieces/Red/Cylinder/bottom.png",
+          scene
+        );
+        //opponentColor.diffuseColor = new BABYLON.Color3(1.00, 0.29, 0.20);
+        //loading the textures
+        let marechalPlayerColor = new BABYLON.StandardMaterial("mat0", scene);
+        marechalPlayerColor.diffuseTexture = new BABYLON.Texture(
+          "/textures/pieces/Blue/Cube/10.png",
+          scene
+        );
+        let generalPlayerColor = new BABYLON.StandardMaterial("mat0", scene);
+        generalPlayerColor.diffuseTexture = new BABYLON.Texture(
+          "/textures/pieces/Blue/Cube/9.png",
+          scene
+        );
+        let colonelPlayerColor = new BABYLON.StandardMaterial("mat0", scene);
+        colonelPlayerColor.diffuseTexture = new BABYLON.Texture(
+          "/textures/pieces/Blue/Cube/8.png",
+          scene
+        );
+        let commandantPlayerColor = new BABYLON.StandardMaterial("mat0", scene);
+        commandantPlayerColor.diffuseTexture = new BABYLON.Texture(
+          "/textures/pieces/Blue/Cube/7.png",
+          scene
+        );
+        let captainePlayerColor = new BABYLON.StandardMaterial("mat0", scene);
+        captainePlayerColor.diffuseTexture = new BABYLON.Texture(
+          "/textures/pieces/Blue/Cube/6.png",
+          scene
+        );
+        let lieuteunantPlayerColor = new BABYLON.StandardMaterial(
+          "mat0",
+          scene
+        );
+        lieuteunantPlayerColor.diffuseTexture = new BABYLON.Texture(
+          "/textures/pieces/Blue/Cube/5.png",
+          scene
+        );
+        let sergentPlayerColor = new BABYLON.StandardMaterial("mat0", scene);
+        sergentPlayerColor.diffuseTexture = new BABYLON.Texture(
+          "/textures/pieces/Blue/Cube/4.png",
+          scene
+        );
+        let demineurPlayerColor = new BABYLON.StandardMaterial("mat0", scene);
+        demineurPlayerColor.diffuseTexture = new BABYLON.Texture(
+          "/textures/pieces/Blue/Cube/3.png",
+          scene
+        );
+        let eclaireurPlayerColor = new BABYLON.StandardMaterial("mat0", scene);
+        eclaireurPlayerColor.diffuseTexture = new BABYLON.Texture(
+          "/textures/pieces/Blue/Cube/2.png",
+          scene
+        );
+        let spyPlayerColor = new BABYLON.StandardMaterial("mat0", scene);
+        spyPlayerColor.diffuseTexture = new BABYLON.Texture(
+          "/textures/pieces/Blue/Cube/1.png",
+          scene
+        );
+        let flagPlayerColor = new BABYLON.StandardMaterial("mat0", scene);
+        flagPlayerColor.diffuseTexture = new BABYLON.Texture(
+          "/textures/pieces/Blue/Cube/0.png",
+          scene
+        );
+        let BombPlayerColor = new BABYLON.StandardMaterial("mat0", scene);
+        BombPlayerColor.diffuseTexture = new BABYLON.Texture(
+          "/textures/pieces/Blue/Cube/B.png",
+          scene
+        );
+
+        //filling the grid with opponent pieces, 69420 as spec so the player can't see them:
+        for (let i = 0; i &lt; opponentPieces.length; ++i) {
+          let top = newMeshes[0].clone("no");
+          let mid = newMeshes[1].clone("no");
+          let bottom = newMeshes[2].clone("no");
+          top.material = topOpponentColor;
+          bottom.material = bottomOpponentColor;
+          mid.material = opponentColor;
+          //creating the assembly
+          let mesh = BABYLON.Mesh.MergeMeshes(
+            [top, mid, bottom],
+            true,
+            false,
+            null,
+            false,
+            true
+          );
+          this.grid[opponentPieces[i][0]][opponentPieces[i][1]] = new Pieces(
+            69420,
+            scene,
+            [opponentPieces[i][0], opponentPieces[i][1]],
+            mesh
+          );
+          //removing the base mesh assembled
+          mesh.dispose();
+        }
+        //setting up the player pieces:
+        for (let i = 0; i &lt; playerPieces.length; ++i) {
+          for (let j = 1; j &lt; playerPieces[i].length; ++j) {
+            let top = newMeshes[0].clone("no");
+            let mid = newMeshes[1].clone("no");
+            let bottom = newMeshes[2].clone("no");
+            top.material = topPlayerColor;
+            bottom.material = bottomPlayerColor;
+            switch (playerPieces[i][0]) {
+              case 10:
+                mid.material = marechalPlayerColor;
+                break;
+              case 9:
+                mid.material = generalPlayerColor;
+                break;
+              case 8:
+                mid.material = colonelPlayerColor;
+                break;
+              case 7:
+                mid.material = commandantPlayerColor;
+                break;
+              case 6:
+                mid.material = captainePlayerColor;
+                break;
+              case 5:
+                mid.material = lieuteunantPlayerColor;
+                break;
+              case 4:
+                mid.material = sergentPlayerColor;
+                break;
+              case 3:
+                mid.material = demineurPlayerColor;
+                break;
+              case 2:
+                mid.material = eclaireurPlayerColor;
+                break;
+              case 1:
+                mid.material = spyPlayerColor;
+                break;
+              case 0:
+                mid.material = flagPlayerColor;
+                break;
+              case 11:
+                mid.material = BombPlayerColor;
+                break;
+              default:
+                break;
+            }
+            //assembling the new mesh with the good textures
+            let mesh = BABYLON.Mesh.MergeMeshes(
+              [top, mid, bottom],
+              true,
+              false,
+              null,
+              false,
+              true
+            );
+            this.grid[playerPieces[i][j][0]][
+              playerPieces[i][j][1]
+            ] = new Pieces(
+              playerPieces[i][0],
+              scene,
+              [playerPieces[i][j][0], playerPieces[i][j][1]],
+              mesh
+            );
+            //removing the base mesh assembled
+            mesh.dispose();
+          }
+        }
+        //assembling and removing the imported one
+        let deleted = BABYLON.Mesh.MergeMeshes(newMeshes);
+        deleted.dispose();
+      }
+    );
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a> on Mon Mar 22 2021 03:20:48 GMT+0100 (Central European Standard Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

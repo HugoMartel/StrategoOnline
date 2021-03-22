@@ -52,10 +52,10 @@ let Socket = (function () {
       Canvas.setCurrentScene(1);
       Canvas.drawCanvas();
       setTimeout(() => {
-        //TODO
         //Display the 3D Stratego game
-        //Canvas.setCurrentScene(2);
-        //Canvas.drawCanvas(); //< We enter the Babylon renderloop here
+        Canvas.setCurrentScene(2);
+        Canvas.resetCanvas();
+        Canvas.drawCanvas(); //< We enter the Babylon renderloop here
       }, 3000);
     } else {
       Toast.error("The server wasn't able to connect you to a game...");

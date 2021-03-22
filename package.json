@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "scss": "node-sass back/scss -o front/css",
-    "gen-docs": "node_modules/.bin/jsdoc --configure .jsdoc.json --verbose"
+    "gen-docs": "rm -rfv doc/* && node_modules/.bin/jsdoc --configure .jsdoc.json --verbose"
   },
   "repository": {
     "type": "git",

@@ -118,9 +118,9 @@ let Canvas = (function () {
 
   //=====================================================================
   /**
-   * @function Canvas.firstSetup
+   * @function Canvas.startMenuSetup
    * @returns {} /
-   * @description Converts the event coords to canvas coords
+   * @description Sets everything up the the display of the base menu
    */
   let startMenuSetupCall = function () {
     // Canvas related
@@ -156,6 +156,8 @@ let Canvas = (function () {
       case 1:
         Scenes.waitingMenu(canvas, ctx);
         break;
+      case 2:
+        Scenes.gameBoard();
       default:
         Scenes.clear(canvas, ctx);
         break;
@@ -178,13 +180,29 @@ let Canvas = (function () {
     drawCanvasCall();
   }
 
+  //=====================================================================
+  /**
+   * @function Canvas.resetCanvas
+   * @returns {} /
+   * @description Resets the canvas to enable 3D rendering with BABYLON
+   */
+  let resetCanvasCall = () => {
+    //Scenes.clear(canvas, ctx);
+    ctx = canvas.getContext("webgl2");
+    Scenes.setupBabylon(canvas, ctx);
+  }
+
+
+  //=====================================================================
+  //=====================================================================
+
   // Returned object
   return {
     getCursorPosition: (event) => getCursorPositionCall(event),
     startMenuSetup: () => startMenuSetupCall(),
     drawCanvas: () => drawCanvasCall(),
     resizeCanvas: () => resizeCanvasCall(),
+    resetCanvas: () => resetCanvasCall(),
     setCurrentScene: (sceneToDisplay) => currentScene = sceneToDisplay,
-
   };
 })();

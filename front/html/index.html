@@ -2,7 +2,10 @@
     <canvas id="canvas" class="w-100 h-100"> Your browser doesn't support the canvas tag. Please update it to be able to
         play our game</canvas>
 </div>
+<script src="../js/classes/pieces.js"></script>
+<script src="../js/classes/table.js"></script>
 <script src="../js/modules/socket.js"></script>
+<script src="../js/modules/graphics.js"></script>
 <script src="../js/modules/scenes.js"></script>
 <script src="../js/modules/canvas.js"></script>
 <script>
@@ -25,3 +28,42 @@
         Canvas.startMenuSetup();
     });
 </script>
+
+<!--aled new TT-->
+
+<!--<script src = "../js/createScene.js"></script>
+<script src = "../js/classes.js"></script>
+<script>
+    let scene = sceneFunction.createSceneCall();
+    let engine = sceneFunction.engine();
+    let test = new table([
+        [1, [0, 2], [1, 2]],
+        [3, [0, 3], [1, 1]],
+        [6, [0,0]],
+        [0, [7, 7]]
+    ], [[9, 9], [8, 8]], scene);
+    scene.registerBeforeRender(function () {
+        //on verifie le positionnement des pieces physiques comparé à leur placement sur la grid:
+        for(x = 0; x < 10; ++x){
+            for(z = 0; z < 10; ++z){
+                if(test.grid[x][z] != undefined){
+                    let coord = test.grid[x][z].check()
+                    if(coord != 0){
+                        //move the piece because not in the good position:
+                        if(coord[0] > 0) test.grid[x][z].physicalPiece.position.x+=0.01;
+                        else if(coord[0] < 0) test.grid[x][z].physicalPiece.position.x-=0.01
+                        if(coord[1] > 0) test.grid[x][z].physicalPiece.position.z+=0.01;
+                        else if(coord[1] < 0) test.grid[x][z].physicalPiece.position.z-=0.01;
+                    }
+                }
+            }
+        }
+    });
+
+    engine.runRenderLoop(() => { 
+        scene.render();
+    });
+    window.addEventListener("resize", function () {
+        engine.resize();
+    });
+</script>-->

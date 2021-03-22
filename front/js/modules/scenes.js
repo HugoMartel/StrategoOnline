@@ -16,6 +16,10 @@ let Scenes = (function () {
   let players = [];
   let gameReadyToStart = false;
 
+  // Babylon variables
+  let engine = undefined;
+  let scene = undefined;
+
   /**
    * @function Scenes.clear
    * @argument {HTMLCanvasElement} canvas
@@ -99,11 +103,6 @@ let Scenes = (function () {
    * Canvas to display elements in
    * @argument {Object} ctx
    * Canvas's context to be able to draw in
-   * @argument {string} name1
-   * Name to display on the left
-   * @argument {string} name2
-   * Name to display on the right
-   * @argument {boolean} ready
    * @returns {} /
    * @description Draws the waiting menu
    */
@@ -255,6 +254,36 @@ let Scenes = (function () {
     /* Optional countdown on player found */
     //TODO
   };
+
+  //=====================================================================//
+  /**
+   * @function Scenes.gameBoard
+   * @argument {HTMLCanvasElement} canvas
+   * Canvas to display elements in
+   * @returns {} /
+   * @description Draws the waiting menu
+   */
+  let gameBoardDraw = () => {
+    engine.runRenderLoop(() => { 
+      scene.render();
+    });
+  };
+
+  //=====================================================================//
+  /**
+   * @function Scenes.setupBabylon
+   * @returns {} /
+   * @description Sets everything up to make the 3D scene usable
+   */
+  let setupBabylonCall = (canvas, ctx) => {
+    engine = new BABYLON.Engine(ctx, true);
+    scene = Graphics.createScene(canvas, engine);
+
+    window.addEventListener("resize", function () {
+      engine.resize();
+    });
+  };
+
   //=====================================================================//
   //=====================================================================//
 
@@ -262,11 +291,14 @@ let Scenes = (function () {
   return {
     startMenu: (canvas, ctx) => startMenuDraw(canvas, ctx),
     waitingMenu: (canvas, ctx) => waitingMenuDraw(canvas, ctx),
+    gameBoard: () => gameBoardDraw(),
     clear: (canvas, ctx) => clearCall(canvas, ctx),
     addPlayer: (name) => {
       if (players.length < 2) players.push(name);
     },
     resetPlayers: () => (players = []),
     setGameReady: (isReady) => (gameReadyToStart = isReady),
+    setupBabylon: (canvas, ctx) => setupBabylonCall(canvas, ctx),
+    getEngine: () => engine,
   };
 })();

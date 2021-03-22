@@ -25,7 +25,7 @@ let Toast = (function () {
    * @param {string} message
    * message to add to the notification
    * @returns {} /
-   * @description Generates the HTML code to insert to the page to display an error notification with a given message
+   * @description Displays an error notification with a given message
    */
   let errorCall = function (message) {
     let notyf = new Notyf({ duration: duration, position: position });
@@ -34,11 +34,11 @@ let Toast = (function () {
 
   //=============================================================================
   /**
-   * @function Toast.error
+   * @function Toast.success
    * @param {string} message
    * message to add to the notification
    * @returns {} /
-   * @description Generates the HTML code to insert to the page to display an error notification with a given message
+   * @description Displays a success notification with a given message
    */
   let successCall = function (message) {
     let notyf = new Notyf({ duration: duration, position: position });

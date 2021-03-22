@@ -117,7 +117,7 @@ let Graphics = (function () {
    */
   let deplaceCall = (newCoord, oldCoord) => {
     board.grid[oldCoord[0]][oldCoord[1]].move(newCoord[0], newCoord[1]);
-    board.grid[newCoord[0]][newCoord[1]] = grid[oldCoord[0]][oldCoord[1]];
+    board.grid[newCoord[0]][newCoord[1]] = board.grid[oldCoord[0]][oldCoord[1]];
     board.grid[oldCoord[0]][oldCoord[1]] = undefined;
   };
 

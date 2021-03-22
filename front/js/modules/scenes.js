@@ -30,7 +30,8 @@ let Scenes = (function () {
    * @description Clear the canvas
    */
   let clearCall = (canvas, ctx) => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.canvas.width = ctx.canvas.width;
   };
 
   //=====================================================================//
@@ -275,8 +276,19 @@ let Scenes = (function () {
    * @returns {} /
    * @description Sets everything up to make the 3D scene usable
    */
-  let setupBabylonCall = (canvas, ctx) => {
-    engine = new BABYLON.Engine(ctx, true);
+  let setupBabylonCall = () => {
+    // Guetto rally way to change canvas (SUBARU)
+    let container = document.getElementById("main");
+    document.getElementById("canvas").remove();
+    let canvas = document.createElement("canvas");
+    canvas.classList.add("w-100");
+    canvas.classList.add("h-100");
+    canvas.id = "canvas";
+    canvas.innerText = "Your browser doesn't support the canvas tag. Please update it to be able to play our game";
+    container.appendChild(canvas);
+
+
+    engine = new BABYLON.Engine(canvas, true);
     scene = Graphics.createScene(canvas, engine);
 
     window.addEventListener("resize", function () {
@@ -298,7 +310,7 @@ let Scenes = (function () {
     },
     resetPlayers: () => (players = []),
     setGameReady: (isReady) => (gameReadyToStart = isReady),
-    setupBabylon: (canvas, ctx) => setupBabylonCall(canvas, ctx),
+    setupBabylon: () => setupBabylonCall(),
     getEngine: () => engine,
   };
 })();

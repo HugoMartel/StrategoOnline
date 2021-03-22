@@ -188,7 +188,7 @@ let Canvas = (function () {
    */
   let resetCanvasCall = () => {
     //Scenes.clear(canvas, ctx);
-    ctx = canvas.getContext("webgl2");
+    //ctx = canvas.getContext("webgl2");
     Scenes.setupBabylon(canvas, ctx);
   }
 

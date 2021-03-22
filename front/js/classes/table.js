@@ -37,10 +37,12 @@ class Table {
     //importing the mesh first
     BABYLON.SceneLoader.ImportMesh(
       "",
-      "../../mesh/",
+      "mesh/",
       "piece.babylon",
       scene,
       (newMeshes) => {
+        console.log(newMeshes);
+
         //loading and setting up variables for the textures
         let topPlayerColor = new BABYLON.StandardMaterial("mat0", scene);
         topPlayerColor.diffuseTexture = new BABYLON.Texture(
@@ -129,15 +131,15 @@ class Table {
         );
         let BombPlayerColor = new BABYLON.StandardMaterial("mat0", scene);
         BombPlayerColor.diffuseTexture = new BABYLON.Texture(
-          "/textures/pieces/Blue/Cube/B.png",
+          "/textures/pieces/Blue/Cube/b.png",
           scene
         );
 
         //filling the grid with opponent pieces, 69420 as spec so the player can't see them:
         for (let i = 0; i < opponentPieces.length; ++i) {
-          let top = newMeshes[0].clone("no");
-          let mid = newMeshes[1].clone("no");
-          let bottom = newMeshes[2].clone("no");
+          let top = newMeshes[0].clone();
+          let mid = newMeshes[1].clone();
+          let bottom = newMeshes[2].clone();
           top.material = topOpponentColor;
           bottom.material = bottomOpponentColor;
           mid.material = opponentColor;

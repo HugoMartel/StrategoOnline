@@ -217,6 +217,8 @@ class Table {
               false,
               true
             );
+            //adding parameter to allow us to pick mesh
+            mesh.isPickable = true;
             this.grid[playerPieces[i][j][0]][
               playerPieces[i][j][1]
             ] = new Pieces(
@@ -233,5 +235,11 @@ class Table {
         deleted.dispose();
       }
     );
+    scene.onPointerDown = function (evt, pickResult) {
+      // We try to pick an object
+      if (pickResult.hit) {
+          console.log("tu m'as eu!");
+      }
+    };
   }
 }

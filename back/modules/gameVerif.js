@@ -76,10 +76,10 @@
         if(pieceB==12){
             return pieceA;
         }
-        else if(pieceA != 3 && pieceB == 12){
+        else if(pieceA != 3 && pieceB == 11){
             return pieceB;
         }
-        else if(pieceA == 3 && pieceB == 12){
+        else if(pieceA == 3 && pieceB == 11){
             return pieceA;
         }
         else if(pieceA == 1 && pieceB == 10){

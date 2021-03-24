@@ -17,7 +17,7 @@ class Table {
     Miners (3), 5 per player
     Scouts (2), 8 per player
     Spy (1), 1 per player
-    Flag (0), 1 per player
+    Flag (12), 1 per player
     Bombs (11), 6 per player
     =====================================
     TOTAL: 40 pieces
@@ -37,12 +37,10 @@ class Table {
     //importing the mesh first
     BABYLON.SceneLoader.ImportMesh(
       "",
-      "mesh/",
+      "../../mesh/",
       "piece.babylon",
       scene,
       (newMeshes) => {
-        console.log(newMeshes);
-
         //loading and setting up variables for the textures
         let topPlayerColor = new BABYLON.StandardMaterial("mat0", scene);
         topPlayerColor.diffuseTexture = new BABYLON.Texture(
@@ -140,6 +138,7 @@ class Table {
           let top = newMeshes[0].clone();
           let mid = newMeshes[1].clone();
           let bottom = newMeshes[2].clone();
+
           top.material = topOpponentColor;
           bottom.material = bottomOpponentColor;
           mid.material = opponentColor;
@@ -152,16 +151,16 @@ class Table {
             false,
             true
           );
+          
           this.grid[opponentPieces[i][0]][opponentPieces[i][1]] = new Pieces(
             69420,
-            scene,
             [opponentPieces[i][0], opponentPieces[i][1]],
             mesh
           );
           //removing the base mesh assembled
           mesh.dispose();
         }
-        //setting up the player pieces:
+        //setting up the player's pieces:
         for (let i = 0; i < playerPieces.length; ++i) {
           for (let j = 1; j < playerPieces[i].length; ++j) {
             let top = newMeshes[0].clone("no");
@@ -200,7 +199,7 @@ class Table {
               case 1:
                 mid.material = spyPlayerColor;
                 break;
-              case 0:
+              case 12:
                 mid.material = flagPlayerColor;
                 break;
               case 11:
@@ -222,7 +221,6 @@ class Table {
               playerPieces[i][j][1]
             ] = new Pieces(
               playerPieces[i][0],
-              scene,
               [playerPieces[i][j][0], playerPieces[i][j][1]],
               mesh
             );

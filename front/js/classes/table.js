@@ -42,13 +42,13 @@ class Table {
       scene,
       (newMeshes) => {
         //loading and setting up variables for the textures
-        let topPlayerColor = new BABYLON.StandardMaterial("mat0", scene);
-        topPlayerColor.diffuseTexture = new BABYLON.Texture(
+        let bottomPlayerColor = new BABYLON.StandardMaterial("mat0", scene);
+        bottomPlayerColor.diffuseTexture = new BABYLON.Texture(
           "/textures/pieces/Blue/Cylinder/top.png",
           scene
         );
-        let bottomPlayerColor = new BABYLON.StandardMaterial("mat0", scene);
-        bottomPlayerColor.diffuseTexture = new BABYLON.Texture(
+        let topPlayerColor = new BABYLON.StandardMaterial("mat0", scene);
+        topPlayerColor.diffuseTexture = new BABYLON.Texture(
           "/textures/pieces/Blue/Cylinder/bottom.png",
           scene
         );

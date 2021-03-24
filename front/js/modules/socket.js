@@ -63,6 +63,18 @@ let Socket = (function () {
   }
 
   //======================================================================================
+  /**
+   * @function Socket.userLeft
+   * @param {Object} data
+   * Data sent from the server
+   * @returns {} /
+   * @description Generic XMLHttpRequest function
+   */
+  function userLeftCall(data) {
+    //TODO
+  }
+
+  //======================================================================================
   //======================================================================================
   // Returned Object
   return {

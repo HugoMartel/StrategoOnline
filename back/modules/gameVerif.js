@@ -21,7 +21,10 @@
         ["CANT_MOVE_FLAG"] = 1003,
         ["CANT_MOVE_ON_YOUR_PIECE"] = 1004,
         ["OUT_OF_MAP"] = 1005,
-        ["BATTLE"] = 1006,
+        ["CASE_OUT_OF_RANGE"] = 1006,
+        ["CANT_MOVE_ON_DIAGONAL"] = 1007,
+        ["CANT_MOVE_THROUGH_A_PIECE"] = 1008,
+        ["BATTLE"] = 1009,
     ];
     /**
     * @function GameVerif.isMovePossible
@@ -55,6 +58,34 @@
         }
         else if(map.tables[playerID][piece.destx][piece.desty] != 0){
             return false, returnCodes["CANT_MOVE_ON_YOUR_PIECE"];
+        }else if(piece.id != 2){
+            if(Math.abs(piece.destx-piece.posx) + Math.abs(piece.desty-piece.posy) >2){
+                return false, returnCodes["CANT_MOVE_ON_DIAGONAL"];
+            }
+            if(Math.abs(piece.destx-piece.posx) != 1 || Math.abs(piece.desty-piece.posy) != 1){
+                return false, returnCodes["CASE_OUT_OF_RANGE"];
+            }
+        }
+        else if(piece.id == 2){
+            if(piece.destx-piece.posx!=0 && piece.desty-piece.posy !=0){
+                return false, returnCodes["CANT_MOVE_ON_DIAGONAL"];
+            }
+            for (let index = 0; index < piece.destx-piece.posx; index > piece.destx-piece.posx ? idnex--:index++) {
+                if(map.tables[playerID][piece.posx+index][piece.posy] !=0){
+                    return false, returnCodes["CANT_MOVE_THROUGH_A_PIECE"];
+                }
+                if(map.tables[player2ID][piece.posx+index][piece.posy] !=0){
+                    return false, returnCodes["CANT_MOVE_THROUGH_A_PIECE"];
+                }
+            }
+            for (let index = 0; index < piece.desty-piece.posy; index > piece.desty-piece.posy ? idnex--:index++) {
+                if(map.tables[playerID][piece.posx][piece.posy+index] !=0){
+                    return false, returnCodes["CANT_MOVE_THROUGH_A_PIECE"];
+                }
+                if(map.tables[player2ID][piece.posx][piece.posy+index] !=0){
+                    return false, returnCodes["CANT_MOVE_THROUGH_A_PIECE"];
+                }
+            }
         }
         else if(map.tables[player2ID][piece.destx][piece.desty] !=0){
             return true, returnCodes["BATTLE"];

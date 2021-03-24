@@ -25,8 +25,8 @@ const hsCert = fs.readFileSync(__dirname + "/ssl/cert.pem").toString();
 // Request handling requires
 const sharedsession = require("express-socket.io-session");
 const bodyParser = require("body-parser");
-const jsonParser = bodyParser.json();
-const urlencodedParser = bodyParser.urlencoded({ extended: false });
+const jsonParser = express.json();
+const urlencodedParser = express.urlencoded({ extended: false });
 
 // Setup server and socket
 /** @constant {Object} server https server used to host the project*/

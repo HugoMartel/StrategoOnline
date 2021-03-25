@@ -30,10 +30,19 @@ class Table {
    * @param {Object} scene Babylonjs 3D Scene 
    */
   constructor(playerPieces, opponentPieces, scene) {
+    //*****************
+    //*     INIT      *
+    //*****************
     //creating the grid, full of nothing like ur damn life
     this.grid = Array(10)
       .fill(null)
       .map(() => Array(10).fill(undefined));
+
+    this.pieceClicked = false;/**< Used to prevent spamming on board pieces */ 
+
+    //*****************
+    //*    MESHES     *
+    //*****************
     //importing the mesh first
     BABYLON.SceneLoader.ImportMesh(
       "",
@@ -195,9 +204,9 @@ class Table {
 
         //filling the grid with opponent pieces, 69420 as spec so the player can't see them:
         for (let i = 0; i < opponentPieces.length; ++i) {
-          let top = newMeshes[0].clone();
-          let mid = newMeshes[1].clone();
-          let bottom = newMeshes[2].clone();
+          let top = newMeshes[0].clone("opponentPiece");
+          let mid = newMeshes[1].clone("opponentPiece");
+          let bottom = newMeshes[2].clone("opponentPiece");
 
           top.material = topOpponentColor;
           bottom.material = bottomOpponentColor;
@@ -223,9 +232,9 @@ class Table {
         //setting up the player's pieces:
         for (let i = 0; i < playerPieces.length; ++i) {
           for (let j = 1; j < playerPieces[i].length; ++j) {
-            let top = newMeshes[0].clone("no");
-            let mid = newMeshes[1].clone("no");
-            let bottom = newMeshes[2].clone("no");
+            let top = newMeshes[0].clone("playerPiece");
+            let mid = newMeshes[1].clone("playerPiece");
+            let bottom = newMeshes[2].clone("playerPiece");
             top.material = topPlayerColor;
             bottom.material = bottomPlayerColor;
             switch (playerPieces[i][0]) {
@@ -289,6 +298,9 @@ class Table {
               false,
               true
             );
+            //adding parameter to allow us to pick mesh
+            mesh.metadata = "playerPiece"
+            mesh.isPickable = true;
             this.grid[playerPieces[i][j][0]][
               playerPieces[i][j][1]
             ] = new Pieces(
@@ -305,5 +317,15 @@ class Table {
         deleted.dispose();
       }
     );
+    scene.onPointerDown = function (evt, pickResult) {
+      // We try to pick an object
+      if(!Graphics.isClicked()){
+        if (pickResult.pickedMesh != null && pickResult.pickedMesh.metadata === "playerPiece") {
+          Graphics.setClicked(true);  
+          console.log("tu m'as eu!");
+          
+        }
+      }
+    };
   }
 }

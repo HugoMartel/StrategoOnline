@@ -36,7 +36,7 @@ let Graphics = (function () {
       new BABYLON.Vector3(0, 0, 0),
       scene
     );
-    camera.attachControl(canvas, true);
+    camera.attachControl(canvas, false);
     //max beta angle, so the player can't look under
     camera.upperBetaLimit = 1.2;
     //max and min radius, so you can't cross the tabletop, or go far away because ur afraid to loose

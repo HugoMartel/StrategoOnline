@@ -14,6 +14,7 @@
 let Graphics = (function () {
   // Variables used for 3D
   let board = undefined;
+  let pieceClicked = false;
 
   /**
    * @function Graphics.createScene
@@ -128,5 +129,7 @@ let Graphics = (function () {
   return {
     deplace: (newCoord, oldCoord) => deplaceCall(newCoord, oldCoord),
     createScene: (canvas, engine) => createSceneCall(canvas, engine),
+    isClicked: () => pieceClicked,
+    setClicked: (value) => (typeof value === "boolean")? pieceClicked = value: Toast.error("pieceClicked got a wrong value..."),
   };
 })();

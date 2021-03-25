@@ -4,7 +4,6 @@
  * @author Stratego Online
  */
 
-
 /**
  * Toolbox of callbacks used for socket.on('event", callback) in index.html
  * @type {Object}
@@ -66,12 +65,15 @@ let Socket = (function () {
   /**
    * @function Socket.userLeft
    * @param {Object} data
-   * Data sent from the server
+   * Reason for the game being cancelled
    * @returns {} /
    * @description Generic XMLHttpRequest function
    */
   function userLeftCall(data) {
-    //TODO
+    Toast.error("Your opponent just diconnected (" + data + ")...");
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000);
   }
 
   //======================================================================================

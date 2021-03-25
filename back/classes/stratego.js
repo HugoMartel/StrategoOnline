@@ -37,9 +37,9 @@ class Game {
     //Fill each player's array with the default pieces placement
 
     //! DEBUG
-    console.log(this.player1);
+    //console.log(this.player1);
     //console.log(this.player1Table);
-    console.log(this.player2);
+    //console.log(this.player2);
     //console.log(this.player2Table);
   }
 }

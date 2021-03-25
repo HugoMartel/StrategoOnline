@@ -112,11 +112,42 @@ io.on("connection", (client) => {
   });
 
   client.on("disconnecting", (reason) => {
+    // Disconnecting during a game
+
+    // Find the room that the user left
     for (const room of client.rooms) {
       if (room !== client.id) {
-        // Disconnecting during a game
-        //TODO
-        client.to(room).emit("user left", client.id);
+        // Let the client know that his opponent disconnected
+        client.to(room).emit("user left", reason); // We only send the reason of the disconnect to the other room's client
+
+        //Remove the game from the server (the room name has the same name as the game JSON file)
+        for (const c of io.sockets.adapter.rooms.get(room)) {
+          // We have found the remaining player so we can find the game
+          let gameNames = fs.readdirSync(__dirname + "/back/storage/games");
+
+          for (let name of gameNames) {
+            if (
+              name.includes(
+                io.sockets.sockets.get(c).handshake.session.login !== undefined
+                  ? io.sockets.sockets.get(c).handshake.session.login
+                  : client.id
+              )
+            ) {
+              //We found the game to remove, we delete it then!
+              fs.unlink(__dirname + "/back/storage/games/" + name, (err) => {
+                if (err) throw err;
+              });
+
+              // Server log
+              console.log(client.id.red + " left a pending game...");
+              console.log(
+                "/back/storage/games/" + name + " deleted".bold
+              );
+              // Disconnect the remaining player from his room
+              io.sockets.sockets.get(c).leave(room);
+            }
+          }
+        }
       }
     }
   });
@@ -127,7 +158,6 @@ io.on("connection", (client) => {
   \******************************/
   client.on("newGame", () => {
     let clientSocket = io.sockets.sockets.get(client.id); // correct way to access a map object in js
-    //console.log(clientSocket); //DEBUG
 
     /* There are no user waiting for a game */
     if (gameWaiting === false) {
@@ -147,7 +177,7 @@ io.on("connection", (client) => {
 
       // Send things to display to the client
       io.sockets.to(newGame.room_name).emit("match created", {
-        username1: newGame.player1
+        username1: newGame.player1,
       });
 
       //Save the game as a JSON file in ./back/storage/games/waiting
@@ -186,8 +216,6 @@ io.on("connection", (client) => {
         "games/" + waitingGame.player1 + "+" + waitingGame.player2,
         waitingGame
       );
-
-      console.log(client.rooms);
 
       //Remove the waiting JSON game file from ./back/storage/games/waiting
       fs.unlink(

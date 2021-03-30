@@ -47,10 +47,10 @@ let GameVerif = (function () {
         else if(map.tables[playerID][piece.destx][piece.desty] != 0){
             return [false, "CANT_MOVE_ON_YOUR_PIECE"];
         }else if(piece.id != 2){
-            if(Math.abs(piece.destx-piece.posx) + Math.abs(piece.desty-piece.posy) >1){
+            if(Math.abs(piece.destx-piece.posx) >= 1 && Math.abs(piece.desty-piece.posy) >= 1){
                 return [false, "CANT_MOVE_ON_DIAGONAL"];
             }
-            if(Math.abs(piece.destx-piece.posx) != 1 || Math.abs(piece.desty-piece.posy) != 1){
+            if(Math.abs(piece.destx-piece.posx) > 1 || Math.abs(piece.desty-piece.posy) > 1){
                 return [false, "CASE_OUT_OF_RANGE"];
             }
         }
@@ -145,11 +145,13 @@ let GameVerif = (function () {
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         ];
+        if(playerID ==1){
+            posx = 9 - posx;
+        }
         let piece = { id: map.tables[playerID][posx][posy], posx: posx, posy: posy};
         for (let y = 0; y <map.tables[0][piece.posx].length; y++) {
             piece.destx = piece.posx;
             piece.desty=y;
-            console.log(isMovePossible(map, player, piece));
             if(isMovePossible(map, player,piece)[0] == false){
                 moves[piece.destx][piece.desty]=0;
             }else if(isMovePossible(map, player,piece)[1] == "BATTLE" ){
@@ -161,7 +163,6 @@ let GameVerif = (function () {
         piece.desty=posy;
         for (let x = 0; x < map.tables[0].length; x++) {
             piece.destx=x;
-            console.log(isMovePossible(map, player, piece));
             if(isMovePossible(map, player,piece)[0] == false){
                 moves[piece.destx][piece.desty]=0;
             }

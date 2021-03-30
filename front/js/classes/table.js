@@ -321,9 +321,43 @@ class Table {
       // We try to pick an object
       if(!Graphics.isClicked()){
         if (pickResult.pickedMesh != null && pickResult.pickedMesh.metadata === "playerPiece") {
-          Graphics.setClicked(true);  
-          console.log("tu m'as eu!");
+          Graphics.setClicked(true);
+          let posX = pickResult.pickedMesh.position.x / 0.835 + 4.507;
+          let posZ = pickResult.pickedMesh.position.z / 0.835 + 4.507;
+          posX = parseInt(posX);
+          posZ = parseInt(posZ);
+
+          socket.emit("requestMoveset", {x: posX, z: posZ});
+
+          let moveDiv = document.createElement("div");
+          // STYLE
+          moveDiv.style.display = "block";
+          moveDiv.style.position = "absolute";
+          moveDiv.style.backgroundColor = "green";
+          moveDiv.style.width = "500px";
+          moveDiv.style.height = "500px";
+          moveDiv.style.top = "20%";
+          moveDiv.style.margin = "auto";
+          moveDiv.style.backgroundColor = "#0c1821";
+          moveDiv.style.boxShadow = "0 4px 8px 2px #e1ae33";
+          moveDiv.style.color = "#e1ae33";
+          moveDiv.style.borderRadius = "15px";
+
+          let closeMoveDiv = document.createElement("button");
+          closeMoveDiv.classList.add("btn-close", "btn-close-white");
+          closeMoveDiv.type = "button";
+          closeMoveDiv.setAttribute("aria-label", "Close");
+          closeMoveDiv.style.position = "absolute";
+          closeMoveDiv.style.top = "5px";
+          closeMoveDiv.style.right = "5px";
           
+          moveDiv.appendChild(closeMoveDiv);
+          moveDiv.innerHTML += `<p>Waiting for server response</p>`;
+
+          document.getElementById("main").appendChild(moveDiv);
+          
+          console.log(posX);
+          console.log(posZ);
         }
       }
     };

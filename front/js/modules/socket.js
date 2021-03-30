@@ -90,7 +90,7 @@ let Socket = (function () {
 
   //======================================================================================
   /**
-   * @function Socket.userVictory
+   * @function Socket.userDeafeat
    * @param {Object} data
    * Score to display ?
    * @returns {} /
@@ -102,13 +102,26 @@ let Socket = (function () {
 
   //======================================================================================
   /**
-   * @function Socket.userVictory
+   * @function Socket.fight
    * @param {Object} data
    * coords of the fight, winner of the fight (data.coord, data.winner)
    * @returns {} /
    * @description socket.io client event callback called when a fight is happening between two pieces
    */
   function fightCall(data) {
+    //TODO
+  }
+
+  //======================================================================================
+  /**
+   * @function Socket.getMoves
+   * @param {Object} data
+   * coords of the piece that requested its moves
+   * @returns {} /
+   * @description socket.io client event callback called when the pieces' possible moves are returned by the server
+   */
+  function getMovesCall(data) {
+    // Append buttons to the moves div
     //TODO
   }
 
@@ -121,6 +134,7 @@ let Socket = (function () {
     userLeft: (data) => userLeftCall(data),
     userVictory: (data) => userVictoryCall(data),
     userDefeat: (data) => userDefeatCall(data),
-    figth: (data) => fightCall(data),
+    fight: (data) => fightCall(data),
+    getMoves: (data) => getMovesCall(data),
   };
 })();

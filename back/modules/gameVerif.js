@@ -8,11 +8,11 @@
  * Game logic and verification 
  * @type {Object}
  * @return {Object} Informations related to game logic
- * @name gameVerif
+ * @name GameVerif
  * @namespace GameVerif
  */
 
- let GameVerif = (function () {
+let GameVerif = (function () {
     
     /**
     * @function GameVerif.isMovePossible

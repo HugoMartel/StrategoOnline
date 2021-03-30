@@ -24,7 +24,7 @@ const hsCert = fs.readFileSync(__dirname + "/ssl/cert.pem").toString();
 
 // Request handling requires
 const sharedsession = require("express-socket.io-session");
-const bodyParser = require("body-parser");
+const GameVerif = require("./back/modules/gameVerif");
 const jsonParser = express.json();
 const urlencodedParser = express.urlencoded({ extended: false });
 
@@ -106,7 +106,8 @@ io.on("connection", (client) => {
 
   // Console message on disconnection
   client.on("disconnect", () => {
-    // END or DELETE games where the client could be a part of
+    // Destroy the client's session
+    //io.sockets.sockets.get(client.id).handshake.session.destroy();
 
     console.log("< ".bold + client.id.red + " disconnected");
   });
@@ -140,9 +141,7 @@ io.on("connection", (client) => {
 
               // Server log
               console.log(client.id.red + " left a pending game...");
-              console.log(
-                "/back/storage/games/" + name + " deleted".bold
-              );
+              console.log("/back/storage/games/" + name + " deleted".bold);
               // Disconnect the remaining player from his room
               io.sockets.sockets.get(c).leave(room);
             }
@@ -177,7 +176,7 @@ io.on("connection", (client) => {
 
       // Send things to display to the client
       io.sockets.to(newGame.room_name).emit("match created", {
-        username1: newGame.player1,
+        username1: newGame.players[0],
       });
 
       //Save the game as a JSON file in ./back/storage/games/waiting
@@ -206,14 +205,14 @@ io.on("connection", (client) => {
       //add the user the the correct socket room
       client.join(waitingGameTimeStamp.toString());
 
-      waitingGame.player2 =
+      waitingGame.players[1] =
         clientSocket.handshake.session.login !== undefined
           ? clientSocket.handshake.session.login
           : client.id;
 
       //Save the game as a JSON file in ./back/storage/games
       Stratego.saveGame(
-        "games/" + waitingGame.player1 + "+" + waitingGame.player2,
+        "games/" + waitingGame.players[0] + "+" + waitingGame.players[1],
         waitingGame
       );
 
@@ -233,8 +232,8 @@ io.on("connection", (client) => {
 
       //Update the first user's interface with the second player's name
       io.sockets.to(waitingGame.room_name).emit("match ready", {
-        username1: waitingGame.player1,
-        username2: waitingGame.player2,
+        username1: waitingGame.players[0],
+        username2: waitingGame.players[1],
       });
     }
   });
@@ -243,15 +242,67 @@ io.on("connection", (client) => {
   /**************************************\
     An user wants to get available moves
   \**************************************/
-  client.on("requestMoveset", () => {
-    //TODO
+  client.on("requestMoveset", (args) => {
+    // Check if the args are correct
+    try {
+      if (
+        args == undefined ||
+        typeof args.x !== "number" ||
+        typeof args.z !== "number"
+      ) {
+        throw "Wrong args given to the requestMoveset callback...";
+        return {};
+      }
+    } catch (e) {
+      console.error(e);
+    }
+
+    //Get the used name for game storage
+    let clientName =
+      io.sockets.sockets.get(client.id).handshake.session.login !== undefined
+        ? io.sockets.sockets.get(client.id).handshake.session.login
+        : client.id;
+
+    let clientGame = undefined;
+
+    // Load the game object of the player that made the request
+    for (let game of fs
+      .readdirSync(__dirname + "/back/storage/games")
+      .map((value, index, array) => value.slice(0, value.length - 5))) {
+      if (game.includes(clientName)) {
+        clientGame = Storage.getData("games/" + game);
+        break; // I did this because if I remember correctly we cannot iterate in a while
+      }
+    }
+
+    // Possible moves object to return to the client
+    let moves;
+
+    // Get the possible moves array from GameVerif module
+    try {
+      if (clientGame !== "") {
+        moves = GameVerif.possibleMoves(
+          clientGame,
+          clientName,
+          args.z,
+          args.x
+        );
+      } else {
+        throw "The client's game couldn't be found...";
+      }
+    } catch (e) {
+      console.error(e);
+    }
+
+    console.log(moves);//! DEBUG
+    return moves;
   });
 
   //===================================================================
   /**************************************\
         An user wants to move a piece
   \**************************************/
-  client.on("requestMoveset", () => {
+  client.on("requestMove", (args) => {
     //TODO
   });
 });

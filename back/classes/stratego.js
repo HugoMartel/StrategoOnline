@@ -16,31 +16,31 @@ class Game {
   constructor(player, name) {
     this.room_name = name;
 
-    this.player1 = player;
-    this.player2 = null;
+    this.players = [player, null];
     //Create each player's pieces array
-    this.player1Table = Array(10)
-      .fill(0)
-      .map((x) => Array(10).fill(0));
-    this.player2Table = Array(10)
-      .fill(0)
-      .map((x) => Array(10).fill(0));
+    this.tables = [
+      Array(10)
+        .fill(0)
+        .map((x) => Array(10).fill(0)),
+      Array(10)
+        .fill(0)
+        .map((x) => Array(10).fill(0))
+    ];
+
     //Add the lakes (-1)
     for (let i = 4; i < 6; ++i) {
       for (let j = 2; j < 4; ++j) {
-        this.player1Table[i][j] = -1;
-        this.player2Table[i][j] = -1;
-        this.player1Table[i][j + 4] = -1;
-        this.player2Table[i][j + 4] = -1;
+        this.tables[0][i][j] = -1;
+        this.tables[1][i][j] = -1;
+        this.tables[0][i][j + 4] = -1;
+        this.tables[1][i][j + 4] = -1;
       }
     }
     //Fill each player's array with the default pieces placement
 
     //! DEBUG
-    //console.log(this.player1);
-    //console.log(this.player1Table);
-    //console.log(this.player2);
-    //console.log(this.player2Table);
+    //console.log(this.players);
+    //console.log(this.tables);
   }
 }
 

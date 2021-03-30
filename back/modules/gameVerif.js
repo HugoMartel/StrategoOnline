@@ -47,7 +47,7 @@ let GameVerif = (function () {
         else if(map.tables[playerID][piece.destx][piece.desty] != 0){
             return [false, "CANT_MOVE_ON_YOUR_PIECE"];
         }else if(piece.id != 2){
-            if(Math.abs(piece.destx-piece.posx) + Math.abs(piece.desty-piece.posy) >2){
+            if(Math.abs(piece.destx-piece.posx) + Math.abs(piece.desty-piece.posy) >1){
                 return [false, "CANT_MOVE_ON_DIAGONAL"];
             }
             if(Math.abs(piece.destx-piece.posx) != 1 || Math.abs(piece.desty-piece.posy) != 1){

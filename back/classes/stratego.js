@@ -36,7 +36,92 @@ class Game {
         this.tables[1][i][j + 4] = -1;
       }
     }
+    
     //Fill each player's array with the default pieces placement
+    //* First player
+    tables[0][0][0] = 3;//First line
+    tables[0][0][1] = 3;
+    tables[0][0][2] = 11;
+    tables[0][0][3] = 11;
+    tables[0][0][4] = 0;
+    tables[0][0][5] = 11;
+    tables[0][0][6] = 11;
+    tables[0][0][7] = 3;
+    tables[0][0][8] = 3;
+    tables[0][0][9] = 2;
+    tables[0][1][0] = 5;//Second line
+    tables[0][1][1] = 2;
+    tables[0][1][2] = 6;
+    tables[0][1][3] = 8;
+    tables[0][1][4] = 4;
+    tables[0][1][5] = 11;
+    tables[0][1][6] = 5;
+    tables[0][1][7] = 7;
+    tables[0][1][8] = 5;
+    tables[0][1][9] = 11;
+    tables[0][2][0] = 1;//Third line
+    tables[0][2][1] = 7;
+    tables[0][2][2] = 2;
+    tables[0][2][3] = 3;
+    tables[0][2][4] = 2;
+    tables[0][2][5] = 7;
+    tables[0][2][6] = 5;
+    tables[0][2][7] = 2;
+    tables[0][2][8] = 6;
+    tables[0][2][9] = 10;
+    tables[0][3][0] = 6;//Fourth line
+    tables[0][3][1] = 4;
+    tables[0][3][2] = 9;
+    tables[0][3][3] = 2;
+    tables[0][3][4] = 6;
+    tables[0][3][5] = 4;
+    tables[0][3][6] = 2;
+    tables[0][3][7] = 8;
+    tables[0][3][8] = 4;
+    tables[0][3][9] = 2;
+
+    //* Second player
+    tables[1][9][0] = 3;//First line
+    tables[1][9][1] = 3;
+    tables[1][9][2] = 11;
+    tables[1][9][3] = 11;
+    tables[1][9][4] = 0;
+    tables[1][9][5] = 11;
+    tables[1][9][6] = 11;
+    tables[1][9][7] = 3;
+    tables[1][9][8] = 3;
+    tables[1][9][9] = 2;
+    tables[1][8][0] = 5;//Second line
+    tables[1][8][1] = 2;
+    tables[1][8][2] = 6;
+    tables[1][8][3] = 8;
+    tables[1][8][4] = 4;
+    tables[1][8][5] = 11;
+    tables[1][8][6] = 5;
+    tables[1][8][7] = 7;
+    tables[1][8][8] = 5;
+    tables[1][8][9] = 11;
+    tables[1][7][0] = 1;//Third line
+    tables[1][7][1] = 7;
+    tables[1][7][2] = 2;
+    tables[1][7][3] = 3;
+    tables[1][7][4] = 2;
+    tables[1][7][5] = 7;
+    tables[1][7][6] = 5;
+    tables[1][7][7] = 2;
+    tables[1][7][8] = 6;
+    tables[1][7][9] = 10;
+    tables[1][6][0] = 6;//Fourth line
+    tables[1][6][1] = 4;
+    tables[1][6][2] = 9;
+    tables[1][6][3] = 2;
+    tables[1][6][4] = 6;
+    tables[1][6][5] = 4;
+    tables[1][6][6] = 2;
+    tables[1][6][7] = 8;
+    tables[1][6][8] = 4;
+    tables[1][6][9] = 2;
+
 
     //! DEBUG
     //console.log(this.players);

@@ -12,7 +12,7 @@
  * @namespace GameVerif
  */
 
-let GameVerif = (function () {
+ let GameVerif = (function () {
     
     /**
     * @function GameVerif.isMovePossible

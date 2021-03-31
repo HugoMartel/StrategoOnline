@@ -27,7 +27,7 @@ let GameVerif = (function () {
     * @description Say if a move is possible, adn give you the details information about it
     */
     let isMovePossible = function(map, player, piece){
-        let playerID = map.players.findIndex(findPlayer=> findPlayer === player);
+        let playerID = map.players.findIndex(findPlayer => findPlayer === player);
         let player2ID = (playerID+1)%2;
         if(map.players[playerID] != player){ // If the player isn't in the game
             return [false, "NOT_IN_GAME"];
@@ -46,32 +46,58 @@ let GameVerif = (function () {
         }
         else if(map.tables[playerID][piece.destx][piece.desty] != 0){
             return [false, "CANT_MOVE_ON_YOUR_PIECE"];
-        }else if(piece.id != 2){
-            if(Math.abs(piece.destx-piece.posx) >= 1 && Math.abs(piece.desty-piece.posy) >= 1){
-                return [false, "CANT_MOVE_ON_DIAGONAL"];
-            }
-            if(Math.abs(piece.destx-piece.posx) > 1 || Math.abs(piece.desty-piece.posy) > 1){
+        }
+        else if(Math.abs(piece.destx - piece.posx) != 0 && Math.abs(piece.desty - piece.posy) != 0){
+            return [false, "CANT_MOVE_ON_DIAGONAL"];
+        }
+        else if(piece.id != 2){
+            if(Math.abs(piece.destx - piece.posx) > 1 || Math.abs(piece.desty - piece.posy) > 1){
                 return [false, "CASE_OUT_OF_RANGE"];
             }
         }
         else if(piece.id == 2){
-            if(piece.destx-piece.posx!=0 && piece.desty-piece.posy !=0){
-                return [false, "CANT_MOVE_ON_DIAGONAL"];
+            if (piece.desty === piece.posy) {
+                if (piece.destx < piece.posx) {
+                    for (let index = piece.posx - 1; index > piece.destx; index--) {
+                        if(map.tables[playerID][index][piece.posy] != 0){
+                            return [false, "CANT_MOVE_THROUGH_A_PIECE"];
+                        }
+                        if(map.tables[player2ID][index][piece.posy] != 0){
+                            return [false, "CANT_MOVE_THROUGH_A_PIECE"];
+                        }
+                    }
+                }
+                else {
+                    for (let index = piece.posx + 1; index < piece.destx; index++) {
+                        if(map.tables[playerID][index][piece.posy] != 0){
+                            return [false, "CANT_MOVE_THROUGH_A_PIECE"];
+                        }
+                        if(map.tables[player2ID][index][piece.posy] != 0){
+                            return [false, "CANT_MOVE_THROUGH_A_PIECE"];
+                        }
+                    }
+                }
             }
-            for (let index = 1; index < piece.destx-piece.posx; index > piece.destx-piece.posx ? index--:index++) {
-                if(map.tables[playerID][piece.posx+index][piece.posy] !=0){
-                    return [false, "CANT_MOVE_THROUGH_A_PIECE"];
+            else {
+                if (piece.desty < piece.posy) {
+                    for (let index = piece.posy - 1; index > piece.desty; index--) {
+                        if(map.tables[playerID][piece.posx][index] != 0){
+                            return [false, "CANT_MOVE_THROUGH_A_PIECE"];
+                        }
+                        if(map.tables[player2ID][piece.posx][index] != 0){
+                            return [false, "CANT_MOVE_THROUGH_A_PIECE"];
+                        }
+                    }
                 }
-                if(map.tables[player2ID][piece.posx+index][piece.posy] !=0){
-                    return [false, "CANT_MOVE_THROUGH_A_PIECE"];
-                }
-            }
-            for (let index = 1; index < piece.desty-piece.posy; index > piece.desty-piece.posy ? index--:index++) {
-                if(map.tables[playerID][piece.posx][piece.posy+index] !=0){
-                    return [false, "CANT_MOVE_THROUGH_A_PIECE"];
-                }
-                if(map.tables[player2ID][piece.posx][piece.posy+index] !=0){
-                    return [false, "CANT_MOVE_THROUGH_A_PIECE"];
+                else {
+                    for (let index = piece.posy + 1; index < piece.desty; index++) {
+                        if(map.tables[playerID][piece.posx][index] != 0){
+                            return [false, "CANT_MOVE_THROUGH_A_PIECE"];
+                        }
+                        if(map.tables[player2ID][piece.posx][index] != 0){
+                            return [false, "CANT_MOVE_THROUGH_A_PIECE"];
+                        }
+                    }
                 }
             }
         }
@@ -145,9 +171,10 @@ let GameVerif = (function () {
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         ];
-        if(playerID ==1){
+        if(playerID == 1){
             posx = 9 - posx;
         }
+        console.log(playerID);
         let piece = { id: map.tables[playerID][posx][posy], posx: posx, posy: posy};
         for (let y = 0; y <map.tables[0][piece.posx].length; y++) {
             piece.destx = piece.posx;

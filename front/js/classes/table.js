@@ -317,16 +317,19 @@ class Table {
         deleted.dispose();
       }
     );
-    scene.onPointerDown = function (evt, pickResult) {
+    scene.onPointerUp = function (evt, pickResult) {
       // We try to pick an object
       if(!Graphics.isClicked()){
         if (pickResult.pickedMesh != null && pickResult.pickedMesh.metadata === "playerPiece") {
+          
           Graphics.setClicked(true);
+          //scaling the coordinates to go in our table
           let posX = pickResult.pickedMesh.position.x / 0.835 + 4.507;
           let posZ = pickResult.pickedMesh.position.z / 0.835 + 4.507;
           posX = parseInt(posX);
           posZ = parseInt(posZ);
 
+          //emiting the coord to the serve
           socket.emit("requestMoveset", {x: posX, z: posZ});
 
           let moveDiv = document.createElement("div");
@@ -334,14 +337,15 @@ class Table {
           moveDiv.style.display = "block";
           moveDiv.style.position = "absolute";
           moveDiv.style.backgroundColor = "green";
-          moveDiv.style.width = "500px";
-          moveDiv.style.height = "500px";
+          moveDiv.style.width = "20%";
+          moveDiv.style.height = "40%";
           moveDiv.style.top = "20%";
           moveDiv.style.margin = "auto";
           moveDiv.style.backgroundColor = "#0c1821";
           moveDiv.style.boxShadow = "0 4px 8px 2px #e1ae33";
           moveDiv.style.color = "#e1ae33";
           moveDiv.style.borderRadius = "15px";
+          moveDiv.id = "moveDiv";
 
           let closeMoveDiv = document.createElement("button");
           closeMoveDiv.classList.add("btn-close", "btn-close-white");
@@ -350,14 +354,24 @@ class Table {
           closeMoveDiv.style.position = "absolute";
           closeMoveDiv.style.top = "5px";
           closeMoveDiv.style.right = "5px";
-          
+          closeMoveDiv.id = "closeMoveDiv";
+
           moveDiv.appendChild(closeMoveDiv);
           moveDiv.innerHTML += `<p>Waiting for server response</p>`;
 
+          let closeMoveDivCallback = function(e){
+            if(e.target && e.target.id== 'closeMoveDiv'){
+              Graphics.setClicked(false);
+              document.getElementById("moveDiv").remove();
+              document.removeEventListener('click', closeMoveDivCallback);
+            }
+          }
+          //TODO: comparer les coordonnées envoyé par le serveur et les coordonnées de la pièce pour connaître la position des boutons de déplacement
+          //TODO: créer les boutons de déplacement, en croix autour de la position acuelle de la pièce
+          document.addEventListener('click', closeMoveDivCallback);
+
           document.getElementById("main").appendChild(moveDiv);
           
-          console.log(posX);
-          console.log(posZ);
         }
       }
     };

@@ -116,12 +116,13 @@ let Socket = (function () {
   /**
    * @function Socket.getMoves
    * @param {Object} data
-   * coords of the piece that requested its moves
+   * List of possible moves and if they imply a fight
    * @returns {} /
    * @description socket.io client event callback called when the pieces' possible moves are returned by the server
    */
   function getMovesCall(data) {
     // Append buttons to the moves div
+    console.log(data);
     //TODO
   }
 

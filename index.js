@@ -281,12 +281,7 @@ io.on("connection", (client) => {
     // Get the possible moves array from GameVerif module
     try {
       if (clientGame !== "") {
-        moves = GameVerif.possibleMoves(
-          clientGame,
-          clientName,
-          args.z,
-          args.x
-        );
+        moves = GameVerif.possibleMoves(clientGame, clientName, args.z, args.x);
       } else {
         throw "The client's game couldn't be found...";
       }
@@ -294,8 +289,22 @@ io.on("connection", (client) => {
       console.error(e);
     }
 
-    console.log(moves);//! DEBUG
-    return moves;
+    //Convert the available moves to buttons to return to the front
+    let movesToDisplay = []; //contains [x, z, isFight]
+
+    for (let i = 0; i < moves.length; ++i) {
+      for (let j = 0; j < moves[i].length; ++j) {
+        if (moves[i][j] > 0)
+          movesToDisplay.push([
+            j - args.x,
+            i - args.z,
+            moves[i][j] !== 2 ? false : true,
+          ]); //Thanks to TT the indexed are inverted from back to front :) (sry)
+      }
+    }
+
+    console.log(movesToDisplay); //! DEBUG
+    io.to(client.id).emit('moveset response', movesToDisplay);
   });
 
   //===================================================================

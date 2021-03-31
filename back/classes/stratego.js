@@ -17,6 +17,7 @@ class Game {
     this.room_name = name;
 
     this.players = [player, null];
+    this.turn = 0;//Defaults to player 0 turn
     //Create each player's pieces array
     this.tables = [
       Array(10)

@@ -113,10 +113,18 @@ let Graphics = (function () {
    * The coords where the selected piece will be moved
    * @argument {number[]} oldCoord
    * The coords where the selected piece is currently positionned
+   * @argument {Object} fight
+   * If the deplace needs a fight animation, add args to enable the animation
    * @returns {} /
    * @description Sets everything up to make the 3D scene usable
    */
-  let deplaceCall = (newCoord, oldCoord) => {
+  let deplaceCall = (newCoord, oldCoord, fight) => {
+    //fight = {winner: true/false, enemyValue: Number}
+    if (fightObject !== undefined) {
+      //!CHECK IF THE ARGS IN THE OBJECT ARE CORRECT
+      //TODO
+    }
+
     board.grid[oldCoord[0]][oldCoord[1]].move(newCoord[0], newCoord[1]);
     board.grid[newCoord[0]][newCoord[1]] = board.grid[oldCoord[0]][oldCoord[1]];
     board.grid[oldCoord[0]][oldCoord[1]] = undefined;

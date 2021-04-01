@@ -22,6 +22,7 @@ class Pieces {
         | 0,0 | 1,0 | ... | 9,0 |
         +-----+-----+-----+-----+
         */
+        //note: status 1 = alive, 0 = ded and 2 = fight win (for animation) and 3 = reveal win, and 4 reveal ded
     this.specc = spec;
     this.x = position[0];
     this.z = position[1];
@@ -38,6 +39,7 @@ class Pieces {
     this.physicalPiece.position.y = 0;
     this.physicalPiece.position.x = this.x * 0.835 - 3.757;
     this.physicalPiece.position.z = this.z * 0.835 - 3.757;
+    this.status = 1;
   }
 
   //only moving the coordonate inside the class, not the physical piece

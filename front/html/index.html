@@ -20,6 +20,7 @@
     socket.on('defeat', data => Socket.userDefeat(data));
     socket.on('start fight', data => Socket.fight(data));
     socket.on('moveset response', data => Socket.getMoves(data));
+    socket.on('move', data => Socket.movePiece(data));
 
     /* Append the img to ease out the access for the menu background */
     let bottomImg = document.createElement("img");

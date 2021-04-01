@@ -290,21 +290,21 @@ io.on("connection", (client) => {
     }
 
     //Convert the available moves to buttons to return to the front
-    let movesToDisplay = []; //contains [x, z, isFight]
+    let movesToReturn = {pieceLocation: args, availableMoves: [] }; //contains [x, z, isFight]
 
     for (let i = 0; i < moves.length; ++i) {
       for (let j = 0; j < moves[i].length; ++j) {
         if (moves[i][j] > 0)
-          movesToDisplay.push([
-            j - args.x,
-            i - args.z,
+          movesToReturn.availableMoves.push([
+            j,
+            i,
             moves[i][j] !== 2 ? false : true,
           ]); //Thanks to TT the indexed are inverted from back to front :) (sry)
       }
     }
 
-    console.log(movesToDisplay); //! DEBUG
-    io.to(client.id).emit('moveset response', movesToDisplay);
+    console.log(movesToReturn); //! DEBUG
+    io.to(client.id).emit('moveset response', movesToReturn);
   });
 
   //===================================================================
@@ -312,6 +312,7 @@ io.on("connection", (client) => {
         An user wants to move a piece
   \**************************************/
   client.on("requestMove", (args) => {
+    console.log(args);
     //TODO
   });
 });

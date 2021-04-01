@@ -79,8 +79,8 @@ let Graphics = (function () {
       [0,7],[1,7],[2,7],[3,7],[4,7],[5,7],[6,7],[7,7],[8,7],[9,7],
       [0,6],[1,6],[2,6],[3,6],[4,6],[5,6],[6,6],[7,6],[8,6],[9,6]
     ], scene);
-    console.log(board);
-    //deplaceCall([5, 5], [1, 1], undefined);
+    
+    // Load the scene for the render loop
     scene.registerBeforeRender(function () {
       // Checking the position of each 3D Piece whith its board.grid position
       for (x = 0; x < 10; ++x) {
@@ -135,18 +135,16 @@ let Graphics = (function () {
    * @argument {number[]} oldCoord
    * The coords where the selected piece is currently positionned
    * @argument {Object} fight
+   * (optional)
    * If the deplace needs a fight animation, add args to enable the animation
-   * object: {enemyCoord: array [x, z],
-   * winner: 1 if the attackers win, or 2 if it's a draw, or 0 if it's a loose
+   * object: {
+   * winner: 1 if the attackers win, or 2 if it's a draw, or 0 if it's a lose
    * enemyStrength: used for the reveal of the piece
    * }
    * @returns {} /
    * @description Sets everything up to make the 3D scene usable
    */
-  let deplaceCall = (newCoord, oldCoord, fight) => {
-    //if fight
-    //fight = {winner: 0/1/2, enemyValue: Number, enemyCoord = [x, z] array}
-    //winner = 0 => the attacker is the looser, winner == 1 then the attackers win and if winner == 2 so draw
+  let deplaceCall = (newCoord, oldCoord, fight = undefined) => {
     let isMoving = true;
     console.log(board);
     if(fight !== undefined){
@@ -288,24 +286,24 @@ let Graphics = (function () {
       }
       //TODO: fix that 
       //appllying the new texture:
-      board.grid[fight.enemyCoord[0]][fight.enemyCoord[1]].physicalPiece.subMeshes[1].material = enemyColor;
-      board.grid[fight.enemyCoord[0]][fight.enemyCoord[1]].physicalPiece.subMeshes[2].material = enemyTopColor;
+      board.grid[newCoord[0]][newCoord[1]].physicalPiece.subMeshes[1].material = enemyColor;
+      board.grid[newCoord[0]][newCoord[1]].physicalPiece.subMeshes[2].material = enemyTopColor;
 
       if (fight !== undefined && fight.win !== undefined && fight.win == 0) {
         //when the piece attacking is loosing (looser)
         //piece attacking is ded
         board.grid[oldCoord[0]][oldCoord[1]].status = 0;
         //initiating the reveal of the enemy piece
-        board.grid[fight.enemyCoord[0]][fight.enemyCoord[1]].status = 3;
+        board.grid[newCoord[0]][newCoord[1]].status = 3;
         //maybe remove that line
-        board.grid[fight.enemyCoord[0]][fight.enemyCoord[1]].physicalPiece.rotation.y +=0.01;
+        board.grid[newCoord[0]][newCoord[1]].physicalPiece.rotation.y +=0.01;
         isMoving = false;
       }
 
       else if (fight !== undefined && fight.win !== undefined && fight.win == 1) {
         //when the piece attacking is winning
         board.grid[oldCoord[0]][oldCoord[1]].status = 3;
-        board.grid[fight.enemyCoord[0]][fight.enemyCoord[1]].status = 0;
+        board.grid[newCoord[0]][newCoord[1]].status = 0;
         isMoving = true;
       }
 
@@ -313,7 +311,7 @@ let Graphics = (function () {
         //draw
         isMoving = false;
         board.grid[oldCoord[0]][oldCoord[1]].status = 4;
-        board.grid[fight.enemyCoord[0]][fight.enemyCoord[1]].status = 0;
+        board.grid[newCoord[0]][newCoord[1]].status = 0;
       }
     }
 
@@ -333,6 +331,7 @@ let Graphics = (function () {
     deplace: (newCoord, oldCoord, fight) => deplaceCall(newCoord, oldCoord, fight),
     createScene: (canvas, engine) => createSceneCall(canvas, engine),
     isClicked: () => pieceClicked,
-    setClicked: (value) => (typeof value === "boolean")? pieceClicked = value: Toast.error("pieceClicked got a wrong value..."),
+    setClicked: (value) => (typeof value === "boolean") ? pieceClicked = value : Toast.error("pieceClicked got a wrong value..."),
+    getStrength: (coords) => board.grid[coords[0]][coords[1]].specc,
   };
 })();

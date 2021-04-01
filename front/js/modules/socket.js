@@ -116,16 +116,152 @@ let Socket = (function () {
   /**
    * @function Socket.getMoves
    * @param {Object} data
-   * List of possible moves and if they imply a fight
+   * pieceLocation: clicked piece location
+   * availableMoves: moves coords returned by the server where the selected piece can go
    * @returns {} /
    * @description socket.io client event callback called when the pieces' possible moves are returned by the server
    */
   function getMovesCall(data) {
-    // Append buttons to the moves div
-    console.log(data);
-    //TODO
+    if (
+      data === undefined &&
+      data.pieceLocation === undefined &&
+      data.availableMoves === undefined
+    ) {
+      Toast.error("The server couldn't fetch your available moves...");
+    } else {
+      // Append buttons to the moves div
+      console.log(data);
+
+      if (!data.availableMoves.length) {
+        Toast.error("You can't move this piece...");
+        Graphics.setClicked(false);
+      } else {
+        // Create the moveset div
+        let moveDiv = document.createElement("div");
+        // STYLE
+        moveDiv.style.display = "flex";
+        moveDiv.style.flexDirection = "column";
+        moveDiv.style.flexWrap = "nowrap";
+        moveDiv.style.justifyContent = "center";
+        moveDiv.style.alignContent = "space-around";
+        moveDiv.style.textAlign = "center";
+        moveDiv.style.position = "absolute";
+        moveDiv.style.backgroundColor = "green";
+        moveDiv.style.width = "20%";
+        moveDiv.style.height = "40%";
+        moveDiv.style.top = "20%";
+        moveDiv.style.margin = "auto";
+        moveDiv.style.backgroundColor = "#0c1821";
+        moveDiv.style.boxShadow = "0 4px 8px 2px #e1ae33";
+        moveDiv.style.color = "#e1ae33";
+        moveDiv.style.borderRadius = "15px";
+        moveDiv.id = "moveDiv";
+
+        // Remove the moveDiv from the page
+        let closeMoveDivCallback = function (e) {
+          if (e.target && e.target.id == "closeMoveDiv") {
+            Graphics.setClicked(false);
+            document.removeEventListener("click", closeMoveDivCallback);
+            //TODO: remove img callbacks too (we will have to do it dynamically...)
+            for (node of document.getElementById("moveDiv").childNodes) {
+              if (node.tagName == "DIV") {
+                // Remove the main line listeners
+                //TODO
+              } else if (node.tagName == "IMG") {
+                node.removeEventListener('click', closeMoveDivCallback);
+              }
+            }
+
+            document.getElementById("moveDiv").remove();
+          }
+        };
+
+        // Create the main line of moves that will always be present
+        let moveLeftRightContainer = document.createElement("div");
+        
+        let selectedPieceImg = document.createElement("img");
+        selectedPieceImg.src = "../../img/selectedPieces/" + Graphics.getStrength([data.pieceLocation.x, data.pieceLocation.z]) + ".png";
+        selectedPieceImg.alt = "Selected Piece Image";
+        selectedPieceImg.style.width = "50px";
+        selectedPieceImg.style.height = "50px";
+
+        moveLeftRightContainer.appendChild(selectedPieceImg);
+        moveDiv.appendChild(moveLeftRightContainer);
+
+        // Create the buttons to be able to select a move
+        for (elt of data.availableMoves) {
+          let moveButton = document.createElement("img");
+          moveButton.alt = "Move Button Image";
+          moveButton.style.width = "50px";
+          moveButton.style.height = "50px";
+
+          // Event to call when a move is requested
+          moveButton.addEventListener("click", (e) => {
+            closeMoveDivCallback(e);
+            io.emit("requestMove", {newCoords: [data.availableMoves[0], data.availableMoves[1]], oldCoords: [data.pieceLocation[0], data.pieceLocation[1]]});
+          });
+
+          console.log(moveDiv.childNodes);
+
+          if (elt[1] > data.pieceLocation.z) {
+            // Checks if the move is above the chosen piece
+            if (elt[2]) moveButton.src = "../../img/swordsCrossing.png";
+            else moveButton.src = "../../img/arrowUp.png";
+            moveDiv.insertBefore(moveButton, moveDiv.childNodes[0]);
+            
+          } else if (elt[0] < data.pieceLocation.x) {
+            // Checks if the move is on the left of the chosen piece
+            if (elt[2]) moveButton.src = "../../img/swordsCrossing.png";
+            else moveButton.src = "../../img/arrowLeft.png";
+            moveLeftRightContainer.insertBefore(moveButton, moveLeftRightContainer.childNodes[0]);
+
+          } else if (elt[0] > data.pieceLocation.x) {
+            // Checks if the move is on the right of the chosen piece
+            if (elt[2]) moveButton.src = "../../img/swordsCrossing.png";
+            else moveButton.src = "../../img/arrowRight.png";
+            moveLeftRightContainer.appendChild(moveButton);
+
+          } else if (elt[1] < data.pieceLocation.z) {
+            // Checks if the move is below the chosen piece
+            if (elt[2]) moveButton.src = "../../img/swordsCrossing.png";
+            else moveButton.src = "../../img/arrowDown.png";
+            moveDiv.appendChild(moveButton);
+            
+          }
+        }
+
+        console.log(moveDiv);
+
+        // Cross button to close the moveset div
+        let closeMoveDiv = document.createElement("button");
+        closeMoveDiv.classList.add("btn-close", "btn-close-white");
+        closeMoveDiv.type = "button";
+        closeMoveDiv.setAttribute("aria-label", "Close");
+        closeMoveDiv.style.position = "absolute";
+        closeMoveDiv.style.top = "5px";
+        closeMoveDiv.style.right = "5px";
+        closeMoveDiv.id = "closeMoveDiv";
+
+        document.addEventListener("click", closeMoveDivCallback);
+        moveDiv.appendChild(closeMoveDiv);
+
+        // Add the moveset div to the page
+        document.getElementById("main").appendChild(moveDiv);
+      }
+    }
   }
 
+  //======================================================================================
+  /**
+   * @function Socket.movePiece
+   * @param {Object} data
+   * TODO lol
+   * @returns {} /
+   * @description socket.io client event callback called when the pieces' need to move
+   */
+  function movePieceCall(data) {
+    //TODO
+  }
   //======================================================================================
   //======================================================================================
   // Returned Object
@@ -137,5 +273,6 @@ let Socket = (function () {
     userDefeat: (data) => userDefeatCall(data),
     fight: (data) => fightCall(data),
     getMoves: (data) => getMovesCall(data),
+    movePiece: (data) => movePieceCall(data),
   };
 })();

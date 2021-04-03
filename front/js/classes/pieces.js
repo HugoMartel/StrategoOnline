@@ -26,6 +26,7 @@ class Pieces {
     this.specc = spec;
     this.x = position[0];
     this.z = position[1];
+    this.replacement = undefined;
     //this.physicalPiece = BABYLON.Mesh.CreateCylinder("cylinder", 1, 0.8, 0.8, 10, 1, scene, false, BABYLON.Mesh.DEFAULTSIDE);
     //cloning the base mesh:
     this.physicalPiece = mesh.clone("clonedPiece");

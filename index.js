@@ -244,17 +244,101 @@ io.on("connection", (client) => {
   \**************************************/
   client.on("requestMoveset", (args) => {
     // Check if the args are correct
+    if (
+      args == undefined ||
+      typeof args.x !== "number" ||
+      typeof args.z !== "number"
+    ) {
+      io.to(client.id).emit("moveset response", {
+        error: "Wrong args given to the requestMoveset callback...",
+      });
+      return;
+    }
+
+    //Get the used name for game storage
+    let clientName =
+      io.sockets.sockets.get(client.id).handshake.session.login !== undefined
+        ? io.sockets.sockets.get(client.id).handshake.session.login
+        : client.id;
+
+    let clientGame = undefined;
+
+    // Load the game object of the player that made the request
+    for (let game of fs
+      .readdirSync(__dirname + "/back/storage/games")
+      .map((value, index, array) => value.slice(0, value.length - 5))) {
+      if (game.includes(clientName)) {
+        clientGame = Storage.getData("games/" + game);
+        break; // I did this because if I remember correctly we cannot iterate in a while
+      }
+    }
+    // Possible moves object to return to the client
+    let moves;
+
+    /*
+    Case of the first player
+    The coords needs to be converted since the server placement is different from the client display
+    (clientGame.turn ? args.z : 9-args.z)
+    */
+
+    // Get the possible moves array from GameVerif module
     try {
-      if (
-        args == undefined ||
-        typeof args.x !== "number" ||
-        typeof args.z !== "number"
-      ) {
-        throw "Wrong args given to the requestMoveset callback...";
-        return {};
+      if (clientGame === undefined) {
+        io.to(client.id).emit("moveset response", {
+          error: "Your game doesn't exist on the server...",
+        });
+        throw "The client's game couldn't be found...";
+      } else if (clientGame.players[clientGame.turn] !== clientName) {
+        // Other condition version : clientGame.turn !== clientGame.players.findIndex(findPlayer => findPlayer === player)
+        io.to(client.id).emit("moveset response", {
+          error: "It is not your turn...",
+        });
+        return;
+      } else {
+        moves = GameVerif.possibleMoves(clientGame, clientName, args.z, args.x);
       }
     } catch (e) {
       console.error(e);
+      return;
+    }
+
+    //Convert the available moves to buttons to return to the front
+    let movesToReturn = { pieceLocation: args, availableMoves: [] }; //contains [x, z, isFight]
+
+    //console.table(moves);//! DEBUG
+
+    // Check the moves array to find the possible moves (1 or 2)
+    // 1 will mean a normal move
+    // 2 will imply a fight
+    for (let i = 0; i < moves.length; ++i) {
+      for (let j = 0; j < moves[i].length; ++j) {
+        if (moves[i][j] > 0)
+          movesToReturn.availableMoves.push([
+            j,
+            i,
+            moves[i][j] !== 2 ? false : true,
+          ]); //Thanks to TT the indexed are inverted from back to front :) (sry)
+      }
+    }
+
+    io.to(client.id).emit("moveset response", movesToReturn);
+  });
+
+  //===================================================================
+  /**************************************\
+        An user wants to move a piece
+  \**************************************/
+  client.on("requestMove", (args) => {
+    console.log(args);
+    if (
+      args == undefined ||
+      typeof args.newCoords === undefined ||
+      typeof args.oldCoords === undefined
+    ) {
+      io.to(client.id).emit("move", {
+        error: "Wrong args given to the requestMoveset callback...",
+      });
+      return;
     }
 
     //Get the used name for game storage
@@ -275,45 +359,49 @@ io.on("connection", (client) => {
       }
     }
 
-    // Possible moves object to return to the client
-    let moves;
-
-    // Get the possible moves array from GameVerif module
+    // Check if the game is correctly loaded
     try {
-      if (clientGame !== "") {
-        moves = GameVerif.possibleMoves(clientGame, clientName, args.z, args.x);
+      if (clientGame === undefined) {
+        throw "The game doesn't exist on the server...";
+      } else if (clientGame.players[clientGame.turn] !== clientName) {
+        // Other condition version : clientGame.turn !== clientGame.players.findIndex(findPlayer => findPlayer === player)
+        throw clientName + " cheated and tried to move with going through the console (not your turn)";
       } else {
-        throw "The client's game couldn't be found...";
+        // Make the move on the game file
+        let moveResult = GameVerif.makeMove(
+          clientGame, 
+          clientName, 
+          args.oldCoords[1], 
+          args.oldCoords[0], 
+          args.newCoords[1],
+          args.newCoords[0]
+        );
+        
+        // Check if the move has been correctly done
+        if (!moveResult[0]) {
+          throw clientName + " cheated and tried to move with going through the console (move not possible)";
+        }
+
+        console.log(moveResult);
+        // Send the move animation request to the clients
+        //TODO Send two different moves in each player case (since the boards are inverted)
+        io.sockets.to(clientGame.room_name).emit("move response", {
+          newCoords: args.newCoords,
+          oldCoords: args.oldCoords,
+          fight: (moveResult[5] ?
+          {
+            win: moveResult[6], 
+            enemyStrength: destPieceStrength
+          } : undefined)
+        });
       }
     } catch (e) {
+      io.to(client.id).emit("move response", { error: e });
       console.error(e);
+      return;
     }
 
-    //Convert the available moves to buttons to return to the front
-    let movesToReturn = {pieceLocation: args, availableMoves: [] }; //contains [x, z, isFight]
 
-    for (let i = 0; i < moves.length; ++i) {
-      for (let j = 0; j < moves[i].length; ++j) {
-        if (moves[i][j] > 0)
-          movesToReturn.availableMoves.push([
-            j,
-            i,
-            moves[i][j] !== 2 ? false : true,
-          ]); //Thanks to TT the indexed are inverted from back to front :) (sry)
-      }
-    }
-
-    console.log(movesToReturn); //! DEBUG
-    io.to(client.id).emit('moveset response', movesToReturn);
-  });
-
-  //===================================================================
-  /**************************************\
-        An user wants to move a piece
-  \**************************************/
-  client.on("requestMove", (args) => {
-    console.log(args);
-    //TODO
   });
 });
 

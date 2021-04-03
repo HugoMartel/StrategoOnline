@@ -4,6 +4,7 @@
  * @author Stratego Online
  */
 
+
 /**
  * Toolbox of callbacks used for socket.on('event", callback) in index.html
  * @type {Object}
@@ -118,6 +119,7 @@ let Socket = (function () {
    * @param {Object} data
    * pieceLocation: clicked piece location
    * availableMoves: moves coords returned by the server where the selected piece can go
+   * error : if the sererver send an error message
    * @returns {} /
    * @description socket.io client event callback called when the pieces' possible moves are returned by the server
    */
@@ -130,9 +132,10 @@ let Socket = (function () {
       Toast.error("The server couldn't fetch your available moves...");
     } else {
       // Append buttons to the moves div
-      console.log(data);
-
-      if (!data.availableMoves.length) {
+      if (data.error !== undefined) {
+        Toast.error(data.error);
+        Graphics.setClicked(false);
+      } else if (!data.availableMoves.length) {
         Toast.error("You can't move this piece...");
         Graphics.setClicked(false);
       } else {
@@ -143,13 +146,13 @@ let Socket = (function () {
         moveDiv.style.flexDirection = "column";
         moveDiv.style.flexWrap = "nowrap";
         moveDiv.style.justifyContent = "center";
-        moveDiv.style.alignContent = "space-around";
+        moveDiv.style.alignItems = "center";
         moveDiv.style.textAlign = "center";
         moveDiv.style.position = "absolute";
         moveDiv.style.backgroundColor = "green";
-        moveDiv.style.width = "20%";
-        moveDiv.style.height = "40%";
+        moveDiv.style.width = "15%";
         moveDiv.style.top = "20%";
+        moveDiv.style.padding = "10px 0";
         moveDiv.style.margin = "auto";
         moveDiv.style.backgroundColor = "#0c1821";
         moveDiv.style.boxShadow = "0 4px 8px 2px #e1ae33";
@@ -166,7 +169,10 @@ let Socket = (function () {
             for (node of document.getElementById("moveDiv").childNodes) {
               if (node.tagName == "DIV") {
                 // Remove the main line listeners
-                //TODO
+                for (childNode of node.childNodes) {
+                  if (!childNode.classList.contains("notClickable"))
+                    childNode.removeEventListener('click', closeMoveDivCallback);
+                }
               } else if (node.tagName == "IMG") {
                 node.removeEventListener('click', closeMoveDivCallback);
               }
@@ -184,6 +190,7 @@ let Socket = (function () {
         selectedPieceImg.alt = "Selected Piece Image";
         selectedPieceImg.style.width = "50px";
         selectedPieceImg.style.height = "50px";
+        selectedPieceImg.classList.add("notClickable");
 
         moveLeftRightContainer.appendChild(selectedPieceImg);
         moveDiv.appendChild(moveLeftRightContainer);
@@ -198,10 +205,9 @@ let Socket = (function () {
           // Event to call when a move is requested
           moveButton.addEventListener("click", (e) => {
             closeMoveDivCallback(e);
-            io.emit("requestMove", {newCoords: [data.availableMoves[0], data.availableMoves[1]], oldCoords: [data.pieceLocation[0], data.pieceLocation[1]]});
+            socket.emit("requestMove", {newCoords: [elt[0], elt[1]], oldCoords: [data.pieceLocation.x, data.pieceLocation.z]});
           });
 
-          console.log(moveDiv.childNodes);
 
           if (elt[1] > data.pieceLocation.z) {
             // Checks if the move is above the chosen piece
@@ -230,8 +236,6 @@ let Socket = (function () {
           }
         }
 
-        console.log(moveDiv);
-
         // Cross button to close the moveset div
         let closeMoveDiv = document.createElement("button");
         closeMoveDiv.classList.add("btn-close", "btn-close-white");
@@ -255,13 +259,30 @@ let Socket = (function () {
   /**
    * @function Socket.movePiece
    * @param {Object} data
-   * TODO lol
+   * newCoords : this are the new coords where the piece will move
+   * oldCoords : this are the old coords of the piece
+   * fight : in case there is a fight where the piece want to move give the kind of animation that have to be played or undefined if no fight
+   * error : if the is an error message send by the server
    * @returns {} /
-   * @description socket.io client event callback called when the pieces' need to move
+   * @description socket.io client event callback called when the server ask the client to move a piece on the board
    */
   function movePieceCall(data) {
-    //TODO
+    if (
+      data === undefined &&
+      data.newCoords === undefined &&
+      data.oldCoords === undefined
+    ) {
+      Toast.error("The server couldn't fetch your available moves...");
+    } else {
+      if (data.error !== undefined) {
+        Toast.error(data.error);
+      } else {
+        console.log(data);
+        Graphics.deplace(data.newCoords, data.oldCoords, data.fight);
+      }
+    }
   }
+
   //======================================================================================
   //======================================================================================
   // Returned Object

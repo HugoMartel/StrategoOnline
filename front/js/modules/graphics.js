@@ -138,7 +138,7 @@ let Graphics = (function () {
    * (optional)
    * If the deplace needs a fight animation, add args to enable the animation
    * object: {
-   * winner: 1 if the attackers win, or 2 if it's a draw, or 0 if it's a lose
+   * win: 1 if the attackers win, or 2 if it's a draw, or 0 if it's a lose
    * enemyStrength: used for the reveal of the piece
    * }
    * @returns {} /
@@ -284,7 +284,7 @@ let Graphics = (function () {
           );
           break;
       }
-      //TODO: fix that 
+
       //appllying the new texture:
       board.grid[newCoord[0]][newCoord[1]].physicalPiece.subMeshes[1].material = enemyColor;
       board.grid[newCoord[0]][newCoord[1]].physicalPiece.subMeshes[2].material = enemyTopColor;

@@ -243,6 +243,8 @@ io.on("connection", (client) => {
     An user wants to get available moves
   \**************************************/
   client.on("requestMoveset", (args) => {
+    console.log(args);
+
     // Check if the args are correct
     if (
       args == undefined ||
@@ -303,9 +305,9 @@ io.on("connection", (client) => {
     }
 
     //Convert the available moves to buttons to return to the front
-    let movesToReturn = { pieceLocation: args, availableMoves: [] }; //contains [x, z, isFight]
+    let movesToReturn = { pieceLocation: {x: (clientGame.turn ? 9-args.x : args.x), z: (clientGame.turn ? 9-args.z : args.z)}, availableMoves: [] }; //contains [x, z, isFight]
 
-    //console.table(moves);//! DEBUG
+    console.table(moves);//! DEBUG
 
     // Check the moves array to find the possible moves (1 or 2)
     // 1 will mean a normal move
@@ -315,12 +317,14 @@ io.on("connection", (client) => {
         if (moves[i][j] > 0)
           movesToReturn.availableMoves.push([
             j,
-            i,
+            clientGame.turn ? 9-i : i,
             moves[i][j] !== 2 ? false : true,
           ]); //Thanks to TT the indexed are inverted from back to front :) (sry)
       }
     }
 
+
+    console.log(movesToReturn);
     io.to(client.id).emit("moveset response", movesToReturn);
   });
 
@@ -390,16 +394,21 @@ io.on("connection", (client) => {
           if (room !== client.id) {
             //Remove the game from the server (the room name has the same name as the game JSON file)
             for (const c of io.sockets.adapter.rooms.get(room)) {
-              // for each client of the room
-              io.to(c.id).emit("move response", {
-                newCoords: (c.id === client.id) ? args.newCoords : args.oldCoords,
-                oldCoords: (c.id === client.id) ? args.oldCoords : args.newCoords,
+
+              let moveResponse = {
+                newCoords: (c === client.id) ? args.newCoords : args.oldCoords,
+                oldCoords: (c === client.id) ? args.oldCoords : args.newCoords,
                 fight: (moveResult[5] ?
                 {
-                  win: moveResult[6], 
-                  enemyStrength: (c.id === client.id) ? moveResult[8] : moveResult[7]
+                  win: (clientGame.players[0] === (io.sockets.sockets.get(c).handshake.session.login !== undefined ? io.sockets.sockets.get(c).handshake.session.login : c) && moveResult[6] !== 2 ? (moveResult[6]+1)%2 : moveResult[6]),
+                  enemyStrength: (c === client.id) ? moveResult[8] : moveResult[7]
                 } : undefined)
-              })
+              };
+
+              console.log(moveResponse);
+
+              // for each client of the room
+              io.sockets.to(c.id).emit("move response", moveResponse);
             }
           }
         }

@@ -132,6 +132,10 @@ let Socket = (function () {
    * @description socket.io client event callback called when the pieces' possible moves are returned by the server
    */
   function getMovesCall(data) {
+    Graphics.setClicked(false);
+
+    console.log(data);
+
     if (
       data === undefined &&
       data.pieceLocation === undefined &&
@@ -142,10 +146,10 @@ let Socket = (function () {
       // Append buttons to the moves div
       if (data.error !== undefined) {
         Toast.error(data.error);
-        Graphics.setClicked(false);
+        //Graphics.setClicked(false);
       } else if (!data.availableMoves.length) {
         Toast.error("You can't move this piece...");
-        Graphics.setClicked(false);
+        //Graphics.setClicked(false);
       } else {
         // Create the moveset div
         let moveDiv = document.createElement("div");
@@ -170,14 +174,12 @@ let Socket = (function () {
 
         // Remove the moveDiv from the page
         let closeMoveDivCallback = function (e) {
-          if (e.target && e.target.id == "closeMoveDiv") {
-            Graphics.setClicked(false);
-            document.removeEventListener("click", closeMoveDivCallback);
+            document.getElementById("closeMoveDiv").removeEventListener("click", closeMoveDivCallback);
 
-            for (node of document.getElementById("moveDiv").childNodes) {
+            for (let node of document.getElementById("moveDiv").childNodes) {
               if (node.tagName == "DIV") {
                 // Remove the main line listeners
-                for (childNode of node.childNodes) {
+                for (let childNode of node.childNodes) {
                   if (!childNode.classList.contains("notClickable"))
                     childNode.removeEventListener('click', closeMoveDivCallback);
                 }
@@ -187,7 +189,6 @@ let Socket = (function () {
             }
 
             document.getElementById("moveDiv").remove();
-          }
         };
 
         // Create the main line of moves that will always be present
@@ -206,6 +207,7 @@ let Socket = (function () {
         // Create the buttons to be able to select a move
         for (elt of data.availableMoves) {
           let moveButton = document.createElement("img");
+          moveButton.classList.add("clickable");
           moveButton.alt = "Move Button Image";
           moveButton.style.width = "50px";
           moveButton.style.height = "50px";
@@ -254,7 +256,7 @@ let Socket = (function () {
         closeMoveDiv.style.right = "5px";
         closeMoveDiv.id = "closeMoveDiv";
 
-        document.addEventListener("click", closeMoveDivCallback);
+        closeMoveDiv.addEventListener("click", closeMoveDivCallback);
         moveDiv.appendChild(closeMoveDiv);
 
         // Add the moveset div to the page

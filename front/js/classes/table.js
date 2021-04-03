@@ -322,6 +322,8 @@ class Table {
       if(!Graphics.isClicked()){
         if (pickResult.pickedMesh != null && pickResult.pickedMesh.metadata === "playerPiece") {
           
+
+
           Graphics.setClicked(true);
           //scaling the coordinates to go in our table
           let posX = pickResult.pickedMesh.position.x / 0.835 + 4.507;
@@ -331,6 +333,31 @@ class Table {
 
           //emiting the coord to the serve
           socket.emit("requestMoveset", {x: posX, z: posZ});
+
+          if (document.getElementById("moveDiv")) {
+            let closeMoveDivCallback = function (e) {
+              //if (e.target && (e.target.id == "closeMoveDiv" || e.target.classList.contains("clickable"))) {
+                //Graphics.setClicked(false);
+                document.getElementById("closeMoveDiv").removeEventListener("click", closeMoveDivCallback);
+    
+                for (let node of document.getElementById("moveDiv").childNodes) {
+                  if (node.tagName == "DIV") {
+                    // Remove the main line listeners
+                    for (let childNode of node.childNodes) {
+                      if (!childNode.classList.contains("notClickable"))
+                        childNode.removeEventListener('click', closeMoveDivCallback);
+                    }
+                  } else if (node.tagName == "IMG") {
+                    node.removeEventListener('click', closeMoveDivCallback);
+                  }
+                }
+    
+                document.getElementById("moveDiv").remove();
+              //}
+            };
+
+            closeMoveDivCallback();
+          }
         }
       }
     };

@@ -4,6 +4,9 @@
  * @author Stratego Online
  */
 
+// requires
+const Storage = require("./storage");
+
 /**
  * Game logic and verification 
  * @type {Object}
@@ -18,21 +21,18 @@
     * @function GameVerif.isMovePossible
     * @param {Object} map
     * map informations
-    * @param {String} player
-    * Name of the player which play
+    * @param {String} playerID
+    * Id of the player which play
+    * @param {String} player2ID
+    * Id of the other player
     * @param {Object} piece //id, posx, posy, destx, desty
     * piece you want to move
     * @returns {Array}
     * an array with true of false if move is possible and the string of the code error
     * @description Say if a move is possible, adn give you the details information about it
     */
-    let isMovePossible = function(map, player, piece){
-        let playerID = map.players.findIndex(findPlayer => findPlayer === player);
-        let player2ID = (playerID+1)%2;
-        if(map.players[playerID] != player){ // If the player isn't in the game
-            return [false, "NOT_IN_GAME"];
-        }
-        else if (piece.destx < 0 || piece.destx > 9 || piece.desty < 0 || piece.desty > 9) {
+    let isMovePossible = function(map, playerID, player2ID, piece){
+        if (piece.destx < 0 || piece.destx > 9 || piece.desty < 0 || piece.desty > 9) {
             return [false, "OUT_OF_MAP"];
         }
         else if(map.tables[playerID][piece.destx][piece.desty] == -1){
@@ -158,6 +158,11 @@
     */
     let possibleMoves = function(map, player, posx, posy){
         let playerID = map.players.findIndex(findPlayer=> findPlayer === player);
+        let player2ID = (playerID+1)%2;
+        if(playerID == 1){
+            posx = 9 - posx;
+            posy = 9 - posy;
+        }
         let moves=[
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -170,14 +175,11 @@
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         ];
-        if(playerID == 1){
-            posx = 9 - posx;
-        }
-        let piece = { id: map.tables[playerID][posx][posy], posx: posx, posy: posy};
+        let piece = {id: map.tables[playerID][posx][posy], posx: posx, posy: posy};
         piece.destx = piece.posx;
         for (let y = 0; y < map.tables[0][piece.posx].length; y++) {
             piece.desty = y;
-            let movement = isMovePossible(map, player, piece);
+            let movement = isMovePossible(map, playerID, player2ID, piece);
             moves[piece.destx][piece.desty] = movement[0] ? 1 : 0;
             if (movement[1] == "BATTLE") {
                 moves[piece.destx][piece.desty] = 2;
@@ -186,7 +188,7 @@
         piece.desty = posy;
         for (let x = 0; x < map.tables[0].length; x++) {
             piece.destx = x;
-            let movement = isMovePossible(map, player, piece);
+            let movement = isMovePossible(map, playerID, player2ID, piece);
             moves[piece.destx][piece.desty] = movement[0] ? 1 : 0;
             if (movement[1] == "BATTLE") {
                 moves[piece.destx][piece.desty] = 2;
@@ -224,20 +226,43 @@
     let makeMove = function (map, player, posx, posy, destx, desty) {
         let playerID = map.players.findIndex(findPlayer => findPlayer === player);
         let player2ID = (playerID+1)%2;
-        let pieceA = {id: map.tables[playerID][posx][posy], posx: posx, posy: posy, destx: destx, desty: desty};
-        let movement = isMovePossible(map, player, pieceA)
+        // if(playerID == 1){
+        //     posx = 9 - posx;
+        //     destx = 9 - destx;
+        // }
+        let pieceA = map.tables[playerID][posx][posy];
+        let movement = isMovePossible(map, playerID, player2ID, {
+            id: pieceA, 
+            posx: playerID == 1 ? 9-posx : posx, 
+            posy: playerID == 1 ? 9-posy : posy, 
+            destx: playerID == 1 ? 9-destx : destx, 
+            desty: playerID == 1 ? 9-desty : desty
+        });
         if (movement[0]) {
+            let fileName = "games/" + map.players[0]+"+"+map.players[1];
+            map.turn = (map.turn+1) % 2;
+            map.tables[playerID][posx][posy] == 0;
             if (movement[1] == "BATTLE") {
                 let pieceB = map.tables[player2ID][destx][desty];
                 let battleResult = checkBattle(pieceA, pieceB);
                 let winner = 2;
                 if (battleResult === pieceA) {
                     winner = playerID;
+                    map.tables[player2ID][destx][desty] == 0;
+                    map.tables[playerID][destx][desty] == pieceA;
                 } else if (battleResult === pieceB) {
                     winner = player2ID;
+                    map.tables[playerID][destx][desty] == 0;
+                    map.tables[player2ID][destx][desty] == pieceB;
+                }else if (battleResult === 0) {
+                    map.tables[playerID][destx][desty] == 0;
+                    map.tables[player2ID][destx][desty] == 0;
                 }
+                Storage.saveData(fileName, map);
                 return [true, posx, posy, destx, desty, true, winner, pieceA, pieceB];
             } else {
+                map.tables[playerID][destx][desty] == pieceA;
+                Storage.saveData(fileName, map);
                 return [true, posx, posy, destx, desty, false];
             }
         } else {

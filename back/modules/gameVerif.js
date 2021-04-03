@@ -217,7 +217,7 @@
     *   param 4 : number (desty)
     *   param 5 : bool (if battle)
     *   param 6 : number (winner of the battle, 2 if same power)
-    *   param 7 : number (power of the piece wich attack)
+    *   param 7 : number (power of the piece which attacks)
     *   param 8 : number (power of the attacked piece)
     * @description Make the move if possible
     */

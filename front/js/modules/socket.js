@@ -87,6 +87,10 @@ let Socket = (function () {
    */
   function userVictoryCall(data) {
     //TODO
+    // STEPS :
+    // end the game, send back on first page
+    // upgrade match history
+    // improve elo of player
   }
 
   //======================================================================================
@@ -99,6 +103,10 @@ let Socket = (function () {
    */
   function userDefeatCall(data) {
     //TODO
+    // STEPS :
+    // end the game, send back on first page
+    // upgrade match history
+    // downgrade elo of player
   }
 
   //======================================================================================
@@ -165,7 +173,7 @@ let Socket = (function () {
           if (e.target && e.target.id == "closeMoveDiv") {
             Graphics.setClicked(false);
             document.removeEventListener("click", closeMoveDivCallback);
-            //TODO: remove img callbacks too (we will have to do it dynamically...)
+
             for (node of document.getElementById("moveDiv").childNodes) {
               if (node.tagName == "DIV") {
                 // Remove the main line listeners

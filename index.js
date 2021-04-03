@@ -385,15 +385,24 @@ io.on("connection", (client) => {
         console.log(moveResult);
         // Send the move animation request to the clients
         //TODO Send two different moves in each player case (since the boards are inverted)
-        io.sockets.to(clientGame.room_name).emit("move response", {
-          newCoords: args.newCoords,
-          oldCoords: args.oldCoords,
-          fight: (moveResult[5] ?
-          {
-            win: moveResult[6], 
-            enemyStrength: destPieceStrength
-          } : undefined)
-        });
+
+        for (const room of client.rooms) {
+          if (room !== client.id) {
+            //Remove the game from the server (the room name has the same name as the game JSON file)
+            for (const c of io.sockets.adapter.rooms.get(room)) {
+              // for each client of the room
+              io.to(c.id).emit("move response", {
+                newCoords: (c.id === client.id) ? args.newCoords : args.oldCoords,
+                oldCoords: (c.id === client.id) ? args.oldCoords : args.newCoords,
+                fight: (moveResult[5] ?
+                {
+                  win: moveResult[6], 
+                  enemyStrength: (c.id === client.id) ? moveResult[8] : moveResult[7]
+                } : undefined)
+              })
+            }
+          }
+        }
       }
     } catch (e) {
       io.to(client.id).emit("move response", { error: e });

@@ -115,7 +115,8 @@ let Graphics = (function () {
                 //removing the mesh
                 board.grid[x][z].physicalPiece.dispose();
                 //removing the piece from the grid
-                board.grid[x][z] = undefined;
+                if(board.grid[x][z].replacement !== undefined) board.grid[x][z] = board.grid[board.grid[x][z].replacement[0]][board.grid[x][z].replacement[1]];
+                else board.grid[x][z] = undefined;
               }
             }
           }
@@ -289,25 +290,26 @@ let Graphics = (function () {
       board.grid[newCoord[0]][newCoord[1]].physicalPiece.subMeshes[1].material = enemyColor;
       board.grid[newCoord[0]][newCoord[1]].physicalPiece.subMeshes[2].material = enemyTopColor;
 
-      if (fight !== undefined && fight.win !== undefined && fight.win == 0) {
+      if (fight.win !== undefined && fight.win == 0) {
         //when the piece attacking is loosing (looser)
         //piece attacking is ded
         board.grid[oldCoord[0]][oldCoord[1]].status = 0;
         //initiating the reveal of the enemy piece
         board.grid[newCoord[0]][newCoord[1]].status = 3;
         //maybe remove that line
-        board.grid[newCoord[0]][newCoord[1]].physicalPiece.rotation.y +=0.01;
+        //board.grid[newCoord[0]][newCoord[1]].physicalPiece.rotation.y +=0.01;
         isMoving = false;
       }
 
-      else if (fight !== undefined && fight.win !== undefined && fight.win == 1) {
+      else if (fight.win !== undefined && fight.win == 1) {
         //when the piece attacking is winning
+        console.log("heheheheheheh");
         board.grid[oldCoord[0]][oldCoord[1]].status = 3;
         board.grid[newCoord[0]][newCoord[1]].status = 0;
         isMoving = true;
       }
 
-      else if(fight !== undefined && fight.win !== undefined && fight.win == 2){
+      else if(fight.win !== undefined && fight.win == 2){
         //draw
         isMoving = false;
         board.grid[oldCoord[0]][oldCoord[1]].status = 4;
@@ -318,8 +320,7 @@ let Graphics = (function () {
     //basic move
     if(isMoving){
       board.grid[oldCoord[0]][oldCoord[1]].move(newCoord[0], newCoord[1]);
-      board.grid[newCoord[0]][newCoord[1]] = board.grid[oldCoord[0]][oldCoord[1]];
-      board.grid[oldCoord[0]][oldCoord[1]] = undefined;
+      board.grid[newCoord[0]][newCoord[1]].replacement = oldCoord;
     }
   };
 

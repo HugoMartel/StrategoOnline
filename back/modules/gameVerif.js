@@ -139,7 +139,7 @@
         else if(pieceA > pieceB){
             return pieceA;
         }
-        return -1;
+        return 0;
     }
     
     /**
@@ -210,7 +210,15 @@
     * @param {Number} desty
     * destY of the piece
     * @returns {Array}
-    * JE NE SAIS PAS ENCORE
+    *   param 0 : bool (if movement is possible)
+    *   param 1 : number (posx)
+    *   param 2 : number (posy)
+    *   param 3 : number (destx)
+    *   param 4 : number (desty)
+    *   param 5 : bool (if battle)
+    *   param 6 : number (winner of the battle, 2 if same power)
+    *   param 7 : number (power of the piece wich attack)
+    *   param 8 : number (power of the attacked piece)
     * @description Make the move if possible
     */
     let makeMove = function (map, player, posx, posy, destx, desty) {
@@ -229,12 +237,12 @@
                 } else if (battleResult === pieceB) {
                     winner = player2ID;
                 }
-                return [true, posx, posy, destx, desty, true, winner]; //movement is possible and battle
+                return [true, posx, posy, destx, desty, true, winner, pieceA, pieceB];
             } else {
                 return [true, posx, posy, destx, desty, false]; //movement is possible but no battle
             }
         } else {
-            return [false]; //movement isn't possible
+            return [false];
         }
     }
 

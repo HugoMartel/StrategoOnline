@@ -230,7 +230,6 @@
             if (movement[1] == "BATTLE") {
                 let pieceB = map.tables[player2ID][destx][desty];
                 let battleResult = checkBattle(pieceA, pieceB);
-                // let winner = battleResult === 0 ? 2 : (battleResult === pieceA ? playerID : player2ID);
                 let winner = 2;
                 if (battleResult === pieceA) {
                     winner = playerID;
@@ -239,7 +238,7 @@
                 }
                 return [true, posx, posy, destx, desty, true, winner, pieceA, pieceB];
             } else {
-                return [true, posx, posy, destx, desty, false]; //movement is possible but no battle
+                return [true, posx, posy, destx, desty, false];
             }
         } else {
             return [false];

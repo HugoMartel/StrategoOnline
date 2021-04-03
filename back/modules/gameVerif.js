@@ -159,10 +159,6 @@ const Storage = require("./storage");
     let possibleMoves = function(map, player, posx, posy){
         let playerID = map.players.findIndex(findPlayer=> findPlayer === player);
         let player2ID = (playerID+1)%2;
-        if(playerID == 1){
-            posx = 9 - posx;
-            posy = 9 - posy;
-        }
         let moves=[
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -221,22 +217,18 @@ const Storage = require("./storage");
     *   param 6 : number (winner of the battle, 2 if same power)
     *   param 7 : number (power of the piece which attacks)
     *   param 8 : number (power of the attacked piece)
-    * @description Make the move if possible
+    * @description Make the move in the back-end if possible
     */
     let makeMove = function (map, player, posx, posy, destx, desty) {
         let playerID = map.players.findIndex(findPlayer => findPlayer === player);
         let player2ID = (playerID+1)%2;
-        // if(playerID == 1){
-        //     posx = 9 - posx;
-        //     destx = 9 - destx;
-        // }
         let pieceA = map.tables[playerID][posx][posy];
         let movement = isMovePossible(map, playerID, player2ID, {
             id: pieceA, 
-            posx: playerID == 1 ? 9-posx : posx, 
-            posy: playerID == 1 ? 9-posy : posy, 
-            destx: playerID == 1 ? 9-destx : destx, 
-            desty: playerID == 1 ? 9-desty : desty
+            posx: posx, 
+            posy: posy, 
+            destx: destx, 
+            desty: desty
         });
         if (movement[0]) {
             let fileName = "games/" + map.players[0]+"+"+map.players[1];
@@ -245,13 +237,13 @@ const Storage = require("./storage");
             if (movement[1] == "BATTLE") {
                 let pieceB = map.tables[player2ID][destx][desty];
                 let battleResult = checkBattle(pieceA, pieceB);
-                let winner = 2;
+                let winner = 2;// Draw
                 if (battleResult === pieceA) {
-                    winner = playerID;
+                    winner = 1;// The player that has attacked won
                     map.tables[player2ID][destx][desty] == 0;
                     map.tables[playerID][destx][desty] == pieceA;
                 } else if (battleResult === pieceB) {
-                    winner = player2ID;
+                    winner = 0;// The player that has attacked lost
                     map.tables[playerID][destx][desty] == 0;
                     map.tables[player2ID][destx][desty] == pieceB;
                 }else if (battleResult === 0) {
@@ -259,13 +251,16 @@ const Storage = require("./storage");
                     map.tables[player2ID][destx][desty] == 0;
                 }
                 Storage.saveData(fileName, map);
+                // Case of a fight happening
                 return [true, posx, posy, destx, desty, true, winner, pieceA, pieceB];
             } else {
                 map.tables[playerID][destx][desty] == pieceA;
                 Storage.saveData(fileName, map);
+                // Case of a fight NOT happening
                 return [true, posx, posy, destx, desty, false];
             }
         } else {
+            // Case of a NON valid movement
             return [false];
         }
     }

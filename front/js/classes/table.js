@@ -331,29 +331,27 @@ class Table {
           posX = parseInt(posX);
           posZ = parseInt(posZ);
 
-          //emiting the coord to the serve
+          //emiting the coord to the server
           socket.emit("requestMoveset", {x: posX, z: posZ});
 
           if (document.getElementById("moveDiv")) {
             let closeMoveDivCallback = function (e) {
-              //if (e.target && (e.target.id == "closeMoveDiv" || e.target.classList.contains("clickable"))) {
-                //Graphics.setClicked(false);
-                document.getElementById("closeMoveDiv").removeEventListener("click", closeMoveDivCallback);
-    
-                for (let node of document.getElementById("moveDiv").childNodes) {
-                  if (node.tagName == "DIV") {
-                    // Remove the main line listeners
-                    for (let childNode of node.childNodes) {
-                      if (!childNode.classList.contains("notClickable"))
-                        childNode.removeEventListener('click', closeMoveDivCallback);
-                    }
-                  } else if (node.tagName == "IMG") {
-                    node.removeEventListener('click', closeMoveDivCallback);
+              document.getElementById("closeMoveDiv").removeEventListener("click", closeMoveDivCallback);
+
+              for (let node of document.getElementById("moveDiv").childNodes) {
+                if (node.tagName == "DIV") {
+                  // Remove the main line listeners
+                  for (let childNode of node.childNodes) {
+                    if (!childNode.classList.contains("notClickable"))
+                      childNode.removeEventListener('click', closeMoveDivCallback);
                   }
+                } else if (node.tagName == "IMG") {
+                  node.removeEventListener('click', closeMoveDivCallback);
                 }
-    
-                document.getElementById("moveDiv").remove();
-              //}
+              }
+
+              document.getElementById("moveDiv").remove();
+              Graphics.setClicked(false);
             };
 
             closeMoveDivCallback();

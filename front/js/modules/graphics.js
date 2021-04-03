@@ -147,12 +147,13 @@ let Graphics = (function () {
    */
   let deplaceCall = (newCoord, oldCoord, fight = undefined) => {
     let isMoving = true;
+    
     console.log(board);
+
     if(fight !== undefined){
       let enemyColor = new BABYLON.StandardMaterial("mat0", scene);
       let enemyTopColor = new BABYLON.StandardMaterial("mat0", scene);
       //loading the textures of the enemy piece
-      //todo: fix that
       switch(fight.enemyStrength){
       case 10:
         enemyColor.diffuseTexture = new BABYLON.Texture(
@@ -287,40 +288,40 @@ let Graphics = (function () {
       }
 
       //appllying the new texture:
-      board.grid[newCoord[0]][newCoord[1]].physicalPiece.subMeshes[1].material = enemyColor;
-      board.grid[newCoord[0]][newCoord[1]].physicalPiece.subMeshes[2].material = enemyTopColor;
+      board.grid[newCoord.x][newCoord.z].physicalPiece.subMeshes[1].material = enemyColor;
+      board.grid[newCoord.x][newCoord.z].physicalPiece.subMeshes[2].material = enemyTopColor;
 
       if (fight.win !== undefined && fight.win == 0) {
         //when the piece attacking is loosing (looser)
         //piece attacking is ded
-        board.grid[oldCoord[0]][oldCoord[1]].status = 0;
+        board.grid[oldCoord.x][oldCoord.z].status = 0;
         //initiating the reveal of the enemy piece
-        board.grid[newCoord[0]][newCoord[1]].status = 3;
+        board.grid[newCoord.x][newCoord.z].status = 3;
         //maybe remove that line
-        //board.grid[newCoord[0]][newCoord[1]].physicalPiece.rotation.y +=0.01;
+        //board.grid[newCoord.x][newCoord.z].physicalPiece.rotation.y +=0.01;
         isMoving = false;
       }
 
       else if (fight.win !== undefined && fight.win == 1) {
         //when the piece attacking is winning
-        console.log("heheheheheheh");
-        board.grid[oldCoord[0]][oldCoord[1]].status = 3;
-        board.grid[newCoord[0]][newCoord[1]].status = 0;
+        board.grid[oldCoord.x][oldCoord.z].status = 3;
+        board.grid[newCoord.x][newCoord.z].status = 0;
         isMoving = true;
       }
 
-      else if(fight.win !== undefined && fight.win == 2){
+      else if (fight.win !== undefined && fight.win == 2){
         //draw
         isMoving = false;
-        board.grid[oldCoord[0]][oldCoord[1]].status = 4;
-        board.grid[newCoord[0]][newCoord[1]].status = 0;
+        board.grid[oldCoord.x][oldCoord.z].status = 4;
+        board.grid[newCoord.x][newCoord.z].status = 0;
       }
     }
 
     //basic move
-    if(isMoving){
-      board.grid[oldCoord[0]][oldCoord[1]].move(newCoord[0], newCoord[1]);
-      board.grid[newCoord[0]][newCoord[1]].replacement = oldCoord;
+    if (isMoving){
+      board.grid[oldCoord.x][oldCoord.z].move(newCoord.x, newCoord.z);
+      if (fight !== undefined)
+        board.grid[newCoord.x][newCoord.z].replacement = oldCoord;
     }
   };
 

@@ -146,10 +146,8 @@ let Socket = (function () {
       // Append buttons to the moves div
       if (data.error !== undefined) {
         Toast.error(data.error);
-        //Graphics.setClicked(false);
       } else if (!data.availableMoves.length) {
         Toast.error("You can't move this piece...");
-        //Graphics.setClicked(false);
       } else {
         // Create the moveset div
         let moveDiv = document.createElement("div");
@@ -189,6 +187,8 @@ let Socket = (function () {
             }
 
             document.getElementById("moveDiv").remove();
+
+            Graphics.setClicked(false);
         };
 
         // Create the main line of moves that will always be present

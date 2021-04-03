@@ -243,8 +243,6 @@ io.on("connection", (client) => {
     An user wants to get available moves
   \**************************************/
   client.on("requestMoveset", (args) => {
-    console.log(args);
-
     // Check if the args are correct
     if (
       args == undefined ||
@@ -297,7 +295,17 @@ io.on("connection", (client) => {
         });
         return;
       } else {
-        moves = GameVerif.possibleMoves(clientGame, clientName, args.z, args.x);
+        //! Don't forget to convert coords to match the server's standards
+        /*
+          player0: (x,z) -> server: ( z , 9-x)
+          player1: (x,z) -> server: (9-z,  x ) 
+        */
+        moves = GameVerif.possibleMoves(
+          clientGame, 
+          clientName, 
+          (clientGame.turn ? 9-args.z :  args.z ), 
+          (clientGame.turn ?  args.x  : 9-args.x)
+        );
       }
     } catch (e) {
       console.error(e);
@@ -305,7 +313,13 @@ io.on("connection", (client) => {
     }
 
     //Convert the available moves to buttons to return to the front
-    let movesToReturn = { pieceLocation: {x: (clientGame.turn ? 9-args.x : args.x), z: (clientGame.turn ? 9-args.z : args.z)}, availableMoves: [] }; //contains [x, z, isFight]
+    let movesToReturn = { 
+      pieceLocation: {
+        x: args.x, 
+        z: args.z
+      }, 
+      availableMoves: [] 
+    }; //contains [x, z, isFight]
 
     console.table(moves);//! DEBUG
 
@@ -314,17 +328,23 @@ io.on("connection", (client) => {
     // 2 will imply a fight
     for (let i = 0; i < moves.length; ++i) {
       for (let j = 0; j < moves[i].length; ++j) {
-        if (moves[i][j] > 0)
+        if (moves[i][j] > 0) {
+          //! Don't forget to convert coords to match the client's standards
+          /*
+          server: (i,j) -> player0: (9-j,  i )
+          server: (i,j) -> player1: ( j , 9-i)
+          */
           movesToReturn.availableMoves.push([
-            j,
-            clientGame.turn ? 9-i : i,
+            clientGame.turn ?  j  : 9-j,
+            clientGame.turn ? 9-i :  i ,
             moves[i][j] !== 2 ? false : true,
-          ]); //Thanks to TT the indexed are inverted from back to front :) (sry)
+          ]); //Thanks to TT the indexes are inverted from back to front :) (sry)
+        }
       }
     }
 
+    console.log(movesToReturn);//! DEBUG
 
-    console.log(movesToReturn);
     io.to(client.id).emit("moveset response", movesToReturn);
   });
 
@@ -333,7 +353,6 @@ io.on("connection", (client) => {
         An user wants to move a piece
   \**************************************/
   client.on("requestMove", (args) => {
-    console.log(args);
     if (
       args == undefined ||
       typeof args.newCoords === undefined ||
@@ -372,13 +391,18 @@ io.on("connection", (client) => {
         throw clientName + " cheated and tried to move with going through the console (not your turn)";
       } else {
         // Make the move on the game file
+        //! Don't forget to convert coords to match the server's standards
+        /*
+          player0: (x,z) -> server: ( z , 9-x)
+          player1: (x,z) -> server: (9-z,  x ) 
+        */
         let moveResult = GameVerif.makeMove(
           clientGame, 
           clientName, 
-          args.oldCoords[1], 
-          args.oldCoords[0], 
-          args.newCoords[1],
-          args.newCoords[0]
+          clientGame.turn ? 9-args.oldCoords[1] :  args.oldCoords[1] , 
+          clientGame.turn ?  args.oldCoords[0]  : 9-args.oldCoords[0], 
+          clientGame.turn ? 9-args.newCoords[1] :  args.newCoords[1] , 
+          clientGame.turn ?  args.newCoords[0]  : 9-args.newCoords[0]
         );
         
         // Check if the move has been correctly done
@@ -394,21 +418,37 @@ io.on("connection", (client) => {
           if (room !== client.id) {
             //Remove the game from the server (the room name has the same name as the game JSON file)
             for (const c of io.sockets.adapter.rooms.get(room)) {
-
+              //! Don't forget to convert the coords from the client moving to the coords of the defending player
+              /*
+              player0: (x,z) -> player1: (9-x,9-z)
+              player1: (x,z) -> player0: (9-x,9-z)
+              */
+              /* moveResult indexes
+              * 0 : bool (if movement is possible)
+              * 1 : number (posx)
+              * 2 : number (posy)
+              * 3 : number (destx)
+              * 4 : number (desty)
+              * 5 : bool (if battle)
+              * 6 : number (winner of the battle, 2 if same power)
+              * 7 : number (power of the piece which attacks)
+              * 8 : number (power of the attacked piece)
+              */
               let moveResponse = {
-                newCoords: (c === client.id) ? args.newCoords : args.oldCoords,
-                oldCoords: (c === client.id) ? args.oldCoords : args.newCoords,
+                newCoords: (c !== client.id) ? {x: 9-args.newCoords[0], z: 9-args.newCoords[1]} : {x: args.newCoords[0], z: args.newCoords[1]},
+                oldCoords: (c !== client.id) ? {x: 9-args.oldCoords[0], z: 9-args.oldCoords[1]} : {x: args.oldCoords[0], z: args.oldCoords[1]},
                 fight: (moveResult[5] ?
                 {
-                  win: (clientGame.players[0] === (io.sockets.sockets.get(c).handshake.session.login !== undefined ? io.sockets.sockets.get(c).handshake.session.login : c) && moveResult[6] !== 2 ? (moveResult[6]+1)%2 : moveResult[6]),
+                  win: (c !== client.id && moveResult[6] !== 2) ? !moveResult[6] : moveResult[6],
                   enemyStrength: (c === client.id) ? moveResult[8] : moveResult[7]
                 } : undefined)
               };
+              //* sry for the win line but it was funny :)
 
               console.log(moveResponse);
 
               // for each client of the room
-              io.sockets.to(c.id).emit("move response", moveResponse);
+              io.sockets.to(c).emit("move response", moveResponse);
             }
           }
         }

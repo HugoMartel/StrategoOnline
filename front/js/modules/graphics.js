@@ -54,7 +54,7 @@ let Graphics = (function () {
     });
     const tabletop = new BABYLON.StandardMaterial("tabletop");
     tabletop.diffuseTexture = new BABYLON.Texture(
-      "../../textures/tabletop.png",
+      "../../textures/tabletop.jpg",
       scene
     );
     ground.material = tabletop;

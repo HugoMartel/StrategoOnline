@@ -159,6 +159,9 @@ const Storage = require("./storage");
     let possibleMoves = function(map, player, posx, posy){
         let playerID = map.players.findIndex(findPlayer=> findPlayer === player);
         let player2ID = (playerID+1)%2;
+        if(playerID == 1){
+            posx = 9 - posx;
+        }
         let moves=[
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -171,7 +174,7 @@ const Storage = require("./storage");
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         ];
-        let piece = {id: map.tables[playerID][posx][posy], posx: posx, posy: posy};
+        let piece = { id: map.tables[playerID][posx][posy], posx: posx, posy: posy};
         piece.destx = piece.posx;
         for (let y = 0; y < map.tables[0][piece.posx].length; y++) {
             piece.desty = y;
@@ -217,50 +220,45 @@ const Storage = require("./storage");
     *   param 6 : number (winner of the battle, 2 if same power)
     *   param 7 : number (power of the piece which attacks)
     *   param 8 : number (power of the attacked piece)
-    * @description Make the move in the back-end if possible
+    * @description Make the move if possible
     */
     let makeMove = function (map, player, posx, posy, destx, desty) {
         let playerID = map.players.findIndex(findPlayer => findPlayer === player);
         let player2ID = (playerID+1)%2;
+        if(playerID == 1){
+            posx = 9 - posx;
+            destx = 9 - destx;
+        }
         let pieceA = map.tables[playerID][posx][posy];
-        let movement = isMovePossible(map, playerID, player2ID, {
-            id: pieceA, 
-            posx: posx, 
-            posy: posy, 
-            destx: destx, 
-            desty: desty
-        });
+        let movement = isMovePossible(map, playerID, player2ID, {id: pieceA, posx: posx, posy: posy, destx: destx, desty: desty});
         if (movement[0]) {
             let fileName = "games/" + map.players[0]+"+"+map.players[1];
-            map.turn = (map.turn+1) % 2;
-            map.tables[playerID][posx][posy] == 0;
+            map.turn = map.turn+1%2;
+            map.tables[playerID][posx][posy] = 0;
             if (movement[1] == "BATTLE") {
                 let pieceB = map.tables[player2ID][destx][desty];
                 let battleResult = checkBattle(pieceA, pieceB);
-                let winner = 2;// Draw
+                let winner = 2;
                 if (battleResult === pieceA) {
-                    winner = 1;// The player that has attacked won
-                    map.tables[player2ID][destx][desty] == 0;
-                    map.tables[playerID][destx][desty] == pieceA;
+                    winner = playerID;
+                    map.tables[player2ID][destx][desty] = 0;
+                    map.tables[playerID][destx][desty] = pieceA;
                 } else if (battleResult === pieceB) {
-                    winner = 0;// The player that has attacked lost
-                    map.tables[playerID][destx][desty] == 0;
-                    map.tables[player2ID][destx][desty] == pieceB;
+                    winner = player2ID;
+                    map.tables[playerID][destx][desty] = 0;
+                    map.tables[player2ID][destx][desty] = pieceB;
                 }else if (battleResult === 0) {
-                    map.tables[playerID][destx][desty] == 0;
-                    map.tables[player2ID][destx][desty] == 0;
+                    map.tables[playerID][destx][desty] = 0;
+                    map.tables[player2ID][destx][desty] = 0;
                 }
                 Storage.saveData(fileName, map);
-                // Case of a fight happening
                 return [true, posx, posy, destx, desty, true, winner, pieceA, pieceB];
             } else {
-                map.tables[playerID][destx][desty] == pieceA;
+                map.tables[playerID][destx][desty] = pieceA;
                 Storage.saveData(fileName, map);
-                // Case of a fight NOT happening
                 return [true, posx, posy, destx, desty, false];
             }
         } else {
-            // Case of a NON valid movement
             return [false];
         }
     }

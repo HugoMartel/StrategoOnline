@@ -45,7 +45,7 @@ class Game {
     this.tables[0][0][8] = 3;
     this.tables[0][0][7] = 11;
     this.tables[0][0][6] = 11;
-    this.tables[0][0][5] = 0;
+    this.tables[0][0][5] = 12;
     this.tables[0][0][4] = 11;
     this.tables[0][0][3] = 11;
     this.tables[0][0][2] = 3;
@@ -87,7 +87,7 @@ class Game {
     this.tables[1][9][1] = 3;
     this.tables[1][9][2] = 11;
     this.tables[1][9][3] = 11;
-    this.tables[1][9][4] = 0;
+    this.tables[1][9][4] = 12;
     this.tables[1][9][5] = 11;
     this.tables[1][9][6] = 11;
     this.tables[1][9][7] = 3;

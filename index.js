@@ -405,6 +405,24 @@ io.on("connection", (client) => {
           throw clientName + " cheated and tried to move with going through the console (move not possible)";
         }
 
+        //End game process
+        if(moveResult.isFinished){
+          if (client.id !== clientGame.players[clientGame.turn]) {
+            let score =0;
+            clientGame[clientGame.turn].forEach(line => line.forEach(function(pieces){ 
+              if (pieces<11 && pieces>0){
+                score+=pieces;
+              } 
+            }));
+            //Save on leaderboard file
+            let today = new Date();
+            let date = today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
+            let newLine = {"username" : clientGame.players[clientGame.turn], "scores" : score, "time": date};
+            leaderboard = Storage.getData("leaderboard");
+            leaderboard = Storage.storeLB(leaderboard, newLine);
+            Storage.saveData("leaderboard", leaderboard);
+          }
+      }
         console.log(moveResult); //! DEBUG
         // Send the move animation request to the clients
         //TODO Send two different moves in each player case (since the boards are inverted)

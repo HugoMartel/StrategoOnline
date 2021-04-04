@@ -106,9 +106,6 @@ io.on("connection", (client) => {
 
   // Console message on disconnection
   client.on("disconnect", () => {
-    // Destroy the client's session
-    //io.sockets.sockets.get(client.id).handshake.session.destroy();
-
     console.log("< ".bold + client.id.red + " disconnected");
   });
 
@@ -439,11 +436,10 @@ io.on("connection", (client) => {
                 oldCoords: (c !== client.id) ? {x: 9-args.oldCoords[0], z: 9-args.oldCoords[1]} : {x: args.oldCoords[0], z: args.oldCoords[1]},
                 fight: (moveResult[5] ?
                 {
-                  win: (c !== client.id && moveResult[6] !== 2) ? !moveResult[6] : moveResult[6],
+                  win: moveResult[6],
                   enemyStrength: (c === client.id) ? moveResult[8] : moveResult[7]
                 } : undefined)
               };
-              //* sry for the win line but it was funny :)
 
               console.log(moveResponse);
 

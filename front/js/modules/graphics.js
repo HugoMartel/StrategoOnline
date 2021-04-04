@@ -115,8 +115,10 @@ let Graphics = (function () {
                 //removing the mesh
                 board.grid[x][z].physicalPiece.dispose();
                 //removing the piece from the grid
-                if(board.grid[x][z].replacement !== undefined) board.grid[x][z] = board.grid[board.grid[x][z].replacement[0]][board.grid[x][z].replacement[1]];
-                else board.grid[x][z] = undefined;
+                if(board.grid[x][z].replacement !== undefined) 
+                  board.grid[x][z] = board.grid[board.grid[x][z].replacement[0]][board.grid[x][z].replacement[1]];
+                else 
+                  board.grid[x][z] = undefined;
               }
             }
           }
@@ -147,8 +149,6 @@ let Graphics = (function () {
    */
   let deplaceCall = (newCoord, oldCoord, fight = undefined) => {
     let isMoving = true;
-    
-    console.log(board);
 
     if(fight !== undefined){
       let enemyColor = new BABYLON.StandardMaterial("mat0", scene);
@@ -292,7 +292,7 @@ let Graphics = (function () {
       board.grid[newCoord.x][newCoord.z].physicalPiece.subMeshes[2].material = enemyTopColor;
 
       if (fight.win !== undefined && fight.win == 0) {
-        //when the piece attacking is loosing (looser)
+        //when the piece attacking is losing (looser)
         //piece attacking is ded
         board.grid[oldCoord.x][oldCoord.z].status = 0;
         //initiating the reveal of the enemy piece
@@ -323,6 +323,8 @@ let Graphics = (function () {
       if (fight !== undefined)
         board.grid[newCoord.x][newCoord.z].replacement = oldCoord;
     }
+
+    console.table(board.grid);//! DEBUG
   };
 
   //=====================================================================//

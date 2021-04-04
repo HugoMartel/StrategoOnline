@@ -134,8 +134,6 @@ let Socket = (function () {
   function getMovesCall(data) {
     Graphics.setClicked(false);
 
-    console.log(data);
-
     if (
       data === undefined &&
       data.pieceLocation === undefined &&
@@ -205,7 +203,9 @@ let Socket = (function () {
         moveDiv.appendChild(moveLeftRightContainer);
 
         // Create the buttons to be able to select a move
-        for (elt of data.availableMoves) {
+        for (let elt of data.availableMoves) {
+          console.log(elt);
+
           let moveButton = document.createElement("img");
           moveButton.classList.add("clickable");
           moveButton.alt = "Move Button Image";
@@ -287,7 +287,6 @@ let Socket = (function () {
       if (data.error !== undefined) {
         Toast.error(data.error);
       } else {
-        console.log(data);
         Graphics.deplace(data.newCoords, data.oldCoords, data.fight);
       }
     }

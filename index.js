@@ -340,8 +340,6 @@ io.on("connection", (client) => {
       }
     }
 
-    console.log(movesToReturn);//! DEBUG
-
     io.to(client.id).emit("moveset response", movesToReturn);
   });
 
@@ -403,11 +401,11 @@ io.on("connection", (client) => {
         );
         
         // Check if the move has been correctly done
-        if (!moveResult[0]) {
+        if (!moveResult.isPossible) {
           throw clientName + " cheated and tried to move with going through the console (move not possible)";
         }
 
-        console.log(moveResult);
+        console.log(moveResult); //! DEBUG
         // Send the move animation request to the clients
         //TODO Send two different moves in each player case (since the boards are inverted)
 
@@ -421,23 +419,24 @@ io.on("connection", (client) => {
               player1: (x,z) -> player0: (9-x,9-z)
               */
               /* moveResult indexes
-              * 0 : bool (if movement is possible)
-              * 1 : number (posx)
-              * 2 : number (posy)
-              * 3 : number (destx)
-              * 4 : number (desty)
-              * 5 : bool (if battle)
-              * 6 : number (winner of the battle, 2 if same power)
-              * 7 : number (power of the piece which attacks)
-              * 8 : number (power of the attacked piece)
+              *   isPossible    : bool   (if movement is possible)
+              *   oldX          : number (posx)
+              *   oldY          : number (posy)
+              *   newX          : number (destx)
+              *   newY          : number (desty)
+              *   isFight       : bool   (if battle)
+              *   winner        : number (winner of the battle, 2 if same power)
+              *   attackerPower : number (power of the piece which attacks)
+              *   defenderPower : number (power of the attacked piece)
+              *   isFinished    : bool   (if the game is over) //TODO
               */
               let moveResponse = {
                 newCoords: (c !== client.id) ? {x: 9-args.newCoords[0], z: 9-args.newCoords[1]} : {x: args.newCoords[0], z: args.newCoords[1]},
                 oldCoords: (c !== client.id) ? {x: 9-args.oldCoords[0], z: 9-args.oldCoords[1]} : {x: args.oldCoords[0], z: args.oldCoords[1]},
-                fight: (moveResult[5] ?
+                fight: (moveResult.isFight ?
                 {
-                  win: moveResult[6],
-                  enemyStrength: (c === client.id) ? moveResult[8] : moveResult[7]
+                  win: (moveResult.winner != 2 && clientGame.turn ) ? !moveResult.winner : moveResult.winner,
+                  enemyStrength: (c === client.id) ? moveResult.defenderPower : moveResult.attackerPower
                 } : undefined)
               };
 

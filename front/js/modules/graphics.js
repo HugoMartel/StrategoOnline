@@ -97,14 +97,19 @@ let Graphics = (function () {
                 board.grid[x][z].physicalPiece.position.z += 0.01;
               else if (coord[1] < 0)
                 board.grid[x][z].physicalPiece.position.z -= 0.01;
+            } else if (board.grid[x][z].status == -1) {
+              // The piece has stopped moving
+              pieceClicked = false;
             }
             //if reveal
             if(board.grid[x][z].status == 3 || board.grid[x][z].status == 4 || board.grid[x][z].status == 0){
               //the reveal rotation (ye cool stuff)
-              if(board.grid[x][z].physicalPiece.rotation.y <= 2 * Math.PI) board.grid[x][z].physicalPiece.rotation.y += 0.01;
+              if(board.grid[x][z].physicalPiece.rotation.y <= 5 * Math.PI/2) 
+                board.grid[x][z].physicalPiece.rotation.y += 0.03;
               else if(board.grid[x][z].status == 3){
-                board.grid[x][z].physicalPiece.rotation.y = 2 * Math.PI;
+                board.grid[x][z].physicalPiece.rotation.y = Math.PI/2;
                 board.grid[x][z].status = 1;
+                pieceClicked = false;// We can now click on pieces again
               }
             }
             //if ded
@@ -117,18 +122,18 @@ let Graphics = (function () {
                 board.grid[x][z].physicalPiece.dispose();
                 //removing the piece from the grid
                 if(board.grid[x][z].replacement !== undefined) {
-                  board.grid[x][z] = board.grid[board.grid[x][z].replacement[0]][board.grid[x][z].replacement[1]];
-                  console.log("Je suis mort lol");
-                }
-                else 
+                  board.grid[x][z] = board.grid[board.grid[x][z].replacement.x][board.grid[x][z].replacement.z];
+                  //board.grid[board.grid[x][z].replacement.x][board.grid[x][z].replacement.z] = undefined;
+                } else { 
                   board.grid[x][z] = undefined;
+                }
+                pieceClicked = false;// We can now click on pieces again
               }
             }
           }
         }
       }
-
-      console.table(board.grid);
+      console.log(pieceClicked);
     });
 
     //end of the creation
@@ -154,6 +159,7 @@ let Graphics = (function () {
    */
   let deplaceCall = (newCoord, oldCoord, fight = undefined) => {
     let isMoving = true;
+    pieceClicked = true;//Prevent a piece from getting clicked before its animation is done
 
     if(fight !== undefined){
       /*
@@ -309,6 +315,7 @@ let Graphics = (function () {
         //maybe remove that line
         //board.grid[newCoord.x][newCoord.z].physicalPiece.rotation.y +=0.01;
         isMoving = false;
+        pieceClicked = false;// We can now click on pieces again
       }
 
       else if (fight.win !== undefined && fight.win == 1) {
@@ -323,6 +330,7 @@ let Graphics = (function () {
         isMoving = false;
         board.grid[oldCoord.x][oldCoord.z].status = 4;
         board.grid[newCoord.x][newCoord.z].status = 0;
+        pieceClicked = false;// We can now click on pieces again
       }
     }
 
@@ -334,6 +342,7 @@ let Graphics = (function () {
       else {
         board.grid[newCoord.x][newCoord.z] = board.grid[oldCoord.x][oldCoord.z];
         board.grid[oldCoord.x][oldCoord.z] = undefined;
+        board.grid[newCoord.x][newCoord.z].status = -1; // is just moving, this status is used to prevent the click events when a piece is moving
       }
     }
   };

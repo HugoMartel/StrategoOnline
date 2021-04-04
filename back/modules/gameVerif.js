@@ -15,7 +15,7 @@ const Storage = require("./storage");
  * @namespace GameVerif
  */
 
- let GameVerif = (function () {
+let GameVerif = (function () {
     
     /**
     * @function GameVerif.isMovePossible
@@ -158,10 +158,8 @@ const Storage = require("./storage");
     */
     let possibleMoves = function(map, player, posx, posy){
         let playerID = map.players.findIndex(findPlayer=> findPlayer === player);
-        let player2ID = (playerID+1)%2;
-        if(playerID == 1){
-            posx = 9 - posx;
-        }
+        let player2ID = (playerID+1)%2;// in Js !playerID transforms a number to a boolean :)
+
         let moves=[
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -210,30 +208,28 @@ const Storage = require("./storage");
     * destX of the piece
     * @param {Number} desty
     * destY of the piece
-    * @returns {Array}
-    *   param 0 : bool (if movement is possible)
-    *   param 1 : number (posx)
-    *   param 2 : number (posy)
-    *   param 3 : number (destx)
-    *   param 4 : number (desty)
-    *   param 5 : bool (if battle)
-    *   param 6 : number (winner of the battle, 2 if same power)
-    *   param 7 : number (power of the piece which attacks)
-    *   param 8 : number (power of the attacked piece)
+    * @returns {Object}
+    *   isPossible    : bool   (if movement is possible)
+    *   oldX          : number (posx)
+    *   oldY          : number (posy)
+    *   newX          : number (destx)
+    *   newY          : number (desty)
+    *   isFight       : bool   (if battle)
+    *   winner        : number (winner of the battle, 2 if same power)
+    *   attackerPower : number (power of the piece which attacks)
+    *   defenderPower : number (power of the attacked piece)
+    *   TODO isFinished    : bool   (if the game is over)
     * @description Make the move if possible
     */
     let makeMove = function (map, player, posx, posy, destx, desty) {
         let playerID = map.players.findIndex(findPlayer => findPlayer === player);
-        let player2ID = (playerID+1)%2;
-        if(playerID == 1){
-            posx = 9 - posx;
-            destx = 9 - destx;
-        }
+        let player2ID = (playerID+1)%2; // in Js !playerID transforms a number to a boolean :)
+
         let pieceA = map.tables[playerID][posx][posy];
         let movement = isMovePossible(map, playerID, player2ID, {id: pieceA, posx: posx, posy: posy, destx: destx, desty: desty});
         if (movement[0]) {
             let fileName = "games/" + map.players[0]+"+"+map.players[1];
-            map.turn = map.turn+1%2;
+            map.turn = (map.turn+1)%2;
             map.tables[playerID][posx][posy] = 0;
             if (movement[1] == "BATTLE") {
                 let pieceB = map.tables[player2ID][destx][desty];
@@ -251,15 +247,44 @@ const Storage = require("./storage");
                     map.tables[playerID][destx][desty] = 0;
                     map.tables[player2ID][destx][desty] = 0;
                 }
+
+                //! DEBUG
+                console.table(map.tables[0]);
+                console.table(map.tables[1]);
+
                 Storage.saveData(fileName, map);
-                return [true, posx, posy, destx, desty, true, winner, pieceA, pieceB];
+                return {
+                    isPossible: true,
+                    oldX: posx,
+                    oldY: posy,
+                    newX: destx,
+                    newY: desty,
+                    isFight: true,
+                    winner: winner,
+                    attackerPower: pieceA,
+                    defenderPower: pieceB
+                }
+                //return [true, posx, posy, destx, desty, true, winner, pieceA, pieceB];//old method
             } else {
                 map.tables[playerID][destx][desty] = pieceA;
+
+                //! DEBUG
+                console.table(map.tables[0]);
+                console.table(map.tables[1]);
+
                 Storage.saveData(fileName, map);
-                return [true, posx, posy, destx, desty, false];
+                return {
+                    isPossible: true,
+                    oldX: posx,
+                    oldY: posy,
+                    newX: destx,
+                    newY: desty,
+                    isFight: false
+                }
+                //return [true, posx, posy, destx, desty, false];//old method
             }
         } else {
-            return [false];
+            return { isPossible: false };
         }
     }
 

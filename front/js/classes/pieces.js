@@ -22,7 +22,14 @@ class Pieces {
         | 0,0 | 1,0 | ... | 9,0 |
         +-----+-----+-----+-----+
         */
-        //note: status 1 = alive, 0 = ded and 2 = fight win (for animation) and 3 = reveal win, and 4 reveal ded
+        /* STATUS 
+        * -1 = moving (not for a fight)
+        *  0 = ded
+        *  1 = alive
+        *  2 = fight win (for animation) 
+        *  3 = reveal win
+        *  4 reveal ded
+        */
     this.specc = spec;
     this.x = position[0];
     this.z = position[1];

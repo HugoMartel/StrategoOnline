@@ -101,22 +101,25 @@ let Graphics = (function () {
             //if reveal
             if(board.grid[x][z].status == 3 || board.grid[x][z].status == 4 || board.grid[x][z].status == 0){
               //the reveal rotation (ye cool stuff)
-              if(board.grid[x][z].physicalPiece.rotation.y <= 3*Math.PI / 2) board.grid[x][z].physicalPiece.rotation.y += 0.01;
+              if(board.grid[x][z].physicalPiece.rotation.y <= 2 * Math.PI) board.grid[x][z].physicalPiece.rotation.y += 0.01;
               else if(board.grid[x][z].status == 3){
-                board.grid[x][z].physicalPiece.rotation.y = 3 * Math.PI / 2;
+                board.grid[x][z].physicalPiece.rotation.y = 2 * Math.PI;
                 board.grid[x][z].status = 1;
               }
             }
             //if ded
             if(board.grid[x][z].status == 4 || board.grid[x][z].status == 0){
               //ded
-              if(board.grid[x][z].physicalPiece.position.y > -20) board.grid[x][z].physicalPiece.position.y -= 0.05;
+              if(board.grid[x][z].physicalPiece.position.y > -20) 
+                board.grid[x][z].physicalPiece.position.y -= 0.05;
               else{
                 //removing the mesh
                 board.grid[x][z].physicalPiece.dispose();
                 //removing the piece from the grid
-                if(board.grid[x][z].replacement !== undefined) 
+                if(board.grid[x][z].replacement !== undefined) {
                   board.grid[x][z] = board.grid[board.grid[x][z].replacement[0]][board.grid[x][z].replacement[1]];
+                  console.log("Je suis mort lol");
+                }
                 else 
                   board.grid[x][z] = undefined;
               }
@@ -124,6 +127,8 @@ let Graphics = (function () {
           }
         }
       }
+
+      console.table(board.grid);
     });
 
     //end of the creation
@@ -142,7 +147,7 @@ let Graphics = (function () {
    * If the deplace needs a fight animation, add args to enable the animation
    * object: {
    * win: 1 if the attackers win, or 2 if it's a draw, or 0 if it's a lose
-   * enemyStrength: used for the reveal of the piece
+   * ? enemyStrength: used for the reveal of the piece //not used yet ?
    * }
    * @returns {} /
    * @description Sets everything up to make the 3D scene usable
@@ -151,9 +156,11 @@ let Graphics = (function () {
     let isMoving = true;
 
     if(fight !== undefined){
+      /*
       let enemyColor = new BABYLON.StandardMaterial("mat0", scene);
       let enemyTopColor = new BABYLON.StandardMaterial("mat0", scene);
       //loading the textures of the enemy piece
+      
       switch(fight.enemyStrength){
       case 10:
         enemyColor.diffuseTexture = new BABYLON.Texture(
@@ -290,6 +297,8 @@ let Graphics = (function () {
       //appllying the new texture:
       board.grid[newCoord.x][newCoord.z].physicalPiece.subMeshes[1].material = enemyColor;
       board.grid[newCoord.x][newCoord.z].physicalPiece.subMeshes[2].material = enemyTopColor;
+      */
+
 
       if (fight.win !== undefined && fight.win == 0) {
         //when the piece attacking is losing (looser)
@@ -322,9 +331,11 @@ let Graphics = (function () {
       board.grid[oldCoord.x][oldCoord.z].move(newCoord.x, newCoord.z);
       if (fight !== undefined)
         board.grid[newCoord.x][newCoord.z].replacement = oldCoord;
+      else {
+        board.grid[newCoord.x][newCoord.z] = board.grid[oldCoord.x][oldCoord.z];
+        board.grid[oldCoord.x][oldCoord.z] = undefined;
+      }
     }
-
-    console.table(board.grid);//! DEBUG
   };
 
   //=====================================================================//

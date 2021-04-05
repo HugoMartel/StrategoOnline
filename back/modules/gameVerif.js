@@ -218,7 +218,7 @@ let GameVerif = (function () {
     *   winner        : number (winner of the battle, 2 if same power)
     *   attackerPower : number (power of the piece which attacks)
     *   defenderPower : number (power of the attacked piece)
-    *   TODO isFinished    : bool   (if the game is over)
+    *   isFinished    : bool   (if the game is over)
     * @description Make the move if possible
     */
     let makeMove = function (map, player, posx, posy, destx, desty) {
@@ -235,6 +235,7 @@ let GameVerif = (function () {
                 let pieceB = map.tables[player2ID][destx][desty];
                 let battleResult = checkBattle(pieceA, pieceB);
                 let winner = 2;
+                let flagDown = false;
                 if (battleResult === pieceA) {
                     winner = playerID;
                     map.tables[player2ID][destx][desty] = 0;
@@ -253,6 +254,23 @@ let GameVerif = (function () {
                 console.table(map.tables[1]);
 
                 Storage.saveData(fileName, map);
+                if(pieceB==12){
+                    flagDown = true;
+                    let score =0;
+                    array1.forEach(line => line.forEach(function(pieces){ 
+                        if (pieces<11 && pieces>0){
+                            score+=pieces;
+                        } 
+                    }));
+                    if (client.id !== map.players[map.turn]) {
+                        var today = new Date();
+                        var date = today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
+                        let newLine = {"username" : map.players[map.turn], "scores" : score, "time": date};
+                        leaderboard = Storage.getData("leaderboard");
+                        leaderboard = Storage.storeLB(leaderboard, newLine);
+                        Storage.saveData("leaderboard", leaderboard);
+                    }
+                }
                 return {
                     isPossible: true,
                     oldX: posx,
@@ -262,7 +280,8 @@ let GameVerif = (function () {
                     isFight: true,
                     winner: winner,
                     attackerPower: pieceA,
-                    defenderPower: pieceB
+                    defenderPower: pieceB,
+                    isFinished: flagDown
                 }
                 //return [true, posx, posy, destx, desty, true, winner, pieceA, pieceB];//old method
             } else {

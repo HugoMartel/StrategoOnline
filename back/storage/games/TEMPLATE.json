@@ -27,5 +27,7 @@
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     ]
   ],
-  "turn": 0
+  "turn": 0,
+  "ready": {"player0" : false, "player1": false},
+  "started": true
 }

@@ -179,23 +179,6 @@ let Socket = (function () {
       } else {
         // Create the moveset div
         let moveDiv = document.createElement("div");
-        // STYLE
-        moveDiv.style.display = "flex";
-        moveDiv.style.flexDirection = "column";
-        moveDiv.style.flexWrap = "nowrap";
-        moveDiv.style.justifyContent = "center";
-        moveDiv.style.alignItems = "center";
-        moveDiv.style.textAlign = "center";
-        moveDiv.style.position = "absolute";
-        moveDiv.style.backgroundColor = "green";
-        moveDiv.style.width = "15%";
-        moveDiv.style.top = "20%";
-        moveDiv.style.padding = "10px 0";
-        moveDiv.style.margin = "auto";
-        moveDiv.style.backgroundColor = "#0c1821";
-        moveDiv.style.boxShadow = "0 4px 8px 2px #e1ae33";
-        moveDiv.style.color = "#e1ae33";
-        moveDiv.style.borderRadius = "15px";
         moveDiv.id = "moveDiv";
 
         // Create the main line of moves that will always be present
@@ -204,8 +187,6 @@ let Socket = (function () {
         let selectedPieceImg = document.createElement("img");
         selectedPieceImg.src = "../../img/selectedPieces/" + Graphics.getStrength([data.pieceLocation.x, data.pieceLocation.z]) + ".png";
         selectedPieceImg.alt = "Selected Piece Image";
-        selectedPieceImg.style.width = "50px";
-        selectedPieceImg.style.height = "50px";
         selectedPieceImg.classList.add("notClickable");
 
         moveLeftRightContainer.appendChild(selectedPieceImg);
@@ -216,8 +197,6 @@ let Socket = (function () {
           let moveButton = document.createElement("img");
           moveButton.classList.add("clickable");
           moveButton.alt = "Move Button Image";
-          moveButton.style.width = "50px";
-          moveButton.style.height = "50px";
 
           // Event to call when a move is requested
           moveButton.addEventListener("click", (e) => {
@@ -258,9 +237,6 @@ let Socket = (function () {
         closeMoveDiv.classList.add("btn-close", "btn-close-white");
         closeMoveDiv.type = "button";
         closeMoveDiv.setAttribute("aria-label", "Close");
-        closeMoveDiv.style.position = "absolute";
-        closeMoveDiv.style.top = "5px";
-        closeMoveDiv.style.right = "5px";
         closeMoveDiv.id = "closeMoveDiv";
 
         closeMoveDiv.addEventListener("click", closeMoveDivCallback);
@@ -300,6 +276,32 @@ let Socket = (function () {
   }
 
   //======================================================================================
+  /**
+   * @function Socket.swapPieces
+   * @param {Object} data
+   * coordsA : this are the new coords where the piece will move
+   * coordsB : this are the old coords of the piece
+   * error : if the is an error message send by the server
+   * @returns {} /
+   * @description Swaps two pieces during the setup phase
+   */
+  function swapPiecesCall(data) {
+    if (
+      data === undefined &&
+      data.coordsA === undefined &&
+      data.coordsB === undefined
+    ) {
+      Toast.error("The server couldn't fetch your available moves...");
+    } else {
+      if (data.error !== undefined) {
+        Toast.error(data.error);
+      } else {
+        Graphics.swap(data.coordsA, data.coordsB);
+      }
+    }
+  }
+
+  //======================================================================================
   //======================================================================================
   // Returned Object
   return {
@@ -311,6 +313,7 @@ let Socket = (function () {
     fight: (data) => fightCall(data),
     getMoves: (data) => getMovesCall(data),
     movePiece: (data) => movePieceCall(data),
+    swapPieces: (data) => swapPiecesCall(data),
     closeMoveDivCallback: (e) => closeMoveDivCallback(e),
   };
 })();

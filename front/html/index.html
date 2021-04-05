@@ -21,6 +21,7 @@
     socket.on('start fight', data => Socket.fight(data));
     socket.on('moveset response', data => Socket.getMoves(data));
     socket.on('move response', data => Socket.movePiece(data));
+    socket.on('swap response', data => Socket.swapPieces(data));
 
     /* Append the img to ease out the access for the menu background */
     let bottomImg = document.createElement("img");

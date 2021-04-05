@@ -362,11 +362,41 @@ let Graphics = (function () {
   };
 
   //=====================================================================//
-  //=====================================================================//
+  /**
+   * @function Graphics.swap
+   * @argument {object} coordsA
+   * coordsA
+   * @argument {object} coordsB
+   * coordsB
+   * @returns {} /
+   * @description Swap two pieces
+   */
+  let swapCall = (coordsA, coordsB) => {
+    // Change A
+    board.grid[coordsA.x][coordsA.z].x = coordsB.x;
+    board.grid[coordsA.x][coordsA.z].z = coordsB.z;
+    
+    board.grid[coordsA.x][coordsA.z].physicalPiece.position.x = coordsB.x * 0.835 - 3.757;
+    board.grid[coordsA.x][coordsA.z].physicalPiece.position.z = coordsB.x * 0.835 - 3.757;
 
+    //Change B
+    board.grid[coordsB.x][coordsB.z].x = coordsA.x;
+    board.grid[coordsB.x][coordsB.z].z = coordsA.z;
+    
+    board.grid[coordsB.x][coordsB.z].physicalPiece.position.x = coordsA.x * 0.835 - 3.757;
+    board.grid[coordsB.x][coordsB.z].physicalPiece.position.z = coordsA.x * 0.835 - 3.757;
+  
+    // Swap the pieces in the matrix
+    [board.grid[coordsB.x][coordsB.z], board.grid[coordsA.x][coordsA.z]] = [board.grid[coordsA.x][coordsA.z], board.grid[coordsB.x][coordsB.z]]
+  }
+
+
+  //=====================================================================//
+  //=====================================================================//
   // Returned Object
   return {
     deplace: (newCoord, oldCoord, fight) => deplaceCall(newCoord, oldCoord, fight),
+    swap: (coordsA, coordsB) => swapCall(coordsA, coordsB),
     createScene: (canvas, engine) => createSceneCall(canvas, engine),
     isClicked: () => pieceClicked,
     setClicked: (value) => (typeof value === "boolean") ? pieceClicked = value : Toast.error("pieceClicked got a wrong value..."),

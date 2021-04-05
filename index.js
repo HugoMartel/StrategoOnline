@@ -419,32 +419,70 @@ io.on("connection", (client) => {
           throw clientName + " cheated and tried to move with going through the console (move not possible)";
         }
 
-        //End game process
-        if(moveResult.isFinished){
-          if (client.id !== clientGame.players[clientGame.turn]) {
-            let score =0;
-            clientGame[clientGame.turn].forEach(line => line.forEach(function(pieces){ 
-              if (pieces<11 && pieces>0){
-                score+=pieces;
-              } 
-            }));
-            //Save on leaderboard file
-            let today = new Date();
-            let date = today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
-            let newLine = {"username" : clientGame.players[clientGame.turn], "scores" : score, "time": date};
-            leaderboard = Storage.getData("leaderboard");
-            leaderboard = Storage.storeLB(leaderboard, newLine);
-            Storage.saveData("leaderboard", leaderboard);
-          }
-      }
-        console.log(moveResult); //! DEBUG
-        // Send the move animation request to the clients
-        //TODO Send two different moves in each player case (since the boards are inverted)
-
+        
         for (const room of client.rooms) {
           if (room !== client.id) {
-            //Remove the game from the server (the room name has the same name as the game JSON file)
             for (const c of io.sockets.adapter.rooms.get(room)) {
+              // Sends the corresponding winning events
+              // Get the name of the player
+              let cName = io.sockets.sockets.get(c).handshake.session.login !== undefined ? io.sockets.sockets.get(c).handshake.session.login : c;
+              let finishedResult = undefined;
+
+              //* (cName !== c) if true -> c is connected
+              //* (c === client.id)  if true -> c has made the move request
+              //End game process
+              if (moveResult.isFinished !== undefined && moveResult.scores !== undefined) {
+                let score = moveResult.scores[0] ? moveResult.scores[0] : moveResult.scores[1];
+
+                if(moveResult.isFinished == 1 || moveResult.isFinished == 2){
+                  if (c !== client.id) {
+                    // case of the player who lost
+                    finishedResult = "You lost!";
+                  } else {
+                    // case of the player who won
+                    finishedResult = "You won! Score : " + score;
+                    if (c !== cName) {
+                      // If the winner was connected
+                      //Save on leaderboard file
+                      let today = new Date();
+                      let date = today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
+                      let newLine = {"username" : cName, "scores" : score, "time": date};
+                      leaderboard = Storage.getData("leaderboard");
+                      leaderboard = Storage.storeLB(leaderboard, newLine);
+                      Storage.saveData("leaderboard", leaderboard);
+                    } else {
+                      finishedResult += "\nConnect to an account to be able to save your score"
+                    }
+                  }
+                }
+                //If both have no more pieces
+                if(moveResult.isFinished == 4){
+                  finishedResult = "You lost!";
+                }
+                //If player have no more pieces
+                if(moveResult.isFinished == 3){
+                  if (c === client.id) {
+                    // case of the player who lost
+                    finishedResult = "You lost!";
+                  } else {
+                    // case of the player who won
+                    finishedResult = "You won! Score : " + score;
+                    if (c !== cName) {
+                      // If the winner was connected
+                      //Save on leaderboard file
+                      let today = new Date();
+                      let date = today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
+                      let newLine = {"username" : cName, "scores" : score, "time": date};
+                      leaderboard = Storage.getData("leaderboard");
+                      leaderboard = Storage.storeLB(leaderboard, newLine);
+                      Storage.saveData("leaderboard", leaderboard);
+                    } else {
+                      finishedResult += "\nConnect to an account to be able to save your score"
+                    }
+                  }
+                }
+              }
+              
               //! Don't forget to convert the coords from the client moving to the coords of the defending player
               /*
               player0: (x,z) -> player1: (9-x,9-z)
@@ -460,7 +498,7 @@ io.on("connection", (client) => {
               *   winner        : number (winner of the battle, 2 if same power)
               *   attackerPower : number (power of the piece which attacks)
               *   defenderPower : number (power of the attacked piece)
-              *   isFinished    : bool   (if the game is over) //TODO
+              *   isFinished    : bool   (if the game is over)
               */
               let moveResponse = {
                 newCoords: (c !== client.id) ? {x: 9-args.newCoords[0], z: 9-args.newCoords[1]} : {x: args.newCoords[0], z: args.newCoords[1]},
@@ -469,16 +507,29 @@ io.on("connection", (client) => {
                 {
                   win: (moveResult.winner != 2 && clientGame.turn ) ? !moveResult.winner : moveResult.winner,
                   enemyStrength: (c === client.id) ? moveResult.defenderPower : moveResult.attackerPower
-                } : undefined)
+                } : undefined),
+                finished: finishedResult
               };
-
-              console.log(moveResponse);
-
               // for each client of the room
               io.sockets.to(c).emit("move response", moveResponse);
+
+              if (moveResult.isFinished !== undefined && moveResult.isFinished != 0) {
+                io.sockets.sockets.get(c).leave(room);
+              }
             }
           }
         }
+        
+        if (moveResult.isFinished !== undefined && moveResult.isFinished != 0) {
+          fs.unlink(__dirname + "/back/storage/games/" + clientGame.players[0]+"+"+clientGame.players[1]+".json", (err) => {
+            if (err) throw err;
+          });
+
+          // Server log
+          console.log("This game was finished !".underline);
+          console.log("/back/storage/games/" + clientGame.players[0]+"+"+clientGame.players[1]+".json" + " deleted".bold);
+        }
+        console.log(moveResult); //! DEBUG
       }
     } catch (e) {
       io.to(client.id).emit("move response", { error: e });
@@ -487,6 +538,85 @@ io.on("connection", (client) => {
     }
 
 
+  });
+
+  //===================================================================
+  /****************************************\
+        A user wants to swap two pieces
+  \****************************************/
+  client.on("swapPieces", (args) => {
+    // args contains two pieces positions to swap
+    if (
+      args == undefined ||
+      typeof args.coordsA === undefined ||
+      typeof args.coordsB === undefined
+    ) {
+      io.to(client.id).emit("move", {
+        error: "Wrong args given to the swapPieces callback...",
+      });
+      return;
+    } else if (args.CoordsA === args.CoordsB) {
+      // The client has clicked twice on the same piece, so we do nothing
+      return;
+    }
+
+    //Get the used name for game storage
+    let clientName =
+      io.sockets.sockets.get(client.id).handshake.session.login !== undefined
+        ? io.sockets.sockets.get(client.id).handshake.session.login
+        : client.id;
+
+    let clientGame = undefined;
+
+    // Load the game object of the player that made the request
+    for (let game of fs
+      .readdirSync(__dirname + "/back/storage/games")
+      .map((value, index, array) => value.slice(0, value.length - 5))) {
+      if (game.includes(clientName)) {
+        clientGame = Storage.getData("games/" + game);
+        break; // I did this because if I remember correctly we cannot iterate in a while
+      }
+    }
+
+    // Check if the game is correctly loaded
+    try {
+      if (clientGame === undefined) {
+        throw "The game doesn't exist on the server...";
+      } else {
+        // Check if the game has started
+        if (clientGame.started) {
+          throw "You can't swap pieces anymore since the game has already started";
+        }
+
+        // Make the move on the game file
+        //! Don't forget to convert coords to match the server's standards
+        /*
+          player0: (x,z) -> server: ( z , 9-x)
+          player1: (x,z) -> server: (9-z,  x ) 
+        */
+        //! Here the conversion will be done in makeSwap since I don't have direct access to the player associated index
+        let swapPossible = GameVerif.makeSwap(
+          clientGame,
+          clientName,
+          args.coordsA.x,
+          args.coordsA.z,
+          args.coordsB.x,
+          args.coordsB.z
+        );
+
+        if (swapPossible) {
+          io.to(client.id).emit("swap response", args);
+        }
+        else
+          throw "The requested swap wasn't possible";
+      }
+    }
+    catch (e) {
+      io.to(client.id).emit("swap response", { error: e });
+      console.error(e);
+      return;
+    }
+  
   });
 });
 

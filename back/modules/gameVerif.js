@@ -107,6 +107,7 @@ let GameVerif = (function () {
         return [true, "SUCCESS"];
     }
 
+    //================================================================
     /**
     * @function GameVerif.checkBattle
     * @param {Number} pionA
@@ -142,6 +143,7 @@ let GameVerif = (function () {
         return 0;
     }
     
+    //================================================================
     /**
     * @function GameVerif.possibleMoves
     * @param {Object} map
@@ -194,6 +196,7 @@ let GameVerif = (function () {
         return moves;
     }
 
+    //================================================================
     /**
     * @function GameVerif.makeMove
     * @param {Object} map
@@ -218,7 +221,7 @@ let GameVerif = (function () {
     *   winner        : number (winner of the battle, 2 if same power)
     *   attackerPower : number (power of the piece which attacks)
     *   defenderPower : number (power of the attacked piece)
-    *   isFinished    : bool   (if the game is over)
+    *   isFinished    : number   (0 if the game is not finished, 1 if the player won, 2 if player won because opponent have no more peces, 3 if player lost because he have no more peces, 4 if both have no more pieces)
     * @description Make the move if possible
     */
     let makeMove = function (map, player, posx, posy, destx, desty) {
@@ -235,7 +238,12 @@ let GameVerif = (function () {
                 let pieceB = map.tables[player2ID][destx][desty];
                 let battleResult = checkBattle(pieceA, pieceB);
                 let winner = 2;
-                let flagDown = false;
+                let scores = [0,0];
+                let gameState = 0; /* The game status : 0 is not finished, 
+                1 if player won, 
+                2 if player won because opponent have no more peces, 
+                3 if player lost because he have no more peces
+                4 if both have no more pieces */
                 if (battleResult === pieceA) {
                     winner = playerID;
                     map.tables[player2ID][destx][desty] = 0;
@@ -254,23 +262,34 @@ let GameVerif = (function () {
                 console.table(map.tables[1]);
 
                 Storage.saveData(fileName, map);
-                if(pieceB==12){
-                    flagDown = true;
-                    let score =0;
-                    array1.forEach(line => line.forEach(function(pieces){ 
-                        if (pieces<11 && pieces>0){
-                            score+=pieces;
-                        } 
-                    }));
-                    if (client.id !== map.players[map.turn]) {
-                        var today = new Date();
-                        var date = today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
-                        let newLine = {"username" : map.players[map.turn], "scores" : score, "time": date};
-                        leaderboard = Storage.getData("leaderboard");
-                        leaderboard = Storage.storeLB(leaderboard, newLine);
-                        Storage.saveData("leaderboard", leaderboard);
+
+                
+                // player 0
+                map.tables[playerID].forEach(line => line.forEach(function(pieces){ 
+                    if (pieces<11 && pieces>0){
+                        scores[0] += pieces;
+                    } 
+                }));
+                // player 1
+                map.tables[player2ID].forEach(line => line.forEach(function(pieces){ 
+                    if (pieces<11 && pieces>0){
+                        scores[1] += pieces;
+                    } 
+                }));
+                if(pieceB == 12){
+                    gameState = 1;
+                    scores[map.turn] = 0;// Nullify the score of the loser
+                } else {
+                    if(scores[1] == 0 && scores[0] == 0){ // If both have no more pieces
+                        gameState = 2;
+                    }else if(scores[1] == 0){ // if opponent have no more pieces
+                        gameState = 4;
+                    }else if(scores[0] == 0) {  // if player have no more pieces
+                        gameState = 3;
                     }
                 }
+                
+                
                 return {
                     isPossible: true,
                     oldX: posx,
@@ -281,7 +300,8 @@ let GameVerif = (function () {
                     winner: winner,
                     attackerPower: pieceA,
                     defenderPower: pieceB,
-                    isFinished: flagDown
+                    isFinished: gameState,
+                    scores: (!gameState) ? undefined : scores
                 }
                 //return [true, posx, posy, destx, desty, true, winner, pieceA, pieceB];//old method
             } else {
@@ -307,9 +327,64 @@ let GameVerif = (function () {
         }
     }
 
+    //================================================================
+    /**
+    * @function GameVerif.makeSwap
+    * @param {Object} map
+    * map you are playing on
+    * @param {String} player
+    * player which is requesting the swap
+    * @param {Number} pa_posx
+    * posX of the piece A
+    * @param {Number} pa_posy
+    * posY of the piece A
+    * @param {Number} pb_posx
+    * posX of the piece B
+    * @param {Number} pb_posy
+    * posY of the piece B
+    * @return {Bool}
+    * if swap is done
+    * @description Make the swap if possible
+    */
+    let makeSwap = function(map, player, pa_posx, pa_posy, pb_posx, pb_posy) {
+        //! Don't forget to convert coords to match the server's standards
+        /*
+          player0: (x,y) -> server: ( y , 9-x)
+          player1: (x,y) -> server: (9-y,  x ) 
+        */
+        let playerID = map.players.findIndex(findPlayer => findPlayer === player);
+        if (playerID == 0) {
+            let tmp_x = pa_posx;
+            pa_posx = pa_posy;
+            pa_posy = 9-tmp_x;
+            tmp_x = pb_posx;
+            pb_posx = pb_posy;
+            pb_posy = 9-tmp_x;
+        } else {
+            let tmp_x = pa_posx;
+            pa_posx = 9-pa_posy;
+            pa_posy = pa_posx;
+            tmp_x = pb_posx;
+            pb_posx = 9-pb_posy;
+            pb_posy = pb_posx;
+        }
+        let pa = map.tables[playerID][pa_posx][pa_posy];
+        let pb = map.tables[playerID][pb_posx][pb_posy];
+        if (pa != -1 && pa != 0 && pb != -1 && pb != 0) {
+            map.tables[playerID][pa_posx][pa_posy] = pb;
+            map.tables[playerID][pb_posx][pb_posy] = pa;
+            Storage.saveData("games/" + map.players[0]+"+"+map.players[1], map);
+            return true;
+        }
+        return false;
+    }
+
+    //================================================================
+    //================================================================
     return {
         possibleMoves: (map, player, posx, posy) => possibleMoves(map, player, posx, posy),
-        makeMove : (map, player, posx, posy, destx, desty) => makeMove(map, player, posx, posy, destx, desty)
+        makeMove : (map, player, posx, posy, destx, desty) => makeMove(map, player, posx, posy, destx, desty),
+        makeSwap : (map, player, pa_posx, pa_posy, pb_posx, pb_posy) => makeSwap(map, player, pa_posx, pa_posy, pb_posx, pb_posy)
     }
 })();
 

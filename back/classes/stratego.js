@@ -18,6 +18,7 @@ class Game {
 
     this.players = [player, null];
     this.turn = 0;//Defaults to player 0 turn
+    this.started = false;
     
     //Create each player's pieces array
     this.tables = [

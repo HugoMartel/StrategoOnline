@@ -264,13 +264,13 @@ let GameVerif = (function () {
                 Storage.saveData(fileName, map);
 
                 
-                // player 0
+                // player playing
                 map.tables[playerID].forEach(line => line.forEach(function(pieces){ 
                     if (pieces<11 && pieces>0){
                         scores[0] += pieces;
                     } 
                 }));
-                // player 1
+                // player aopponent
                 map.tables[player2ID].forEach(line => line.forEach(function(pieces){ 
                     if (pieces<11 && pieces>0){
                         scores[1] += pieces;

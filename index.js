@@ -433,7 +433,7 @@ io.on("connection", (client) => {
               //End game process
               if (moveResult.isFinished !== undefined && moveResult.scores !== undefined) {
                 let score = moveResult.scores[0] ? moveResult.scores[0] : moveResult.scores[1];
-
+                console.log(score);
                 if(moveResult.isFinished == 1 || moveResult.isFinished == 2){
                   if (c !== client.id) {
                     // case of the player who lost
@@ -446,9 +446,9 @@ io.on("connection", (client) => {
                       //Save on leaderboard file
                       let today = new Date();
                       let date = today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
-                      let newLine = {"username" : cName, "scores" : score, "time": date};
+                      let newLine = {"username" : cName, "score" : score, "time": date};
                       leaderboard = Storage.getData("leaderboard");
-                      leaderboard = Storage.storeLB(leaderboard, newLine);
+                      leaderboard.leaderboard = Storage.storeLB(leaderboard.leaderboard, newLine);
                       Storage.saveData("leaderboard", leaderboard);
                     } else {
                       finishedResult += "\nConnect to an account to be able to save your score"
@@ -472,7 +472,7 @@ io.on("connection", (client) => {
                       //Save on leaderboard file
                       let today = new Date();
                       let date = today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
-                      let newLine = {"username" : cName, "scores" : score, "time": date};
+                      let newLine = {"username" : cName, "score" : score, "time": date};
                       leaderboard = Storage.getData("leaderboard");
                       leaderboard = Storage.storeLB(leaderboard, newLine);
                       Storage.saveData("leaderboard", leaderboard);

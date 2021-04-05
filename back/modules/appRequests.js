@@ -76,10 +76,7 @@ let AppRequest = (function () {
     fileSend += `<script>document.getElementById("homeLink").classList.remove("active");document.getElementById("leaderboardLink").classList.add("active");</script>`;
     fileSend += fs.readFileSync("front/html/leaderboard.html");
     let data = Storage.getData("leaderboard");
-    // let newScore = {"username":"Lionel","score":200,"time":0};
-    // data.leaderboard = Storage.storeLB(data.leaderboard,newScore);
-    // Storage.editData("leaderboard",data);
-    fileSend += TableDraw.draw(20, data.leaderboard, Scores.getRankLine);
+    fileSend += TableDraw.draw(100, data.leaderboard, Scores.getRankLine);
     fileSend += "</table></div>";
     fileSend +=
       '<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" type="text/javascript"></script>';

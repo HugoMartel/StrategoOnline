@@ -75,7 +75,7 @@ let Scores = (function () {
         " </td>" +
         "<td>" +
         leaderboard.time +
-        " min</td></tr>"
+        "</td></tr>"
       );
     },
   };

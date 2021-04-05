@@ -101,42 +101,32 @@ let Graphics = (function () {
                 board.grid[x][z].physicalPiece.position.z += 0.01;
               else if (coord[1] < -0.01)
                 board.grid[x][z].physicalPiece.position.z -= 0.01;
-            } else if (board.grid[x][z].status == -1 || board.grid[x][z].status == 3) {
+            } else if (board.grid[x][z].status == -1 || board.grid[x][z].status == 2) {
               // The piece has stopped moving
-              if (board.grid[x][z].status == 3) {
-                // Change the previous coords with the new ones 
-                //(the change couldn't be made before since there already was a piece that needed to be removed at this new place)
-                console.log("lolz");
-                console.log(board.grid[board.grid[x][z].x][board.grid[x][z].z]);
-                board.grid[board.grid[x][z].x][board.grid[x][z].z] = board.grid[x][z];
-              }
               //set the coords manually since they are close enough to their real position
               // the "real" position is calculated with the savant formula : board.grid.position * 0.835 - 3.757 (found by tiptoeing with values)
               board.grid[x][z].physicalPiece.position.x = board.grid[x][z].x * 0.835 - 3.757;
               board.grid[x][z].physicalPiece.position.z = board.grid[x][z].z * 0.835 - 3.757;
 
-              // Remove the old position of the attacking (and winning) piece
-              if (board.grid[x][z].status == 3)
-                board.grid[x][z] = undefined;
-
-              console.table(board.grid);//! DEBUG
-
-              board.grid[x][z].status = 1;
-              pieceClicked = false;// We can now click on pieces again
+              //to allow the rotation to finish
+              if(board.grid[x][z].status != 2){
+                board.grid[x][z].status = 1;
+                pieceClicked = false;// We can now click on pieces again
+              }
             }
             //if reveal
-            if(board.grid[x][z] != undefined && (board.grid[x][z].status == 3 || board.grid[x][z].status == 4 || board.grid[x][z].status == 0)) {
+            if(board.grid[x][z].status == 2 || board.grid[x][z].status == 0) {
               //the reveal rotation (ye cool stuff)
               if(board.grid[x][z].physicalPiece.rotation.y <= 5 * Math.PI/2) 
                 board.grid[x][z].physicalPiece.rotation.y += 0.04;
-              else if(board.grid[x][z].status == 3){
+              else if(board.grid[x][z].status == 2){
                 board.grid[x][z].physicalPiece.rotation.y = Math.PI/2;
                 board.grid[x][z].status = 1;
                 pieceClicked = false;// We can now click on pieces again
               }
             }
             //if ded
-            if(board.grid[x][z] != undefined && (board.grid[x][z].status == 4 || board.grid[x][z].status == 0)) {
+            if(board.grid[x][z].status == 0) {
               //ded
               if(board.grid[x][z].physicalPiece.position.y > -20) 
                 board.grid[x][z].physicalPiece.position.y -= 0.05;
@@ -145,8 +135,9 @@ let Graphics = (function () {
                 board.grid[x][z].physicalPiece.dispose();
                 //removing the piece from the grid
                 if(board.grid[x][z].replacement !== undefined) {
-                  board.grid[x][z] = board.grid[board.grid[x][z].replacement.x][board.grid[x][z].replacement.z];
-                  //board.grid[board.grid[x][z].replacement.x][board.grid[x][z].replacement.z] = undefined;
+                  let replace = board.grid[x][z].replacement
+                  board.grid[x][z] = board.grid[replace.x][replace.z];
+                  board.grid[replace.x][replace.z]= undefined;
                 } else { 
                   board.grid[x][z] = undefined;
                 }
@@ -334,7 +325,7 @@ let Graphics = (function () {
         //piece attacking is ded
         board.grid[oldCoord.x][oldCoord.z].status = 0;
         //initiating the reveal of the enemy piece
-        board.grid[newCoord.x][newCoord.z].status = 3;
+        board.grid[newCoord.x][newCoord.z].status = 2;
         //maybe remove that line
         //board.grid[newCoord.x][newCoord.z].physicalPiece.rotation.y +=0.01;
         isMoving = false;
@@ -343,7 +334,7 @@ let Graphics = (function () {
 
       else if (fight.win !== undefined && fight.win == 1) {
         //when the piece attacking is winning
-        board.grid[oldCoord.x][oldCoord.z].status = 3;
+        board.grid[oldCoord.x][oldCoord.z].status = 2;
         board.grid[newCoord.x][newCoord.z].status = 0;
         isMoving = true;
       }
@@ -351,7 +342,7 @@ let Graphics = (function () {
       else if (fight.win !== undefined && fight.win == 2){
         //draw
         isMoving = false;
-        board.grid[oldCoord.x][oldCoord.z].status = 4;
+        board.grid[oldCoord.x][oldCoord.z].status = 0;
         board.grid[newCoord.x][newCoord.z].status = 0;
         pieceClicked = false;// We can now click on pieces again
       }

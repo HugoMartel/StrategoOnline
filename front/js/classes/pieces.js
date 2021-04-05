@@ -27,8 +27,6 @@ class Pieces {
         *  0 = ded
         *  1 = alive
         *  2 = fight win (for animation) 
-        *  3 = reveal win
-        *  4 = reveal ded
         */
     this.specc = spec;
     this.x = position[0];

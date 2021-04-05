@@ -318,8 +318,6 @@ io.on("connection", (client) => {
       availableMoves: [] 
     }; //contains [x, z, isFight]
 
-    console.table(moves);//! DEBUG
-
     // Check the moves array to find the possible moves (1 or 2)
     // 1 will mean a normal move
     // 2 will imply a fight
@@ -336,6 +334,22 @@ io.on("connection", (client) => {
             clientGame.turn ? 9-i :  i ,
             moves[i][j] !== 2 ? false : true,
           ]); //Thanks to TT the indexes are inverted from back to front :) (sry)
+        }
+      }
+    }
+
+    //Sort availableMoves to fit the appends that will be done in front
+    // Bubble sort
+    for (let a = 0; a < movesToReturn.availableMoves.length; ++a) {
+      for (let b = movesToReturn.availableMoves.length - 1; b > a; --b) {
+        if (movesToReturn.availableMoves[b-1][0] > movesToReturn.availableMoves[b][0]) {
+          // Horizontal sort
+          [movesToReturn.availableMoves[b-1], movesToReturn.availableMoves[b]] = [movesToReturn.availableMoves[b], movesToReturn.availableMoves[b-1]]; // yes it works
+        } else {
+          // Here only the vertical sorting needs to be done
+          if (movesToReturn.availableMoves[b-1][1] > movesToReturn.availableMoves[b][1]) {
+            [movesToReturn.availableMoves[b-1], movesToReturn.availableMoves[b]] = [movesToReturn.availableMoves[b], movesToReturn.availableMoves[b-1]];// Swap so we always enter the farthest move at last in the moveDiv in the front-end
+          }
         }
       }
     }

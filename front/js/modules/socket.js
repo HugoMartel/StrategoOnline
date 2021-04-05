@@ -124,6 +124,36 @@ let Socket = (function () {
   //======================================================================================
   /**
    * @function Socket.getMoves
+   * @param {Event} e
+   * 'click' Event object
+   * @returns {} /
+   * @description  Removes the moveDiv from the page and removes its event listeners
+   */
+  let closeMoveDivCallback = function (e) {
+    if (document.getElementById("closeMoveDiv")) {
+      document.getElementById("closeMoveDiv").removeEventListener("click", closeMoveDivCallback);
+
+      for (let node of document.getElementById("moveDiv").childNodes) {
+        if (node.tagName == "DIV") {
+          // Remove the main line listeners
+          for (let childNode of node.childNodes) {
+            if (!childNode.classList.contains("notClickable"))
+              childNode.removeEventListener('click', closeMoveDivCallback);
+          }
+        } else if (node.tagName == "IMG") {
+          node.removeEventListener('click', closeMoveDivCallback);
+        }
+      }
+
+      document.getElementById("moveDiv").remove();
+
+      Graphics.setClicked(false);
+    }
+  };
+  
+  //======================================================================================
+  /**
+   * @function Socket.getMoves
    * @param {Object} data
    * pieceLocation: clicked piece location
    * availableMoves: moves coords returned by the server where the selected piece can go
@@ -168,27 +198,6 @@ let Socket = (function () {
         moveDiv.style.borderRadius = "15px";
         moveDiv.id = "moveDiv";
 
-        // Remove the moveDiv from the page
-        let closeMoveDivCallback = function (e) {
-            document.getElementById("closeMoveDiv").removeEventListener("click", closeMoveDivCallback);
-
-            for (let node of document.getElementById("moveDiv").childNodes) {
-              if (node.tagName == "DIV") {
-                // Remove the main line listeners
-                for (let childNode of node.childNodes) {
-                  if (!childNode.classList.contains("notClickable"))
-                    childNode.removeEventListener('click', closeMoveDivCallback);
-                }
-              } else if (node.tagName == "IMG") {
-                node.removeEventListener('click', closeMoveDivCallback);
-              }
-            }
-
-            document.getElementById("moveDiv").remove();
-
-            Graphics.setClicked(false);
-        };
-
         // Create the main line of moves that will always be present
         let moveLeftRightContainer = document.createElement("div");
         
@@ -204,8 +213,6 @@ let Socket = (function () {
 
         // Create the buttons to be able to select a move
         for (let elt of data.availableMoves) {
-          console.log(elt);
-
           let moveButton = document.createElement("img");
           moveButton.classList.add("clickable");
           moveButton.alt = "Move Button Image";
@@ -304,5 +311,6 @@ let Socket = (function () {
     fight: (data) => fightCall(data),
     getMoves: (data) => getMovesCall(data),
     movePiece: (data) => movePieceCall(data),
+    closeMoveDivCallback: (e) => closeMoveDivCallback(e),
   };
 })();

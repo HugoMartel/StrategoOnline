@@ -322,11 +322,9 @@ class Table {
       if(!Graphics.isClicked()){
         if (pickResult.pickedMesh != null && pickResult.pickedMesh.metadata === "playerPiece") {
           
-
-
           Graphics.setClicked(true);
           //scaling the coordinates to go in our table
-          let posX = pickResult.pickedMesh.position.x / 0.835 + 4.507;
+          let posX = pickResult.pickedMesh.position.x / 0.835 + 4.507;//found by tiptoeing again but by Louis this time !
           let posZ = pickResult.pickedMesh.position.z / 0.835 + 4.507;
           posX = parseInt(posX);
           posZ = parseInt(posZ);
@@ -335,26 +333,7 @@ class Table {
           socket.emit("requestMoveset", {x: posX, z: posZ});
 
           if (document.getElementById("moveDiv")) {
-            let closeMoveDivCallback = function (e) {
-              document.getElementById("closeMoveDiv").removeEventListener("click", closeMoveDivCallback);
-
-              for (let node of document.getElementById("moveDiv").childNodes) {
-                if (node.tagName == "DIV") {
-                  // Remove the main line listeners
-                  for (let childNode of node.childNodes) {
-                    if (!childNode.classList.contains("notClickable"))
-                      childNode.removeEventListener('click', closeMoveDivCallback);
-                  }
-                } else if (node.tagName == "IMG") {
-                  node.removeEventListener('click', closeMoveDivCallback);
-                }
-              }
-
-              document.getElementById("moveDiv").remove();
-              Graphics.setClicked(false);
-            };
-
-            closeMoveDivCallback();
+            Socket.closeMoveDivCallback();
           }
         }
       }

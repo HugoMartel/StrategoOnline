@@ -28,7 +28,7 @@ class Pieces {
         *  1 = alive
         *  2 = fight win (for animation) 
         *  3 = reveal win
-        *  4 reveal ded
+        *  4 = reveal ded
         */
     this.specc = spec;
     this.x = position[0];
@@ -60,14 +60,7 @@ class Pieces {
   //check if the physical piece coords are the same as the coord (check if we need to move the physical piece)
   //return 0 if no difference, else it return the array with the difference coords
   check = () => {
-    let retour = [0, 0];
-    if (this.x * 0.835 - 3.757 != this.physicalPiece.position.x) {
-      retour[0] = this.x * 0.835 - 3.757 - this.physicalPiece.position.x;
-    }
-    if (this.z * 0.835 - 3.757 != this.physicalPiece.position.z) {
-      retour[1] = this.z * 0.835 - 3.757 - this.physicalPiece.position.z;
-    }
-    if (retour[0] == 0 && retour[1] == 0) return 0;
-    return retour;
+    // Check if the piece is in a correct interval (since float comparaisons aren't precise)
+    return [this.x * 0.835 - 3.757 - this.physicalPiece.position.x, this.z * 0.835 - 3.757 - this.physicalPiece.position.z];
   };
 }

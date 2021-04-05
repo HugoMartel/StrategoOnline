@@ -39,6 +39,8 @@ let Graphics = (function () {
     camera.attachControl(canvas, false);
     //max beta angle, so the player can't look under
     camera.upperBetaLimit = 1.2;
+    //prevent players from moving the camera around
+    camera.panningDistanceLimit = 0.1;
     //max and min radius, so you can't cross the tabletop, or go far away because ur afraid to loose
     camera.lowerRadiusLimit = 7;
     camera.upperRadiusLimit = 15;
@@ -87,25 +89,46 @@ let Graphics = (function () {
         for (z = 0; z < 10; ++z) {
           if (board.grid[x][z] != undefined) {
             let coord = board.grid[x][z].check();
-            if (coord != 0) {
+            // if the error is not minimal
+            if (Math.abs(coord[0]) > 0.01) {
               //move the piece because not in the good position:
-              if (coord[0] > 0)
+              if (coord[0] > 0.01)
                 board.grid[x][z].physicalPiece.position.x += 0.01;
-              else if (coord[0] < 0)
+              else if (coord[0] < -0.01)
                 board.grid[x][z].physicalPiece.position.x -= 0.01;
-              if (coord[1] > 0)
+            } else if (Math.abs(coord[1]) > 0.01) {
+              if (coord[1] > 0.01)
                 board.grid[x][z].physicalPiece.position.z += 0.01;
-              else if (coord[1] < 0)
+              else if (coord[1] < -0.01)
                 board.grid[x][z].physicalPiece.position.z -= 0.01;
-            } else if (board.grid[x][z].status == -1) {
+            } else if (board.grid[x][z].status == -1 || board.grid[x][z].status == 3) {
               // The piece has stopped moving
-              pieceClicked = false;
+              if (board.grid[x][z].status == 3) {
+                // Change the previous coords with the new ones 
+                //(the change couldn't be made before since there already was a piece that needed to be removed at this new place)
+                console.log("lolz");
+                console.log(board.grid[board.grid[x][z].x][board.grid[x][z].z]);
+                board.grid[board.grid[x][z].x][board.grid[x][z].z] = board.grid[x][z];
+              }
+              //set the coords manually since they are close enough to their real position
+              // the "real" position is calculated with the savant formula : board.grid.position * 0.835 - 3.757 (found by tiptoeing with values)
+              board.grid[x][z].physicalPiece.position.x = board.grid[x][z].x * 0.835 - 3.757;
+              board.grid[x][z].physicalPiece.position.z = board.grid[x][z].z * 0.835 - 3.757;
+
+              // Remove the old position of the attacking (and winning) piece
+              if (board.grid[x][z].status == 3)
+                board.grid[x][z] = undefined;
+
+              console.table(board.grid);//! DEBUG
+
+              board.grid[x][z].status = 1;
+              pieceClicked = false;// We can now click on pieces again
             }
             //if reveal
-            if(board.grid[x][z].status == 3 || board.grid[x][z].status == 4 || board.grid[x][z].status == 0){
+            if(board.grid[x][z] != undefined && (board.grid[x][z].status == 3 || board.grid[x][z].status == 4 || board.grid[x][z].status == 0)) {
               //the reveal rotation (ye cool stuff)
               if(board.grid[x][z].physicalPiece.rotation.y <= 5 * Math.PI/2) 
-                board.grid[x][z].physicalPiece.rotation.y += 0.03;
+                board.grid[x][z].physicalPiece.rotation.y += 0.04;
               else if(board.grid[x][z].status == 3){
                 board.grid[x][z].physicalPiece.rotation.y = Math.PI/2;
                 board.grid[x][z].status = 1;
@@ -113,7 +136,7 @@ let Graphics = (function () {
               }
             }
             //if ded
-            if(board.grid[x][z].status == 4 || board.grid[x][z].status == 0){
+            if(board.grid[x][z] != undefined && (board.grid[x][z].status == 4 || board.grid[x][z].status == 0)) {
               //ded
               if(board.grid[x][z].physicalPiece.position.y > -20) 
                 board.grid[x][z].physicalPiece.position.y -= 0.05;
@@ -133,7 +156,6 @@ let Graphics = (function () {
           }
         }
       }
-      console.log(pieceClicked);
     });
 
     //end of the creation
@@ -159,6 +181,7 @@ let Graphics = (function () {
    */
   let deplaceCall = (newCoord, oldCoord, fight = undefined) => {
     let isMoving = true;
+    Socket.closeMoveDivCallback();
     pieceClicked = true;//Prevent a piece from getting clicked before its animation is done
 
     if(fight !== undefined){

@@ -24,6 +24,10 @@ npm i
 node index
 ```
 
+---
+
+To deploy the table, import [test.sql](test.sql) into a database called **StrategoOnline** under the **utf8mb4** format
+
 ## Dependecies
 This project is made with those npm packages:
 * [Babylon.js](https://github.com/BabylonJS/Babylon.js "Babylon's github") for the 3d part
@@ -36,3 +40,5 @@ This project is made with those npm packages:
 * [Minami](https://github.com/nijikokun/minami "Minami Github"), template for JSDoc
 * [Colors](https://github.com/Marak/colors.js "Colors Github"), used to add some colors inside of the server terminal
  
+## Preview
+![menu preview](doc/preview.png)

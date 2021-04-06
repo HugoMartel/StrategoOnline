@@ -168,7 +168,7 @@ let AppRequest = (function () {
       req.body.email === undefined ||
       req.body.password === undefined
     ) {
-      console.log(errors, req.body.email, req.body.password);
+      //console.log(errors, req.body.email, req.body.password);//! DEBUG
       return res.status(400).json({ errors: errors.array() });
     } else {
       let emailChecked = escape(req.body.email.trim());
@@ -227,12 +227,6 @@ let AppRequest = (function () {
       let password2Checked = req.body.password2;
       let usernameChecked = escape(req.body.username.trim());
 
-      console.log(
-        emailChecked,
-        passwordChecked,
-        password2Checked,
-        usernameChecked
-      );
 
       // Check if the credentials are correct
       if (

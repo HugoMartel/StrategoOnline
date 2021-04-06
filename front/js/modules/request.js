@@ -84,8 +84,6 @@ let ClientRequest = (function () {
    * @description Register XMLHTTPRequest to send to the express app, the XHR content is sent as a POST request
    */
   function sendRegisterXHR(email, password, password2, username) {
-    console.log(email, password, password2, username);
-
     if (
       password !== password2 ||
       email === undefined ||

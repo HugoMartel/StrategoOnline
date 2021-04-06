@@ -38,7 +38,7 @@ class Table {
       .fill(null)
       .map(() => Array(10).fill(undefined));
 
-    this.pieceClicked = false;/**< Used to prevent spamming on board pieces */ 
+    this.pieceClicked = undefined;/**< Used to prevent spamming on board pieces */ 
 
     //*****************
     //*    MESHES     *
@@ -317,6 +317,38 @@ class Table {
         deleted.dispose();
       }
     );
+
+    // Swap pieces when they are clicked
+    scene.onPointerUp = (evt, pickResult) => {
+      if (this.pieceClicked !== "waiting")
+        if (pickResult.pickedMesh != null && pickResult.pickedMesh.metadata === "playerPiece") {
+          let posX = parseInt(pickResult.pickedMesh.position.x / 0.835 + 4.507);//found by tiptoeing again but by Louis this time !
+          let posZ = parseInt(pickResult.pickedMesh.position.z / 0.835 + 4.507);
+
+          if (this.pieceClicked !== undefined) {
+            // A piece was already selected to request the server to swap them
+            socket.emit("swapPieces", {
+              coordsA: {x: posX, z: posZ},
+              coordsB: this.pieceClicked
+            });
+
+            this.pieceClicked = "waiting";// Reset the clicked piece
+          } else {
+            // No piece was already selected
+            this.pieceClicked = {x: posX, z: posZ};
+            Toast.success("Piece selected : " + this.grid[posX][posZ].specc);
+          }
+        }
+      }
+    }
+
+  // Function to call when a swap can be done again
+  resetPieceClicked() {
+    this.pieceClicked = undefined;
+  }
+
+  setupGame(scene) {
+    // The game is now playable
     scene.onPointerUp = function (evt, pickResult) {
       // We try to pick an object
       if(!Graphics.isClicked()){

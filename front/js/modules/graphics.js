@@ -14,7 +14,7 @@
 let Graphics = (function () {
   // Variables used for 3D
   let board = undefined;
-  let pieceClicked = false;
+  let pieceClicked = true;
   let scene = undefined;
   /**
    * @function Graphics.createScene
@@ -329,7 +329,6 @@ let Graphics = (function () {
         //maybe remove that line
         //board.grid[newCoord.x][newCoord.z].physicalPiece.rotation.y +=0.01;
         isMoving = false;
-        pieceClicked = false;// We can now click on pieces again
       }
 
       else if (fight.win !== undefined && fight.win == 1) {
@@ -344,7 +343,6 @@ let Graphics = (function () {
         isMoving = false;
         board.grid[oldCoord.x][oldCoord.z].status = 0;
         board.grid[newCoord.x][newCoord.z].status = 0;
-        pieceClicked = false;// We can now click on pieces again
       }
     }
 
@@ -377,19 +375,18 @@ let Graphics = (function () {
     board.grid[coordsA.x][coordsA.z].z = coordsB.z;
     
     board.grid[coordsA.x][coordsA.z].physicalPiece.position.x = coordsB.x * 0.835 - 3.757;
-    board.grid[coordsA.x][coordsA.z].physicalPiece.position.z = coordsB.x * 0.835 - 3.757;
+    board.grid[coordsA.x][coordsA.z].physicalPiece.position.z = coordsB.z * 0.835 - 3.757;
 
     //Change B
     board.grid[coordsB.x][coordsB.z].x = coordsA.x;
     board.grid[coordsB.x][coordsB.z].z = coordsA.z;
     
     board.grid[coordsB.x][coordsB.z].physicalPiece.position.x = coordsA.x * 0.835 - 3.757;
-    board.grid[coordsB.x][coordsB.z].physicalPiece.position.z = coordsA.x * 0.835 - 3.757;
+    board.grid[coordsB.x][coordsB.z].physicalPiece.position.z = coordsA.z * 0.835 - 3.757;
   
     // Swap the pieces in the matrix
     [board.grid[coordsB.x][coordsB.z], board.grid[coordsA.x][coordsA.z]] = [board.grid[coordsA.x][coordsA.z], board.grid[coordsB.x][coordsB.z]]
   }
-
 
   //=====================================================================//
   //=====================================================================//
@@ -398,6 +395,8 @@ let Graphics = (function () {
     deplace: (newCoord, oldCoord, fight) => deplaceCall(newCoord, oldCoord, fight),
     swap: (coordsA, coordsB) => swapCall(coordsA, coordsB),
     createScene: (canvas, engine) => createSceneCall(canvas, engine),
+    resetSwappable: () => board.resetPieceClicked(),
+    startGame: () => board.setupGame(scene),
     isClicked: () => pieceClicked,
     setClicked: (value) => (typeof value === "boolean") ? pieceClicked = value : Toast.error("pieceClicked got a wrong value..."),
     getStrength: (coords) => board.grid[coords[0]][coords[1]].specc,

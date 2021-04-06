@@ -22,6 +22,8 @@
     socket.on('moveset response', data => Socket.getMoves(data));
     socket.on('move response', data => Socket.movePiece(data));
     socket.on('swap response', data => Socket.swapPieces(data));
+    socket.on('game start', () => Socket.gameStart());
+    socket.on('ready response', (data) => Socket.playerReady(data));
 
     /* Append the img to ease out the access for the menu background */
     let bottomImg = document.createElement("img");

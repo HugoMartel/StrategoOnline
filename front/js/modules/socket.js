@@ -56,6 +56,40 @@ let Socket = (function () {
         Canvas.setCurrentScene(2);
         Canvas.resetCanvas();
         Canvas.drawCanvas(); //< We enter the Babylon renderloop here
+        //Create the ready button
+        let readyDiv = document.createElement("div");
+        readyDiv.id = "readyDiv";
+
+        //not really important so I did not move it into index.scss
+        readyDiv.style.position = "absolute";
+        readyDiv.style.right = "5%";
+        readyDiv.style.top = "40%";
+
+        let readyButton = document.createElement("button");
+        readyButton.classList.add("btn", "btn-danger");
+        readyButton.type = "button";
+        readyButton.innerText = "Not Ready";
+        readyButton.id = "readyButton";
+
+        let readyButtonCallback = (e) => {
+          e.preventDefault();
+          socket.emit('player ready');
+
+          let button = document.getElementById("readyButton");
+          button.innerText = "Ready";
+          button.classList.replace("btn-danger", "btn-success");
+          button.removeEventListener("click", readyButtonCallback);
+          button.addEventListener("click", (e) => {
+            e.preventDefault();
+          });
+        }
+
+        readyButton.addEventListener("click", readyButtonCallback);
+
+        readyDiv.appendChild(readyButton);
+
+        // Add the moveset div to the page
+        document.getElementById("main").appendChild(readyDiv);
       }, 3000);
     } else {
       Toast.error("The server wasn't able to connect you to a game...");
@@ -86,11 +120,14 @@ let Socket = (function () {
    * @description socket.io client event callback called when a match is over and when you were victorious
    */
   function userVictoryCall(data) {
-    //TODO
-    // STEPS :
-    // end the game, send back on first page
-    // upgrade match history
-    // improve elo of player
+    if (data === undefined || typeof data !== "string") {
+      Toast.error("Wrong args given to the victory callback...");
+    } else {
+      Toast.success(data);
+    }
+    setTimeout(() => {
+      window.location.reload();
+    }, 4000);
   }
 
   //======================================================================================
@@ -102,23 +139,14 @@ let Socket = (function () {
    * @description socket.io client event callback called when a match is over and when you were defeated
    */
   function userDefeatCall(data) {
-    //TODO
-    // STEPS :
-    // end the game, send back on first page
-    // upgrade match history
-    // downgrade elo of player
-  }
-
-  //======================================================================================
-  /**
-   * @function Socket.fight
-   * @param {Object} data
-   * coords of the fight, winner of the fight (data.coord, data.winner)
-   * @returns {} /
-   * @description socket.io client event callback called when a fight is happening between two pieces
-   */
-  function fightCall(data) {
-    //TODO
+    if (data === undefined || typeof data !== "string") {
+      Toast.error("Wrong args given to the victory callback...");
+    } else {
+      Toast.error(data);
+    }
+    setTimeout(() => {
+      window.location.reload();
+    }, 4000);
   }
 
   //======================================================================================
@@ -297,6 +325,49 @@ let Socket = (function () {
         Toast.error(data.error);
       } else {
         Graphics.swap(data.coordsA, data.coordsB);
+        Graphics.resetSwappable();
+        Toast.success("Swap successful!");
+      }
+    }
+  }
+
+  //======================================================================================
+  /**
+   * @function Socket.gameStart
+   * @returns {} /
+   * @description callback called when both players of a game are ready to play
+   */
+  function gameStartCall() {
+    // Remove the ready button and its listeners
+    if (document.getElementById("readyDiv")) {
+      document.getElementById("readyButton").removeEventListener('click', (e) => {
+        e.preventDefault();
+      });
+      document.getElementById("readyDiv").remove();
+    }
+    Graphics.startGame();
+    Graphics.setClicked(false);
+    Toast.success("The game has now begun!\nOutsmart your opponent!");
+  }
+
+  //======================================================================================
+  /**
+   * @function Socket.playerReady
+   * @param {Object} data
+   * server's response
+   * @returns {} /
+   * @description callback called when the server responded to the ready event
+   */
+  function playerReadyCall(data) {
+    if (data === undefined) {
+      Toast.error("The server could not fetch your available moves...");
+    } else {
+      if (data.error !== undefined) {
+        Toast.error(data.error);
+      } else if (data.response !== undefined) {
+        Toast.success(data.response);
+      } else {
+        Toast.error("The server did not respond anything...");
       }
     }
   }
@@ -310,10 +381,11 @@ let Socket = (function () {
     userLeft: (data) => userLeftCall(data),
     userVictory: (data) => userVictoryCall(data),
     userDefeat: (data) => userDefeatCall(data),
-    fight: (data) => fightCall(data),
     getMoves: (data) => getMovesCall(data),
     movePiece: (data) => movePieceCall(data),
     swapPieces: (data) => swapPiecesCall(data),
+    gameStart: () => gameStartCall(),
+    playerReady: (data) => playerReadyCall(data),
     closeMoveDivCallback: (e) => closeMoveDivCallback(e),
   };
 })();

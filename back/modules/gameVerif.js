@@ -258,8 +258,8 @@ let GameVerif = (function () {
                 }
 
                 //! DEBUG
-                console.table(map.tables[0]);
-                console.table(map.tables[1]);
+                //console.table(map.tables[0]);
+                //console.table(map.tables[1]);
 
                 Storage.saveData(fileName, map);
 
@@ -308,8 +308,8 @@ let GameVerif = (function () {
                 map.tables[playerID][destx][desty] = pieceA;
 
                 //! DEBUG
-                console.table(map.tables[0]);
-                console.table(map.tables[1]);
+                //console.table(map.tables[0]);
+                //console.table(map.tables[1]);
 
                 Storage.saveData(fileName, map);
                 return {
@@ -349,8 +349,8 @@ let GameVerif = (function () {
     let makeSwap = function(map, player, pa_posx, pa_posy, pb_posx, pb_posy) {
         //! Don't forget to convert coords to match the server's standards
         /*
-          player0: (x,y) -> server: ( y , 9-x)
-          player1: (x,y) -> server: (9-y,  x ) 
+        player0: (x,y) -> server: ( y , 9-x)
+        player1: (x,y) -> server: (9-y,  x ) 
         */
         let playerID = map.players.findIndex(findPlayer => findPlayer === player);
         if (playerID == 0) {
@@ -368,8 +368,10 @@ let GameVerif = (function () {
             pb_posx = 9-pb_posy;
             pb_posy = pb_posx;
         }
+        
         let pa = map.tables[playerID][pa_posx][pa_posy];
         let pb = map.tables[playerID][pb_posx][pb_posy];
+
         if (pa != -1 && pa != 0 && pb != -1 && pb != 0) {
             map.tables[playerID][pa_posx][pa_posy] = pb;
             map.tables[playerID][pb_posx][pb_posy] = pa;

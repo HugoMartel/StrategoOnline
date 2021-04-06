@@ -19,6 +19,7 @@ class Game {
     this.players = [player, null];
     this.turn = 0;//Defaults to player 0 turn
     this.started = false;
+    this.ready = [false, false];
     
     //Create each player's pieces array
     this.tables = [
@@ -132,56 +133,4 @@ class Game {
   }
 }
 
-/**
- * Function toolbox to use when using a Stratego Game Object
- * @type {Object}
- * @return {Object} Functions to edit and load json
- * @name Stratego
- * @namespace Stratego
- */
-let Stratego = (function () {
-  /**
-   * @function Stratego.saveGame
-   * @param {string} name
-   * Path to save the Stratego Game Object
-   * @param {Object} game
-   * Game Object to save as JSON
-   * @returns {} /
-   * @description Saves a Stratego Game Object as JSON
-   */
-  let saveGameCall = (name, game) => {
-    //! ERROR CHECKING
-    Storage.saveData(name, game);
-  };
-
-  //============================================================================
-  /**
-   * @function Stratego.endGame
-   * @param {string} name
-   * Path to save the Stratego Game Object
-   * @param {Object} game
-   * Game Object to save as JSON
-   * @param {number} winner
-   * 1 or 2 which represents the player who won
-   * @returns {} /
-   * @description Saves a Stratego Game Object as JSON
-   */
-  let endGameCall = (name, game, winner) => {
-    //Add the game to the database
-    //TODO
-    //Add the winner to the database
-    //TODO
-    //Delete the stored JSON file from the storage
-    //Storage.deleteData(this.player1 + "-" + this.player2);
-  };
-
-  //============================================================================
-  //============================================================================
-  // Returned Object
-  return {
-    saveGame: (name, game) => saveGameCall(name, game),
-    endGame: (name, game, winner) => endGameCall(name, game, winner),
-  };
-})();
-
-module.exports = { Game: Game, Stratego: Stratego };
+module.exports = { Game: Game };

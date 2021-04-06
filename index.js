@@ -13,7 +13,7 @@ const app = express();
 const fs = require("fs");
 const https = require("https");
 const AppRequest = require("./back/modules/appRequests");
-const { Game, Stratego } = require("./back/classes/stratego");
+const { Game } = require("./back/classes/stratego");
 const Storage = require("./back/modules/storage");
 
 // Just for the readability of the console logs on the server side
@@ -173,12 +173,12 @@ io.on("connection", (client) => {
 
       // Send things to display to the client
       io.sockets.to(newGame.room_name).emit("match created", {
-        username1: newGame.players[0],
+        username1: (clientSocket.handshake.session.login !== undefined ? newGame.players[0] : "Guest"),
       });
 
       //Save the game as a JSON file in ./back/storage/games/waiting
       //idea to name files : fs.readdirSync(__dirname + "/back/storage/games/waiting").length // Counts the amount of files in the directory
-      Stratego.saveGame("games/waiting/" + currentTime, newGame);
+      Storage.saveData("games/waiting/" + currentTime, newGame);
 
       gameWaiting = true;
       console.log("A new game has been created".underline);
@@ -208,7 +208,7 @@ io.on("connection", (client) => {
           : client.id;
 
       //Save the game as a JSON file in ./back/storage/games
-      Stratego.saveGame(
+      Storage.saveData(
         "games/" + waitingGame.players[0] + "+" + waitingGame.players[1],
         waitingGame
       );
@@ -229,8 +229,8 @@ io.on("connection", (client) => {
 
       //Update the first user's interface with the second player's name
       io.sockets.to(waitingGame.room_name).emit("match ready", {
-        username1: waitingGame.players[0],
-        username2: waitingGame.players[1],
+        username1: (clientSocket.handshake.session.login !== undefined ? waitingGame.players[0] : "Guest"),
+        username2: (clientSocket.handshake.session.login !== undefined ? waitingGame.players[1] : "Guest"),
       });
     }
   });
@@ -368,7 +368,7 @@ io.on("connection", (client) => {
       typeof args.oldCoords === undefined
     ) {
       io.to(client.id).emit("move", {
-        error: "Wrong args given to the requestMoveset callback...",
+        error: "Wrong args given to the requestMove callback...",
       });
       return;
     }
@@ -438,6 +438,7 @@ io.on("connection", (client) => {
                   if (c !== client.id) {
                     // case of the player who lost
                     finishedResult = "You lost!";
+                    io.sockets.to(c).emit('defeat', finishedResult);
                   } else {
                     // case of the player who won
                     finishedResult = "You won! Score : " + score;
@@ -453,11 +454,13 @@ io.on("connection", (client) => {
                     } else {
                       finishedResult += "\nConnect to an account to be able to save your score"
                     }
+                    io.sockets.to(c).emit('victory', finishedResult);
                   }
                 }
                 //If both have no more pieces
                 if(moveResult.isFinished == 4){
                   finishedResult = "You lost!";
+                  io.sockets.to(c).emit('defeat', finishedResult);
                 }
                 //If player have no more pieces
                 if(moveResult.isFinished == 3){
@@ -480,6 +483,7 @@ io.on("connection", (client) => {
                       finishedResult += "\nConnect to an account to be able to save your score"
                     }
                   }
+                  io.sockets.to(c).emit('victory', finishedResult);
                 }
               }
               
@@ -529,15 +533,12 @@ io.on("connection", (client) => {
           console.log("This game was finished !".underline);
           console.log("/back/storage/games/" + clientGame.players[0]+"+"+clientGame.players[1]+".json" + " deleted".bold);
         }
-        console.log(moveResult); //! DEBUG
       }
     } catch (e) {
       io.to(client.id).emit("move response", { error: e });
       console.error(e);
       return;
     }
-
-
   });
 
   //===================================================================
@@ -555,7 +556,7 @@ io.on("connection", (client) => {
         error: "Wrong args given to the swapPieces callback...",
       });
       return;
-    } else if (args.CoordsA === args.CoordsB) {
+    } else if (args.coordsA === args.coordsB) {
       // The client has clicked twice on the same piece, so we do nothing
       return;
     }
@@ -617,6 +618,57 @@ io.on("connection", (client) => {
       return;
     }
   
+  });
+
+  //===================================================================
+  /****************************************\
+          A user is ready to play !
+  \****************************************/
+  client.on("player ready", () => {
+    // Get the client name used in the back-end
+    let clientName =
+      io.sockets.sockets.get(client.id).handshake.session.login !== undefined
+        ? io.sockets.sockets.get(client.id).handshake.session.login
+        : client.id;
+
+    let clientGame = undefined;
+
+    // Load the game object of the player that made the request
+    for (let game of fs
+      .readdirSync(__dirname + "/back/storage/games")
+      .map((value, index, array) => value.slice(0, value.length - 5))) {
+      if (game.includes(clientName)) {
+        clientGame = Storage.getData("games/" + game);
+        break; // I did this because if I remember correctly we cannot iterate in a while
+      }
+    }
+
+    try {
+      if (clientGame === undefined) {
+        throw "The game doesn't exist on the server...";
+      } else {
+        //Change the status of the user in the game object
+        playerID = clientGame.players.findIndex(findPlayer=> findPlayer === clientName);
+
+        clientGame.ready[playerID] = true;
+
+        if (clientGame.ready[0] && clientGame.ready[1]) {
+          // If the game is ready to start
+          clientGame.started = true;
+          io.to(clientGame.room_name).emit('game start');
+        } else {
+          // If a player is still not ready
+          io.to(client.id).emit('ready response', {response: "The game will start when your opponent is also ready!"});
+        }
+
+        // Save the game
+        Storage.saveData("games/" + clientGame.players[0]+"+"+clientGame.players[1], clientGame);
+      }
+    } catch (e) {
+      io.to(client.id).emit('ready response', {error: e});
+      console.error(e);
+      return;
+    }
   });
 });
 

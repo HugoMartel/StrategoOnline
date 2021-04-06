@@ -28,6 +28,6 @@
     ]
   ],
   "turn": 0,
-  "ready": {"player0" : false, "player1": false},
-  "started": true
+  "ready": [0,0],
+  "started": false
 }

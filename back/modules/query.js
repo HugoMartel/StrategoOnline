@@ -22,17 +22,6 @@ let Database = (function () {
   });
 
   //==========================================================================
-  /*
-  let connectCall = () => {
-    mysql.connect((err) => {
-      if (err) throw err;
-      console.log("Database".bold + " connected as " + mysql.threadId);
-      //! NEVER DISCONNECTS
-    });
-  };
-  */
-
-  //==========================================================================
   /**
    * @function Database.login
    * @param {string} email
@@ -142,13 +131,11 @@ let Database = (function () {
 
   // Returned Object
   return {
-    connect: () => connectCall(),
     login: (email, password, callback) => loginCall(email, password, callback),
-    register: (email, password, username, callback) =>
-      registerCall(email, password, username, callback),
+    register: (email, password, username, callback) => registerCall(email, password, username, callback),
     find: (email, callback) => findCall(email, callback),
-    delete: (email, username, callback) =>
-      deleteCall(email, username, callback),
+    delete: (email, username, callback) => deleteCall(email, username, callback),
+    addScore: (email, score) => addScoreCall(email, score),
   };
 })();
 

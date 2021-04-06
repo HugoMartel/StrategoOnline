@@ -125,8 +125,9 @@ let Socket = (function () {
     } else {
       Toast.success(data);
     }
+    Graphics.endGame();
     setTimeout(() => {
-      window.location.reload();
+      window.location.href = window.location.href;
     }, 4000);
   }
 
@@ -144,8 +145,9 @@ let Socket = (function () {
     } else {
       Toast.error(data);
     }
+    Graphics.endGame();
     setTimeout(() => {
-      window.location.reload();
+      window.location.href = window.location.href; 
     }, 4000);
   }
 

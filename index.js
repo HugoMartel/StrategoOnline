@@ -303,7 +303,7 @@ io.on("connection", (client) => {
         });
         throw "A player tried to cheat by using the console...";
       } else if (!clientGame.ready[0] || !clientGame.ready[1]) {
-        console.log(clientGame.ready);
+
         io.to(client.id).emit("moveset response", {
           error: "The other player has a slow pc and has not finished displaying the moving animation...\nPlease forgive him and go back to think about your win conditions!\u{1F60E}",
         });
@@ -450,7 +450,7 @@ io.on("connection", (client) => {
             for (const c of io.sockets.adapter.rooms.get(room)) {
               // Sends the corresponding winning events
               // Get the name of the player
-              let cName = io.sockets.sockets.get(c).handshake.session.login !== undefined ? io.sockets.sockets.get(c).handshake.session.login : c;
+              let cName = io.sockets.sockets.get(c).handshake.session.login !== undefined ? io.sockets.sockets.get(c).handshake.session.username : c;
               let finishedResult = undefined;
 
               //* (cName !== c) if true -> c is connected
@@ -458,7 +458,7 @@ io.on("connection", (client) => {
               //End game process
               if (moveResult.isFinished !== undefined && moveResult.scores !== undefined) {
                 let score = moveResult.scores[0] ? moveResult.scores[0] : moveResult.scores[1];
-                console.log(score);
+
                 if(moveResult.isFinished == 1 || moveResult.isFinished == 2){
                   if (c !== client.id) {
                     // case of the player who lost

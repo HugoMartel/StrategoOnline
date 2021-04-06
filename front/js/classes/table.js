@@ -371,4 +371,10 @@ class Table {
       }
     };
   }
+  
+  endGame() {
+    scene.onPointerUp = function(){
+      return;
+    };
+  }
 }

@@ -400,8 +400,9 @@ let Graphics = (function () {
     createScene: (canvas, engine) => createSceneCall(canvas, engine),
     resetSwappable: () => board.resetPieceClicked(),
     startGame: () => board.setupGame(scene),
+    endGame: () => board.endGame(),
     isClicked: () => pieceClicked,
     setClicked: (value) => (typeof value === "boolean") ? pieceClicked = value : Toast.error("pieceClicked got a wrong value..."),
-    getStrength: (coords) => board.grid[coords[0]][coords[1]].specc,
+    getStrength: (coords) => board.grid[coords[0]][coords[1]].specc
   };
 })();

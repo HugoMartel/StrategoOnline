@@ -1,3 +1,0 @@
-test@test.com
-testTEST1234 -> ed97d44b204f4ccd46ea8a366b7c906544c7c14b31a69baa57f1c659fd121562
-

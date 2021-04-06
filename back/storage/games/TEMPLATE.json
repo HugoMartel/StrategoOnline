@@ -28,6 +28,6 @@
     ]
   ],
   "turn": 0,
-  "ready": [0,0],
+  "ready": [false,false],
   "started": false
 }

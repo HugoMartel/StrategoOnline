@@ -112,6 +112,7 @@ let Graphics = (function () {
               if(board.grid[x][z].status != 2){
                 board.grid[x][z].status = 1;
                 pieceClicked = false;// We can now click on pieces again
+                socket.emit("move ready");// To keep both clients synchronised
               }
             }
             //if reveal
@@ -123,6 +124,7 @@ let Graphics = (function () {
                 board.grid[x][z].physicalPiece.rotation.y = Math.PI/2;
                 board.grid[x][z].status = 1;
                 pieceClicked = false;// We can now click on pieces again
+                socket.emit("move ready");// To keep both clients synchronised
               }
             }
             //if ded
@@ -142,6 +144,7 @@ let Graphics = (function () {
                   board.grid[x][z] = undefined;
                 }
                 pieceClicked = false;// We can now click on pieces again
+                socket.emit("move ready");// To keep both clients synchronised
               }
             }
           }

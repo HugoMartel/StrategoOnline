@@ -173,7 +173,7 @@ io.on("connection", (client) => {
 
       // Send things to display to the client
       io.sockets.to(newGame.room_name).emit("match created", {
-        username1: (clientSocket.handshake.session.login !== undefined ? newGame.players[0] : "Guest"),
+        username1: (clientSocket.handshake.session.login !== undefined ? clientSocket.handshake.session.username : "Guest"),
       });
 
       //Save the game as a JSON file in ./back/storage/games/waiting
@@ -227,10 +227,22 @@ io.on("connection", (client) => {
       gameWaiting = false;
       console.log("A game is starting".underline);
 
+      // Get players names to send to the front
+      let names = ["Guest", "Guest"];
+      for (const room of client.rooms) {
+        if (room !== client.id) {
+          for (const c of io.sockets.adapter.rooms.get(room)) {
+            if (io.sockets.sockets.get(c).handshake.session.username !== undefined)
+              names[(c === client.id ? 1 : 0)] = io.sockets.sockets.get(c).handshake.session.username;
+          }
+        }
+      }
+      
+
       //Update the first user's interface with the second player's name
       io.sockets.to(waitingGame.room_name).emit("match ready", {
-        username1: (clientSocket.handshake.session.login !== undefined ? waitingGame.players[0] : "Guest"),
-        username2: (clientSocket.handshake.session.login !== undefined ? waitingGame.players[1] : "Guest"),
+        username1: names[0],
+        username2: names[1],
       });
     }
   });
@@ -285,7 +297,18 @@ io.on("connection", (client) => {
           error: "Your game doesn't exist on the server...",
         });
         throw "The client's game couldn't be found...";
-      } else if (clientGame.players[clientGame.turn] !== clientName) {
+      } else if (!clientGame.started) {
+        io.to(client.id).emit("moveset response", {
+          error: "How did you do this ?\nStop fiddling with the console \u{1F620}",
+        });
+        throw "A player tried to cheat by using the console...";
+      } else if (!clientGame.ready[0] || !clientGame.ready[1]) {
+        console.log(clientGame.ready);
+        io.to(client.id).emit("moveset response", {
+          error: "The other player has a slow pc and has not finished displaying the moving animation...\nPlease forgive him and go back to think about your win conditions!\u{1F60E}",
+        });
+        return;
+      }else if (clientGame.players[clientGame.turn] !== clientName) {
         // Other condition version : clientGame.turn !== clientGame.players.findIndex(findPlayer => findPlayer === player)
         io.to(client.id).emit("moveset response", {
           error: "It is not your turn...",
@@ -372,7 +395,6 @@ io.on("connection", (client) => {
       });
       return;
     }
-
     //Get the used name for game storage
     let clientName =
       io.sockets.sockets.get(client.id).handshake.session.login !== undefined
@@ -395,7 +417,7 @@ io.on("connection", (client) => {
     try {
       if (clientGame === undefined) {
         throw "The game doesn't exist on the server...";
-      } else if (clientGame.players[clientGame.turn] !== clientName) {
+      } else if (!clientGame.started || clientGame.players[clientGame.turn] !== clientName) {
         // Other condition version : clientGame.turn !== clientGame.players.findIndex(findPlayer => findPlayer === player)
         throw clientName + " cheated and tried to move with going through the console (not your turn)";
       } else {
@@ -405,6 +427,9 @@ io.on("connection", (client) => {
           player0: (x,z) -> server: ( z , 9-x)
           player1: (x,z) -> server: (9-z,  x ) 
         */
+        
+        clientGame.ready = [false, false];// Resets the ready states
+
         let moveResult = GameVerif.makeMove(
           clientGame, 
           clientName, 
@@ -556,7 +581,7 @@ io.on("connection", (client) => {
         error: "Wrong args given to the swapPieces callback...",
       });
       return;
-    } else if (args.coordsA === args.coordsB) {
+    } else if (args.coordsA == args.coordsB) {
       // The client has clicked twice on the same piece, so we do nothing
       return;
     }
@@ -646,6 +671,8 @@ io.on("connection", (client) => {
     try {
       if (clientGame === undefined) {
         throw "The game doesn't exist on the server...";
+      } else if (clientGame.started) {
+        throw "The game has alredy started, you obviously already are ready...";
       } else {
         //Change the status of the user in the game object
         playerID = clientGame.players.findIndex(findPlayer=> findPlayer === clientName);
@@ -670,7 +697,51 @@ io.on("connection", (client) => {
       return;
     }
   });
+
+  //===================================================================
+  /****************************************\
+    A user has finished moving his pieces
+  \****************************************/
+  client.on("move ready", () => {
+    // Get the client name used in the back-end
+    let clientName =
+      io.sockets.sockets.get(client.id).handshake.session.login !== undefined
+        ? io.sockets.sockets.get(client.id).handshake.session.login
+        : client.id;
+
+    let clientGame = undefined;
+
+    // Load the game object of the player that made the request
+    for (let game of fs
+      .readdirSync(__dirname + "/back/storage/games")
+      .map((value, index, array) => value.slice(0, value.length - 5))) {
+      if (game.includes(clientName)) {
+        clientGame = Storage.getData("games/" + game);
+        break; // I did this because if I remember correctly we cannot iterate in a while
+      }
+    }
+
+    try {
+      if (clientGame === undefined) {
+        throw "The game requested doesn't exist on the server...";
+      } else if (!clientGame.started) {
+        throw client.id.red + " is trying to fiddle with the console...";
+      } else {
+        //Change the status of the user in the game object
+        playerID = clientGame.players.findIndex(findPlayer=> findPlayer === clientName);
+
+        clientGame.ready[playerID] = true;// Change the player ready state
+
+        // Save the game
+        Storage.saveData("games/" + clientGame.players[0]+"+"+clientGame.players[1], clientGame);
+      }
+    } catch (e) {
+      console.error(e);
+      return;
+    }
+  });
 });
+
 
 //****************************
 //*       Server Start       *
@@ -679,6 +750,7 @@ io.on("connection", (client) => {
 server.listen(4200, () => {
   console.log("Server is up and running on https://localhost:" + port + "/");
 });
+
 
 //****************************
 //*     Clean up on exit     *
@@ -720,6 +792,17 @@ function exitHandler(options, exitCode) {
         );
       }
     });
+
+    // Final log :)
+    console.log("***********************************************************");
+    console.log("");
+    console.log("         ,,,          Louis Ducrocq            ,,,         ");
+    console.log("        (0 0)         Hugo Martel             (* *)        ");
+    console.log("  ---ooO-(_)-Ooo---   Théodore Martin   ---ooO-(_)-Ooo---  ");
+    console.log("                      Pierre Patoir                        ");
+    console.log("                      Lionel Smets                         ");
+    console.log("");
+    console.log("***********************************************************");
   }
   if (exitCode || exitCode === 0) console.log(exitCode);
   if (options.exit) process.exit();

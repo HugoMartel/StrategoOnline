@@ -1,6 +1,6 @@
 {
   "name": "strategoonline",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A game project for ISEN (CIR2)",
   "main": "index.js",
   "scripts": {

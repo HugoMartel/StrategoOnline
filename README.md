@@ -3,6 +3,8 @@ A game project for our javascript class in Junia ISEN Lille (CIR2), it's a basic
 
 Don't know how to play ? The rules are explained in the site!
 
+**[Gameplay DEMO](https://www.youtube.com/watch?v=NJLrGxr3erw "Youtube Video")**
+
 ## Installing:
 How should you redeploy the webserver ?
 

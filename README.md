@@ -1,22 +1,28 @@
 # StrategoOnline
 A game project for our javascript class in Junia ISEN Lille (CIR2), it's a basic Stratego with working multiplayer.
-<br/>
+
 Don't know how to play ? The rules are explained in the site!
 
-## Compiling:
-Just clone the projet, . 
-<hr/>
-*Windows*
-Download the .zip file and extract it.<br/>
+## Installing:
+How should you redeploy the webserver ?
+
+---
+
+_Windows_
+
+Download the .zip file and extract it.
+
 Run `npm install` in the extracted folder, and `node index` to launch the node server
-<hr/>
-*Linux*
-<code>
+
+---
+
+_Linux_
+```bash
 git clone https://github.com/HugoMartel/StrategoOnline
 cd StrategoOnline
 npm i
 node index
-</code>
+```
 
 ## Dependecies
 This project is made with those npm packages:

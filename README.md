@@ -5,6 +5,8 @@ Don't know how to play ? The rules are explained in the site!
 
 **[Gameplay DEMO](https://www.youtube.com/watch?v=NJLrGxr3erw "Youtube Video")**
 
+**[Presentation](StrategoPresentation.pdf "pdf")**
+
 ## Installing:
 How should you redeploy the webserver ?
 

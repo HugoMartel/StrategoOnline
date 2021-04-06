@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>back/modules/gameVerif.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Game.html">Game</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Pieces.html">Pieces</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Table.html">Table</a></span></li><li class="nav-heading">Namespaces</li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="AppRequest.html">AppRequest</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="AppRequest.html#.connectAccount">connectAccount</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="AppRequest.html#.deleteAccount">deleteAccount</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="AppRequest.html#.registerAccount">registerAccount</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="AppRequest.html#.sendHome">sendHome</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="AppRequest.html#.sendProfile">sendProfile</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="AppRequest.html#.sendRules">sendRules</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="AppRequest.html#.sendScores">sendScores</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Canvas.html">Canvas</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Canvas.html#.drawCanvas">drawCanvas</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Canvas.html#.getCursorPosition">getCursorPosition</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Canvas.html#.resetCanvas">resetCanvas</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Canvas.html#.resizeCanvas">resizeCanvas</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Canvas.html#.startMenuSetup">startMenuSetup</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="ClientRequest.html">ClientRequest</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ClientRequest.html#.sendDelete">sendDelete</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ClientRequest.html#.sendLogin">sendLogin</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ClientRequest.html#.sendRegister">sendRegister</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ClientRequest.html#.sendXHR">sendXHR</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Database.html">Database</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Database.html#.delete">delete</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Database.html#.find">find</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Database.html#.login">login</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Database.html#.register">register</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="GameVerif.html">GameVerif</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GameVerif.html#.checkBattle">checkBattle</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GameVerif.html#.isMovePossible">isMovePossible</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GameVerif.html#.makeMove">makeMove</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GameVerif.html#.makeSwap">makeSwap</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GameVerif.html#.possibleMoves">possibleMoves</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Graphics.html">Graphics</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Graphics.html#.createScene">createScene</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Graphics.html#.deplace">deplace</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Graphics.html#.swap">swap</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Scenes.html">Scenes</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Scenes.html#.clear">clear</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Scenes.html#.gameBoard">gameBoard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Scenes.html#.setupBabylon">setupBabylon</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Scenes.html#.startMenu">startMenu</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Scenes.html#.waitingMenu">waitingMenu</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Scores.html">Scores</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Scores.html#.getRankData">getRankData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Scores.html#.getRankInfos">getRankInfos</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Scores.html#.getRankLine">getRankLine</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Socket.html">Socket</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Socket.html#.gameStart">gameStart</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Socket.html#.getMoves">getMoves</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Socket.html#.getMoves">getMoves</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Socket.html#.matchCreated">matchCreated</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Socket.html#.matchReady">matchReady</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Socket.html#.movePiece">movePiece</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Socket.html#.playerReady">playerReady</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Socket.html#.swapPieces">swapPieces</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Socket.html#.userDeafeat">userDeafeat</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Socket.html#.userLeft">userLeft</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Socket.html#.userVictory">userVictory</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Storage.html">Storage</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Storage.html#.editData">editData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Storage.html#.getData">getData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Storage.html#.saveJSONData">saveJSONData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Storage.html#.storeLeaderboard">storeLeaderboard</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="TableDraw.html">TableDraw</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Toast.html">Toast</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Toast.html#.error">error</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Toast.html#.error">error</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Toast.html#.success">success</a></span></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#io">io</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#port">port</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#server">server</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">back/modules/gameVerif.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file Game logic and verification 
+ * @version 1.0
+ * @author Stratego Online
+ */
+
+// requires
+const Storage = require("./storage");
+
+/**
+ * Game logic and verification 
+ * @type {Object}
+ * @return {Object} Informations related to game logic
+ * @name GameVerif
+ * @namespace GameVerif
+ */
+
+let GameVerif = (function () {
+    
+    /**
+    * @function GameVerif.isMovePossible
+    * @param {Object} map
+    * map informations
+    * @param {String} playerID
+    * Id of the player which play
+    * @param {String} player2ID
+    * Id of the other player
+    * @param {Object} piece //id, posx, posy, destx, desty
+    * piece you want to move
+    * @returns {Array}
+    * an array with true of false if move is possible and the string of the code error
+    * @description Say if a move is possible, adn give you the details information about it
+    */
+    let isMovePossible = function(map, playerID, player2ID, piece){
+        if (piece.destx &lt; 0 || piece.destx > 9 || piece.desty &lt; 0 || piece.desty > 9) {
+            return [false, "OUT_OF_MAP"];
+        }
+        else if(map.tables[playerID][piece.destx][piece.desty] == -1){
+            return [false, "CANT_MOVE_ON_WATER"];
+        }
+        else if(piece.id == 11){
+            return [false, "CANT_MOVE_BOMBS"];
+        }
+        else if(piece.id == 12){
+            return [false, "CANT_MOVE_FLAG"];
+        }
+        else if(map.tables[playerID][piece.destx][piece.desty] != 0){
+            return [false, "CANT_MOVE_ON_YOUR_PIECE"];
+        }
+        else if(Math.abs(piece.destx - piece.posx) != 0 &amp;&amp; Math.abs(piece.desty - piece.posy) != 0){
+            return [false, "CANT_MOVE_ON_DIAGONAL"];
+        }
+        else if(piece.id != 2){
+            if(Math.abs(piece.destx - piece.posx) > 1 || Math.abs(piece.desty - piece.posy) > 1){
+                return [false, "CASE_OUT_OF_RANGE"];
+            }
+        }
+        else if(piece.id == 2){
+            if (piece.desty === piece.posy) {
+                if (piece.destx &lt; piece.posx) {
+                    for (let index = piece.posx - 1; index > piece.destx; index--) {
+                        if(map.tables[playerID][index][piece.posy] != 0){
+                            return [false, "CANT_MOVE_THROUGH_A_PIECE"];
+                        }
+                        if(map.tables[player2ID][index][piece.posy] != 0){
+                            return [false, "CANT_MOVE_THROUGH_A_PIECE"];
+                        }
+                    }
+                }
+                else {
+                    for (let index = piece.posx + 1; index &lt; piece.destx; index++) {
+                        if(map.tables[playerID][index][piece.posy] != 0){
+                            return [false, "CANT_MOVE_THROUGH_A_PIECE"];
+                        }
+                        if(map.tables[player2ID][index][piece.posy] != 0){
+                            return [false, "CANT_MOVE_THROUGH_A_PIECE"];
+                        }
+                    }
+                }
+            }
+            else {
+                if (piece.desty &lt; piece.posy) {
+                    for (let index = piece.posy - 1; index > piece.desty; index--) {
+                        if(map.tables[playerID][piece.posx][index] != 0){
+                            return [false, "CANT_MOVE_THROUGH_A_PIECE"];
+                        }
+                        if(map.tables[player2ID][piece.posx][index] != 0){
+                            return [false, "CANT_MOVE_THROUGH_A_PIECE"];
+                        }
+                    }
+                }
+                else {
+                    for (let index = piece.posy + 1; index &lt; piece.desty; index++) {
+                        if(map.tables[playerID][piece.posx][index] != 0){
+                            return [false, "CANT_MOVE_THROUGH_A_PIECE"];
+                        }
+                        if(map.tables[player2ID][piece.posx][index] != 0){
+                            return [false, "CANT_MOVE_THROUGH_A_PIECE"];
+                        }
+                    }
+                }
+            }
+        }
+        if(map.tables[player2ID][piece.destx][piece.desty] > 0){
+            return [true, "BATTLE"];
+        }
+        return [true, "SUCCESS"];
+    }
+
+    //================================================================
+    /**
+    * @function GameVerif.checkBattle
+    * @param {Number} pionA
+    * value of piece attacking
+    * @param {Number} pionB
+    * value of piece attacked
+    * @returns {Number}
+    * return the piece which won the battle. If both died return 0, if not possible return -1
+    * @description Give the result of a move
+    */
+    let checkBattle = function(pieceA, pieceB){
+        if(pieceB==12){
+            return pieceA;
+        }
+        else if(pieceA != 3 &amp;&amp; pieceB == 11){
+            return pieceB;
+        }
+        else if(pieceA == 3 &amp;&amp; pieceB == 11){
+            return pieceA;
+        }
+        else if(pieceA == 1 &amp;&amp; pieceB == 10){
+            return pieceA;
+        }
+        else if(pieceA == pieceB){
+            return 0;
+        }
+        else if(pieceA &lt; pieceB){
+            return pieceB;
+        }
+        else if(pieceA > pieceB){
+            return pieceA;
+        }
+        return 0;
+    }
+    
+    //================================================================
+    /**
+    * @function GameVerif.possibleMoves
+    * @param {Object} map
+    * map you are playing on
+    * @param {String} player
+    * player which is playing
+    * @param {Number} posx
+    * posX of the piece
+    * @param {Number} posy
+    * posX of the piece
+    * @returns {Array}
+    * return the piece array of move your piece can do
+    * @description Give the possible move for a piece
+    */
+    let possibleMoves = function(map, player, posx, posy){
+        let playerID = map.players.findIndex(findPlayer=> findPlayer === player);
+        let player2ID = (playerID+1)%2;// in Js !playerID transforms a number to a boolean :)
+
+        let moves=[
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, -1, -1, 0, 0, -1, -1, 0, 0],
+            [0, 0, -1, -1, 0, 0, -1, -1, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ];
+        let piece = { id: map.tables[playerID][posx][posy], posx: posx, posy: posy};
+        piece.destx = piece.posx;
+        for (let y = 0; y &lt; map.tables[0][piece.posx].length; y++) {
+            piece.desty = y;
+            let movement = isMovePossible(map, playerID, player2ID, piece);
+            moves[piece.destx][piece.desty] = movement[0] ? 1 : 0;
+            if (movement[1] == "BATTLE") {
+                moves[piece.destx][piece.desty] = 2;
+            }      
+        }
+        piece.desty = posy;
+        for (let x = 0; x &lt; map.tables[0].length; x++) {
+            piece.destx = x;
+            let movement = isMovePossible(map, playerID, player2ID, piece);
+            moves[piece.destx][piece.desty] = movement[0] ? 1 : 0;
+            if (movement[1] == "BATTLE") {
+                moves[piece.destx][piece.desty] = 2;
+            }       
+        }
+        return moves;
+    }
+
+    //================================================================
+    /**
+    * @function GameVerif.makeMove
+    * @param {Object} map
+    * map you are playing on
+    * @param {String} player
+    * player which is requesting the move
+    * @param {Number} posx
+    * posX of the piece
+    * @param {Number} posy
+    * posX of the piece
+    * @param {Number} destx
+    * destX of the piece
+    * @param {Number} desty
+    * destY of the piece
+    * @returns {Object}
+    *   isPossible    : bool   (if movement is possible)
+    *   oldX          : number (posx)
+    *   oldY          : number (posy)
+    *   newX          : number (destx)
+    *   newY          : number (desty)
+    *   isFight       : bool   (if battle)
+    *   winner        : number (winner of the battle, 2 if same power)
+    *   attackerPower : number (power of the piece which attacks)
+    *   defenderPower : number (power of the attacked piece)
+    *   isFinished    : number   (0 if the game is not finished, 1 if the player won, 2 if player won because opponent have no more peces, 3 if player lost because he have no more peces, 4 if both have no more pieces)
+    * @description Make the move if possible
+    */
+    let makeMove = function (map, player, posx, posy, destx, desty) {
+        let playerID = map.players.findIndex(findPlayer => findPlayer === player);
+        let player2ID = (playerID+1)%2; // in Js !playerID transforms a number to a boolean :)
+
+        let pieceA = map.tables[playerID][posx][posy];
+        let movement = isMovePossible(map, playerID, player2ID, {id: pieceA, posx: posx, posy: posy, destx: destx, desty: desty});
+        if (movement[0]) {
+            let fileName = "games/" + map.players[0]+"+"+map.players[1];
+            map.turn = (map.turn+1)%2;
+            map.tables[playerID][posx][posy] = 0;
+            if (movement[1] == "BATTLE") {
+                let pieceB = map.tables[player2ID][destx][desty];
+                let battleResult = checkBattle(pieceA, pieceB);
+                let winner = 2;
+                let scores = [0,0];
+                let gameState = 0; /* The game status : 0 is not finished, 
+                1 if player won, 
+                2 if player won because opponent have no more peces, 
+                3 if player lost because he have no more peces
+                4 if both have no more pieces */
+                if (battleResult === pieceA) {
+                    winner = playerID;
+                    map.tables[player2ID][destx][desty] = 0;
+                    map.tables[playerID][destx][desty] = pieceA;
+                } else if (battleResult === pieceB) {
+                    winner = player2ID;
+                    map.tables[playerID][destx][desty] = 0;
+                    map.tables[player2ID][destx][desty] = pieceB;
+                }else if (battleResult === 0) {
+                    map.tables[playerID][destx][desty] = 0;
+                    map.tables[player2ID][destx][desty] = 0;
+                }
+
+                //! DEBUG
+                //console.table(map.tables[0]);
+                //console.table(map.tables[1]);
+
+                Storage.saveData(fileName, map);
+
+                
+                // player playing
+                map.tables[playerID].forEach(line => line.forEach(function(pieces){ 
+                    if (pieces&lt;11 &amp;&amp; pieces>0){
+                        scores[0] += pieces;
+                    } 
+                }));
+                // player aopponent
+                map.tables[player2ID].forEach(line => line.forEach(function(pieces){ 
+                    if (pieces&lt;11 &amp;&amp; pieces>0){
+                        scores[1] += pieces;
+                    } 
+                }));
+                if(pieceB == 12){
+                    gameState = 1;
+                    scores[map.turn] = 0;// Nullify the score of the loser
+                } else {
+                    if(scores[1] == 0 &amp;&amp; scores[0] == 0){ // If both have no more pieces
+                        gameState = 2;
+                    }else if(scores[1] == 0){ // if opponent have no more pieces
+                        gameState = 4;
+                    }else if(scores[0] == 0) {  // if player have no more pieces
+                        gameState = 3;
+                    }
+                }
+                
+                
+                return {
+                    isPossible: true,
+                    oldX: posx,
+                    oldY: posy,
+                    newX: destx,
+                    newY: desty,
+                    isFight: true,
+                    winner: winner,
+                    attackerPower: pieceA,
+                    defenderPower: pieceB,
+                    isFinished: gameState,
+                    scores: (!gameState) ? undefined : scores
+                }
+                //return [true, posx, posy, destx, desty, true, winner, pieceA, pieceB];//old method
+            } else {
+                map.tables[playerID][destx][desty] = pieceA;
+
+                //! DEBUG
+                //console.table(map.tables[0]);
+                //console.table(map.tables[1]);
+
+                Storage.saveData(fileName, map);
+                return {
+                    isPossible: true,
+                    oldX: posx,
+                    oldY: posy,
+                    newX: destx,
+                    newY: desty,
+                    isFight: false
+                }
+                //return [true, posx, posy, destx, desty, false];//old method
+            }
+        } else {
+            return { isPossible: false };
+        }
+    }
+
+    //================================================================
+    /**
+    * @function GameVerif.makeSwap
+    * @param {Object} map
+    * map you are playing on
+    * @param {String} player
+    * player which is requesting the swap
+    * @param {Number} pa_posx
+    * posX of the piece A
+    * @param {Number} pa_posy
+    * posY of the piece A
+    * @param {Number} pb_posx
+    * posX of the piece B
+    * @param {Number} pb_posy
+    * posY of the piece B
+    * @return {Bool}
+    * if swap is done
+    * @description Make the swap if possible
+    */
+    let makeSwap = function(map, player, pa_posx, pa_posy, pb_posx, pb_posy) {
+        //! Don't forget to convert coords to match the server's standards
+        /*
+        player0: (x,y) -> server: ( y , 9-x)
+        player1: (x,y) -> server: (9-y,  x ) 
+        */
+        let playerID = map.players.findIndex(findPlayer => findPlayer === player);
+        if (playerID == 0) {
+            let tmp_x = pa_posx;
+            pa_posx = pa_posy;
+            pa_posy = 9-tmp_x;
+            tmp_x = pb_posx;
+            pb_posx = pb_posy;
+            pb_posy = 9-tmp_x;
+        } else {
+            let tmp_x = pa_posx;
+            pa_posx = 9-pa_posy;
+            pa_posy = pa_posx;
+            tmp_x = pb_posx;
+            pb_posx = 9-pb_posy;
+            pb_posy = pb_posx;
+        }
+        
+        let pa = map.tables[playerID][pa_posx][pa_posy];
+        let pb = map.tables[playerID][pb_posx][pb_posy];
+
+        if (pa != -1 &amp;&amp; pa != 0 &amp;&amp; pb != -1 &amp;&amp; pb != 0) {
+            map.tables[playerID][pa_posx][pa_posy] = pb;
+            map.tables[playerID][pb_posx][pb_posy] = pa;
+            Storage.saveData("games/" + map.players[0]+"+"+map.players[1], map);
+            return true;
+        }
+        return false;
+    }
+
+    //================================================================
+    //================================================================
+    return {
+        possibleMoves: (map, player, posx, posy) => possibleMoves(map, player, posx, posy),
+        makeMove : (map, player, posx, posy, destx, desty) => makeMove(map, player, posx, posy, destx, desty),
+        makeSwap : (map, player, pa_posx, pa_posy, pb_posx, pb_posy) => makeSwap(map, player, pa_posx, pa_posy, pb_posx, pb_posy)
+    }
+})();
+
+module.exports = GameVerif;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a> on Tue Apr 06 2021 02:09:25 GMT+0200 (Central European Summer Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

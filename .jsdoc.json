@@ -6,7 +6,7 @@
     "source": {
         "include": ["index.js", "package.json", "README.md", "./back", "./front"],
         "includePattern": ".js$",
-        "excludePattern": "(node_modules/|docs)"
+        "excludePattern": "(node_modules/|docs/|front/include/)"
     },
     "plugins": [
         "plugins/markdown"

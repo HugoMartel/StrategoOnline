@@ -676,7 +676,7 @@ io.on("connection", (client) => {
 //*       Server Start       *
 //****************************
 // Make the server use port 4200
-server.listen(4200, () => {
+server.listen(port, () => {
   console.log("Server is up and running on https://localhost:" + port + "/");
 });
 

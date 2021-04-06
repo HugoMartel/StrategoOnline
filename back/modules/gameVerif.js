@@ -363,10 +363,10 @@ let GameVerif = (function () {
         } else {
             let tmp_x = pa_posx;
             pa_posx = 9-pa_posy;
-            pa_posy = pa_posx;
+            pa_posy = tmp_x;
             tmp_x = pb_posx;
             pb_posx = 9-pb_posy;
-            pb_posy = pb_posx;
+            pb_posy = tmp_x;
         }
         
         let pa = map.tables[playerID][pa_posx][pa_posy];

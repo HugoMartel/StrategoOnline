@@ -1,9 +1,22 @@
 # StrategoOnline
-A game project for our javascript class in Junia ISEN Lille (CIR2), it's a basic stratego with a working server, working with socket io, express and babylon js.
-If you want to know the rules, just look up online at the stratego game rules.
+A game project for our javascript class in Junia ISEN Lille (CIR2), it's a basic Stratego with working multiplayer.
+<br/>
+Don't know how to play ? The rules are explained in the site!
 
 ## Compiling:
-Just clone the projet, run `npm install` in the main folder, and `node index` to launch the node server. 
+Just clone the projet, . 
+<hr/>
+*Windows*
+Download the .zip file and extract it.<br/>
+Run `npm install` in the extracted folder, and `node index` to launch the node server
+<hr/>
+*Linux*
+```
+git clone https://github.com/HugoMartel/StrategoOnline
+cd StrategoOnline
+npm i
+node index
+```
 
 ## Dependecies
 This project is made with those npm packages:

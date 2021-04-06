@@ -32,7 +32,7 @@ node index
 
 To deploy the table, import [test.sql](test.sql) into a database called **StrategoOnline** under the **utf8mb4** format
 
-## Dependecies
+## Dependencies
 This project is made with those npm packages:
 * [Babylon.js](https://github.com/BabylonJS/Babylon.js "Babylon's github") for the 3d part
 * [Socket.io](https://github.com/socketio/socket.io "socket.io github") to connect the client 

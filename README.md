@@ -11,12 +11,12 @@ Download the .zip file and extract it.<br/>
 Run `npm install` in the extracted folder, and `node index` to launch the node server
 <hr/>
 *Linux*
-```
+<code>
 git clone https://github.com/HugoMartel/StrategoOnline
 cd StrategoOnline
 npm i
 node index
-```
+</code>
 
 ## Dependecies
 This project is made with those npm packages:

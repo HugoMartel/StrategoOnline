@@ -43,6 +43,7 @@ This project is made with those npm packages:
 * [jsSha256](https://github.com/emn178/js-sha256 "js Sha 256 github") to create secure password and for secured socketio connexion
 * [Minami](https://github.com/nijikokun/minami "Minami Github"), template for JSDoc
 * [Colors](https://github.com/Marak/colors.js "Colors Github"), used to add some colors inside of the server terminal
+* [Notify](https://github.com/caroso1222/notyf "Notyf Github"), used to display notification toasts on the page
  
 ## Preview
 ![menu preview](doc/preview.png)

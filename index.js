@@ -31,7 +31,7 @@ const server = http.createServer(app);
 /** @constant {Object} io socket module used to identify clients*/
 const io = require("socket.io")(server);
 /** @constant {number} port port used to host the server on*/
-const port = 4200;
+const port = process.env.PORT || 4200;
 
 //****************************
 //*         Session          *

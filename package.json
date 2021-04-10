@@ -4,6 +4,7 @@
   "description": "A game project for ISEN (CIR2)",
   "main": "index.js",
   "scripts": {
+    "start": "node index",
     "scss": "node-sass back/scss -o front/css",
     "gen-docs": "rm -rfv doc/* && node_modules/.bin/jsdoc --configure .jsdoc.json --verbose"
   },

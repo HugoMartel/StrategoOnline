@@ -11,16 +11,13 @@
 const express = require("express");
 const app = express();
 const fs = require("fs");
-const https = require("https");
+const http = require("http");
 const AppRequest = require("./back/modules/appRequests");
 const { Game } = require("./back/classes/stratego");
 const Storage = require("./back/modules/storage");
 
 // Just for the readability of the console logs on the server side
 const colors = require("colors");
-
-const hsKey = fs.readFileSync(__dirname + "/ssl/key.pem").toString();
-const hsCert = fs.readFileSync(__dirname + "/ssl/cert.pem").toString();
 
 // Request handling requires
 const sharedsession = require("express-socket.io-session");
@@ -30,9 +27,9 @@ const urlencodedParser = express.urlencoded({ extended: false });
 
 // Setup server and socket
 /** @constant {Object} server https server used to host the project*/
-const server = https.createServer({ key: hsKey, cert: hsCert }, app);
+const server = http.createServer(app);
 /** @constant {Object} io socket module used to identify clients*/
-const io = require("socket.io")(server, { secure: true });
+const io = require("socket.io")(server);
 /** @constant {number} port port used to host the server on*/
 const port = 4200;
 
@@ -748,7 +745,7 @@ io.on("connection", (client) => {
 //****************************
 // Make the server use port 4200
 server.listen(port, () => {
-  console.log("Server is up and running on https://localhost:" + port + "/");
+  console.log("Server is up and running on https://strategoonline.herokuapp.com:" + port + "/");
 });
 
 
